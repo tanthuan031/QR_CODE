@@ -1,0 +1,26 @@
+.listdetail_classroom {
+  position: relative;
+  max-width: 100%;
+  height: 70vh;
+  overflow: scroll;
+}
+.listdetail_classroom table {
+  position: absolute;
+  /* table-layout: fixed; */
+}
+
+/* .listdetail_classroom table th,
+.listdetail_classroom table td {
+  width: auto;
+  white-space: nowrap;
+}
+
+.listdetail_classroom table th:nth-child(1),
+.listdetail_classroom table td:nth-child(1) {
+  width: 100px;
+}
+
+.listdetail_classroom table th:nth-child(2),
+.listdetail_classroom table td:nth-child(2) {
+  width: 200px;
+} */

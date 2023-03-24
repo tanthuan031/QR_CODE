@@ -107,7 +107,11 @@ export function ClassroomPage() {
         {/* <Modal setStateModal={() => setShowCreate(false)} show={show} elementModalBody={bodyModalCreateClass()} /> */}
 
         {isDetailClassroom && (
-          <DetailClassroomTable tableBody={dataTableBody} tableHeader={dataHeaderDetailClassroom} />
+          <DetailClassroomTable
+            tableBody={dataTableBody}
+            tableHeader={dataHeaderDetailClassroom}
+            // isDetailClassroom={}
+          />
         )}
       </section>
     </>

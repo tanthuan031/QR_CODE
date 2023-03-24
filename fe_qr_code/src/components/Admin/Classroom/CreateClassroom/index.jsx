@@ -31,17 +31,6 @@ export default function CreateClassroom(props) {
               </div>
             </Form.Group>
           </div>
-
-          {/* <Row>
-            <Form.Group className="d-flex justify-content-end">
-              <Button type="submit" variant="danger" className="me-3 font-weight-bold">
-                Save
-              </Button>
-              <Button type="button" variant="secondary" className="font-weight-bold" onClick={() => setStateModal()}>
-                Cancel
-              </Button>
-            </Form.Group>
-          </Row> */}
         </div>
         <div className="row pb-2">
           <Form.Group className="d-flex justify-content-center">

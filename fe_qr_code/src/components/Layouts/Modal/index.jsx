@@ -8,7 +8,7 @@ import { FaTimes } from 'react-icons/fa';
 export default function Modal(props) {
   const { elementModalBody, elementModalTitle, className, isHeader = true } = props;
   const [show, setShow] = useState(props.show);
-
+  console.log('modal: ', props);
   return (
     <ModalBootstrap
       show={props.show}

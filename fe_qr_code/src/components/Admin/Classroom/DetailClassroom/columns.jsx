@@ -21,7 +21,19 @@ const COLUMNS = [
   },
   {
     Header: 'Country',
-    accessor: 'country',
+    accessor: 'country1',
+  },
+  {
+    Header: 'Country',
+    accessor: 'country2',
+  },
+  {
+    Header: 'Country',
+    accessor: 'country3',
+  },
+  {
+    Header: 'Country',
+    accessor: 'country4',
   },
 ];
 
