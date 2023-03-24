@@ -22,7 +22,7 @@
 
 #table thead tr th,
 #table tbody tr td {
-  padding: var(--16px);
+  /* padding: var(--16px); */
 }
 
 /* #table thead tr th:last-child,

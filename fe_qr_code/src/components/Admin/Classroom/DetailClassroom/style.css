@@ -8,7 +8,15 @@
   position: absolute;
   /* table-layout: fixed; */
 }
-
+.my-custom-scrollbar {
+  max-width: 710px;
+  overflow: auto;
+}
+.header_detail_classroom {
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  background-color: var(--bs-white);
+}
 /* .listdetail_classroom table th,
 .listdetail_classroom table td {
   width: auto;

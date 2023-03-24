@@ -1,12 +1,13 @@
 import React, { useMemo } from 'react';
 import TableLayout from '../../../Layouts/Table';
+import { Table as TableBootstrap } from 'react-bootstrap';
 import { useSortBy, useTable } from 'react-table';
 import MOCK_DATA from './MOCK_DATA.json';
 import COLUMNS from './columns';
 import './style.css';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import Modal from '../../../Layouts/Modal';
-import { FaSearch } from 'react-icons/fa';
+import { FaEdit, FaSearch } from 'react-icons/fa';
 import './style.css';
 import { QRCodeSVG } from 'qrcode.react';
 import QRCodeGenerator from './QRCode';
@@ -172,8 +173,8 @@ export function DetailClassroomTable(props) {
           </div>
         </div>
       </div>
-
-      <button onClick={handleExport}>Export Data</button>
+      {/* Table auto edit */}
+      {/* <button onClick={handleExport}>Export Data</button>
       <button onClick={handleSave}>Lưu</button>
       <div className="row listdetail_classroom">
         <table {...getTableProps()} className="listdetail_classroom_item" style={{ width: '100%' }}>
@@ -210,6 +211,319 @@ export function DetailClassroomTable(props) {
             })}
           </tbody>
         </table>
+      </div> */}
+      {/* <TableLayout tableHeader={props.tableHeader} tableBody={props.tableBody} /> */}
+
+      <div className="row header_detail_classroom">
+        <div className="col col-md-3">
+          <th key={1} style={{ width: '5%' }}>
+            <div className="d-flex align-items-center justify-content-center">
+              <p className="">STT</p>
+            </div>
+          </th>
+          <th key={2} style={{ width: '10%' }}>
+            <div className="d-flex align-items-center justify-content-center">
+              <p className="">MSSV</p>
+            </div>
+          </th>
+          <th key={3} style={{ width: '15%' }}>
+            <div className="d-flex align-items-center justify-content-center">
+              <p className="">Tên sinh viên</p>
+            </div>
+          </th>
+        </div>
+        <div className="col col-md-7">
+          <th key={4} style={{ width: '1%' }}>
+            <div className="d-flex align-items-center justify-content-center ">
+              <p className=" text-center">Tuần</p>
+            </div>
+          </th>
+        </div>
+        <div className="col col-md-2">
+          <th key={5} style={{ width: '10%' }}>
+            <div className="d-flex align-items-center justify-content-center">
+              <p className="text-center" style={{ width: '60%' }}>
+                Điểm
+              </p>
+              <p className="">Action</p>
+            </div>
+          </th>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col col-md-3">
+          <div>
+            <td key={1} style={{ width: '5%' }}>
+              <div className="d-flex align-items-center justify-content-center">
+                <p className="">-</p>
+              </div>
+            </td>
+            <td key={2} style={{ width: '10%' }}>
+              <div className="d-flex align-items-center justify-content-center">
+                <p className="">-</p>
+              </div>
+            </td>
+            <td key={3} style={{ width: '15%' }}>
+              <div className="d-flex align-items-center justify-content-center">
+                <p className="">-</p>
+              </div>
+            </td>
+          </div>
+          <div>
+            <td key={1} style={{ width: '5%' }}>
+              <div className="d-flex align-items-center justify-content-center">
+                <p className="">1</p>
+              </div>
+            </td>
+            <td key={2} style={{ width: '10%' }}>
+              <div className="d-flex align-items-center justify-content-center">
+                <p className="">3119410420</p>
+              </div>
+            </td>
+            <td key={3} style={{ width: '15%' }}>
+              <div className="d-flex align-items-center justify-content-center">
+                <p className="">Nguyen Van A</p>
+              </div>
+            </td>
+          </div>
+          <div>
+            <td key={1} style={{ width: '5%' }}>
+              <div className="d-flex align-items-center justify-content-center">
+                <p className="">1</p>
+              </div>
+            </td>
+            <td key={2} style={{ width: '10%' }}>
+              <div className="d-flex align-items-center justify-content-center">
+                <p className="">3119410420</p>
+              </div>
+            </td>
+            <td key={3} style={{ width: '15%' }}>
+              <div className="d-flex align-items-center justify-content-center">
+                <p className="">Nguyen Van A</p>
+              </div>
+            </td>
+          </div>
+        </div>
+        <div className="col col-md-7">
+          <div className="d-flex align-items-center justify-content-center">
+            <div className="justify-content-center">
+              <div className="d-flex my-custom-scrollbar">
+                <div>
+                  {/* Buoi */}
+                  <div className="d-flex text-center">
+                    <p style={{ width: '90px', border: '1px solid' }}>1</p>
+                    <p style={{ width: '90px', border: '1px solid' }}>2</p>
+                    <p style={{ width: '90px', border: '1px solid' }}>3</p>
+                    <p style={{ width: '90px', border: '1px solid' }}>4</p>
+                    <p style={{ width: '90px', border: '1px solid' }}>5</p>
+                    <p style={{ width: '90px', border: '1px solid' }}>6</p>
+                    <p style={{ width: '90px', border: '1px solid' }}>7</p>
+                    <p style={{ width: '90px', border: '1px solid' }}>8</p>
+                    <p style={{ width: '90px', border: '1px solid' }}>9</p>
+                    <p style={{ width: '90px', border: '1px solid' }}>10</p>
+                    <p style={{ width: '90px', border: '1px solid' }}>11</p>
+                    <p style={{ width: '90px', border: '1px solid' }}>12</p>
+                    <p style={{ width: '90px', border: '1px solid' }}>13</p>
+                    <p style={{ width: '90px', border: '1px solid' }}>14</p>
+                    <p style={{ width: '90px', border: '1px solid' }}>15</p>
+                  </div>
+                  {/* Diem danh */}
+                  <div className="d-flex">
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                  </div>
+
+                  <div className="d-flex">
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col col-md-2">
+          <div>
+            <td key={5} style={{ width: '10%' }}>
+              <div className="d-flex align-items-center justify-content-center text-center">
+                <p className="" style={{ width: '60%' }}>
+                  -
+                </p>
+                <p className="">-</p>
+              </div>
+            </td>
+          </div>
+          <div>
+            <td key={5} style={{ width: '10%' }}>
+              <div className="d-flex align-items-center text-center justify-content-center">
+                <p className="" style={{ width: '60%' }}>
+                  10.0
+                </p>
+                <p className="">
+                  <FaEdit />
+                </p>
+              </div>
+            </td>
+          </div>
+          <div>
+            <td key={5} style={{ width: '10%' }}>
+              <div className="d-flex align-items-center text-center justify-content-center">
+                <p className="" style={{ width: '60%' }}>
+                  10.0
+                </p>
+                <p className="">
+                  <FaEdit />
+                </p>
+              </div>
+            </td>
+          </div>
+        </div>
       </div>
 
       <Modal
