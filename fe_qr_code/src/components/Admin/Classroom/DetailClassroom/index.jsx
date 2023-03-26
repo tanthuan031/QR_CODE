@@ -11,6 +11,8 @@ import { FaEdit, FaSearch } from 'react-icons/fa';
 import './style.css';
 import { QRCodeSVG } from 'qrcode.react';
 import QRCodeGenerator from './QRCode';
+import { useDispatch } from 'react-redux';
+import { setIsDetailClassroom } from '../../../../redux/reducer/classroom/classroom.reducer';
 const EditableCell = ({ value: initialValue, row: { index }, column: { id }, updateMyData }) => {
   const [value, setValue] = React.useState(initialValue);
 
@@ -33,6 +35,7 @@ export function DetailClassroomTable(props) {
   const [editTable, setEditTable] = React.useState(true);
   const [createQRCode, setCreateQRCode] = React.useState(false);
   const [show, setShow] = React.useState(false);
+  const dispatch = useDispatch();
 
   const updateMyData = (rowIndex, columnId, value) => {
     setData((old) =>
@@ -126,6 +129,7 @@ export function DetailClassroomTable(props) {
   };
   const backToPage = () => {
     // props.isDetailClassroom = true;
+    dispatch(setIsDetailClassroom(false));
   };
   return (
     <>
@@ -154,14 +158,14 @@ export function DetailClassroomTable(props) {
             >
               Điểm danh QR
             </Button>
-            <Button
+            {/* <Button
               id="create-new-product"
               variant="info"
               className="font-weight-bold ms-3 m-r-15"
               onClick={() => setEditTable(false)}
             >
               Cập nhật danh sách
-            </Button>
+            </Button> */}
             <Button
               id="create-new-product"
               variant="info"
@@ -215,97 +219,61 @@ export function DetailClassroomTable(props) {
       {/* <TableLayout tableHeader={props.tableHeader} tableBody={props.tableBody} /> */}
 
       <div className="row header_detail_classroom">
-        <div className="col col-md-3">
-          <th key={1} style={{ width: '5%' }}>
-            <div className="d-flex align-items-center justify-content-center">
-              <p className="">STT</p>
-            </div>
-          </th>
-          <th key={2} style={{ width: '10%' }}>
-            <div className="d-flex align-items-center justify-content-center">
-              <p className="">MSSV</p>
-            </div>
-          </th>
-          <th key={3} style={{ width: '15%' }}>
-            <div className="d-flex align-items-center justify-content-center">
-              <p className="">Tên sinh viên</p>
-            </div>
-          </th>
+        <div className="col col-md-3 p-2">
+          <div className="d-flex justify-content-between ">
+            <p className="text-center">STT</p>
+
+            <p className="">MSSV</p>
+
+            <p className="">Tên sinh viên</p>
+          </div>
         </div>
-        <div className="col col-md-7">
-          <th key={4} style={{ width: '1%' }}>
-            <div className="d-flex align-items-center justify-content-center ">
-              <p className=" text-center">Tuần</p>
-            </div>
-          </th>
+        <div className="col col-md-7 p-2 ">
+          <div className="d-flex align-items-center justify-content-center">
+            <p className=" text-center">Tuần</p>
+          </div>
         </div>
-        <div className="col col-md-2">
-          <th key={5} style={{ width: '10%' }}>
-            <div className="d-flex align-items-center justify-content-center">
-              <p className="text-center" style={{ width: '60%' }}>
-                Điểm
-              </p>
-              <p className="">Action</p>
-            </div>
-          </th>
+        <div className="col col-md-2 p-2">
+          <div className="d-flex align-items-center justify-content-center">
+            <p className="text-center" style={{ width: '60%' }}>
+              Điểm
+            </p>
+            <p className="">Action</p>
+          </div>
         </div>
       </div>
       <div className="row">
         <div className="col col-md-3">
-          <div>
-            <td key={1} style={{ width: '5%' }}>
-              <div className="d-flex align-items-center justify-content-center">
-                <p className="">-</p>
-              </div>
-            </td>
-            <td key={2} style={{ width: '10%' }}>
-              <div className="d-flex align-items-center justify-content-center">
-                <p className="">-</p>
-              </div>
-            </td>
-            <td key={3} style={{ width: '15%' }}>
-              <div className="d-flex align-items-center justify-content-center">
-                <p className="">-</p>
-              </div>
-            </td>
+          <div className="d-flex justify-content-between">
+            <p className="">-</p>
+            <p className="">-</p>
+            <p className="">-</p>
           </div>
-          <div>
-            <td key={1} style={{ width: '5%' }}>
-              <div className="d-flex align-items-center justify-content-center">
-                <p className="">1</p>
-              </div>
-            </td>
-            <td key={2} style={{ width: '10%' }}>
-              <div className="d-flex align-items-center justify-content-center">
-                <p className="">3119410420</p>
-              </div>
-            </td>
-            <td key={3} style={{ width: '15%' }}>
-              <div className="d-flex align-items-center justify-content-center">
-                <p className="">Nguyen Van A</p>
-              </div>
-            </td>
+          <div className="d-flex justify-content-between">
+            <div className="d-flex align-items-center justify-content-center">
+              <p className="">1</p>
+            </div>
+            <div className="d-flex align-items-center justify-content-center">
+              <p className="">3119410420</p>
+            </div>
+            <div className="d-flex align-items-center justify-content-center">
+              <p className="">Nguyen Van A</p>
+            </div>
           </div>
-          <div>
-            <td key={1} style={{ width: '5%' }}>
-              <div className="d-flex align-items-center justify-content-center">
-                <p className="">1</p>
-              </div>
-            </td>
-            <td key={2} style={{ width: '10%' }}>
-              <div className="d-flex align-items-center justify-content-center">
-                <p className="">3119410420</p>
-              </div>
-            </td>
-            <td key={3} style={{ width: '15%' }}>
-              <div className="d-flex align-items-center justify-content-center">
-                <p className="">Nguyen Van A</p>
-              </div>
-            </td>
+          <div className="d-flex justify-content-between">
+            <div className="d-flex align-items-center justify-content-center">
+              <p className="">1</p>
+            </div>
+            <div className="d-flex align-items-center justify-content-center">
+              <p className="">3119410420</p>
+            </div>
+            <div className="d-flex align-items-center justify-content-center">
+              <p className="">Nguyen Van A</p>
+            </div>
           </div>
         </div>
         <div className="col col-md-7">
-          <div className="d-flex align-items-center justify-content-center">
+          <div className="d-flex align-items-center" style={{ position: 'relative' }}>
             <div className="justify-content-center">
               <div className="d-flex my-custom-scrollbar">
                 <div>
@@ -490,38 +458,32 @@ export function DetailClassroomTable(props) {
         </div>
         <div className="col col-md-2">
           <div>
-            <td key={5} style={{ width: '10%' }}>
-              <div className="d-flex align-items-center justify-content-center text-center">
-                <p className="" style={{ width: '60%' }}>
-                  -
-                </p>
-                <p className="">-</p>
-              </div>
-            </td>
+            <div className="d-flex align-items-center justify-content-center text-center">
+              <p className="" style={{ width: '60%' }}>
+                -
+              </p>
+              <p className="">-</p>
+            </div>
           </div>
           <div>
-            <td key={5} style={{ width: '10%' }}>
-              <div className="d-flex align-items-center text-center justify-content-center">
-                <p className="" style={{ width: '60%' }}>
-                  10.0
-                </p>
-                <p className="">
-                  <FaEdit />
-                </p>
-              </div>
-            </td>
+            <div className="d-flex align-items-center text-center justify-content-center">
+              <p className="" style={{ width: '60%' }}>
+                10.0
+              </p>
+              <p className="">
+                <FaEdit />
+              </p>
+            </div>
           </div>
           <div>
-            <td key={5} style={{ width: '10%' }}>
-              <div className="d-flex align-items-center text-center justify-content-center">
-                <p className="" style={{ width: '60%' }}>
-                  10.0
-                </p>
-                <p className="">
-                  <FaEdit />
-                </p>
-              </div>
-            </td>
+            <div className="d-flex align-items-center text-center justify-content-center">
+              <p className="" style={{ width: '60%' }}>
+                10.0
+              </p>
+              <p className="">
+                <FaEdit />
+              </p>
+            </div>
           </div>
         </div>
       </div>

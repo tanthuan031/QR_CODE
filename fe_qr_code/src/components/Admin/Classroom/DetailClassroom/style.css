@@ -9,8 +9,9 @@
   /* table-layout: fixed; */
 }
 .my-custom-scrollbar {
-  max-width: 710px;
+  max-width: 100%;
   overflow: auto;
+  position: absolute;
 }
 .header_detail_classroom {
   border-collapse: separate;

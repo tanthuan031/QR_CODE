@@ -2,16 +2,20 @@
 import * as React from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { FaFileExcel, FaSearch } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
 import { ClassRoom } from '../../../components/Admin/Classroom';
 import CreateClassroom from '../../../components/Admin/Classroom/CreateClassroom';
 import { DetailClassroomTable } from '../../../components/Admin/Classroom/DetailClassroom';
 import Modal from '../../../components/Layouts/Modal';
 import PaginationUI from '../../../components/Layouts/Pagination';
+import { setIsDetailClassroom } from '../../../redux/reducer/classroom/classroom.reducer';
+import { isDetailClassroomSelector } from '../../../redux/selectors/classroom/classroom.selector';
 
 export function ClassroomPage() {
+  const dispatch = useDispatch();
   const [totalRecord, setTotalRecords] = React.useState(11);
-
-  const [isDetailClassroom, setIsDetailClassroom] = React.useState(true);
+  // const [isDetailClassroom, setIsDetailClassroom] = React.useState(false);
+  const isDetailClassroom = useSelector(isDetailClassroomSelector);
   const dataTableBody = [];
   const dataHeaderDetailClassroom = [
     {

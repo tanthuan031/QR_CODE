@@ -2,10 +2,16 @@
 import * as React from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
+import { useDispatch } from 'react-redux';
+import { setIsDetailClassroom } from '../../../redux/reducer/classroom/classroom.reducer';
 import CreateClassroom from './CreateClassroom';
 import './style.css';
 export function ClassRoom(props) {
+  const dispatch = useDispatch();
   const [show, setShowCreate] = React.useState(false);
+  const handleDetailClassroom = () => {
+    dispatch(setIsDetailClassroom(true));
+  };
   return (
     <>
       <div className="row mb-5 justify-content-end ">
@@ -38,7 +44,7 @@ export function ClassRoom(props) {
       </div>
 
       <div className="row justify-content-center">
-        <div className="col md-3  mb-4 cursor-pointer">
+        <a className="col md-3  mb-4 cursor-pointer" onClick={() => handleDetailClassroom()}>
           <div className="classroom_content">
             <div className="classroom_header">
               <div className="classroom_background_header"></div>
@@ -49,8 +55,8 @@ export function ClassRoom(props) {
             </div>
             <div className="classroom_footer"></div>
           </div>
-        </div>
-        <div className="col md-3 mb-4 cursor-pointer">
+        </a>
+        <a className="col md-3  mb-4 cursor-pointer" onClick={() => handleDetailClassroom()}>
           <div className="classroom_content">
             <div className="classroom_header">
               <div className="classroom_background_header"></div>
@@ -59,11 +65,10 @@ export function ClassRoom(props) {
                 <span>Ten giang vien</span>
               </div>
             </div>
-
             <div className="classroom_footer"></div>
           </div>
-        </div>
-        <div className="col md-3 mb-4 cursor-pointer">
+        </a>
+        <a className="col md-3  mb-4 cursor-pointer" onClick={() => handleDetailClassroom()}>
           <div className="classroom_content">
             <div className="classroom_header">
               <div className="classroom_background_header"></div>
@@ -72,11 +77,10 @@ export function ClassRoom(props) {
                 <span>Ten giang vien</span>
               </div>
             </div>
-
             <div className="classroom_footer"></div>
           </div>
-        </div>
-        <div className="col md-3 mb-4 cursor-pointer">
+        </a>
+        <a className="col md-3  mb-4 cursor-pointer" onClick={() => handleDetailClassroom()}>
           <div className="classroom_content">
             <div className="classroom_header">
               <div className="classroom_background_header"></div>
@@ -85,11 +89,10 @@ export function ClassRoom(props) {
                 <span>Ten giang vien</span>
               </div>
             </div>
-
             <div className="classroom_footer"></div>
           </div>
-        </div>
-        <div className="col md-3 mb-4 cursor-pointer">
+        </a>
+        <a className="col md-3  mb-4 cursor-pointer" onClick={() => handleDetailClassroom()}>
           <div className="classroom_content">
             <div className="classroom_header">
               <div className="classroom_background_header"></div>
@@ -98,10 +101,9 @@ export function ClassRoom(props) {
                 <span>Ten giang vien</span>
               </div>
             </div>
-
             <div className="classroom_footer"></div>
           </div>
-        </div>
+        </a>
       </div>
       <CreateClassroom show={show} setStateModal={() => setShowCreate(false)} />
     </>
