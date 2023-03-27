@@ -4,9 +4,9 @@ import { Button, Form, InputGroup } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import { setIsDetailClassroom } from '../../../redux/reducer/classroom/classroom.reducer';
-import CreateClassroom from './CreateClassroom';
+
 import './style.css';
-export function ClassRoom(props) {
+export function ClientOverview(props) {
   const dispatch = useDispatch();
   const [show, setShowCreate] = React.useState(false);
   const handleDetailClassroom = () => {
@@ -37,7 +37,7 @@ export function ClassRoom(props) {
               className="font-weight-bold ms-3 m-r-15"
               onClick={() => setShowCreate(true)}
             >
-              Create classroom
+              Tham gia lớp
             </Button>
           </div>
         </div>
@@ -104,8 +104,6 @@ export function ClassRoom(props) {
           </div>
         </div>
       </div>
-
-      <CreateClassroom show={show} setStateModal={() => setShowCreate(false)} />
     </>
   );
 }

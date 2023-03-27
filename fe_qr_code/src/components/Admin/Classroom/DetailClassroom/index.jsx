@@ -12,7 +12,7 @@ import './style.css';
 import { QRCodeSVG } from 'qrcode.react';
 import QRCodeGenerator from './QRCode';
 import { useDispatch } from 'react-redux';
-import { setIsDetailClassroom } from '../../../../redux/reducer/classroom/classroom.reducer';
+import { setIsDetailClassroom, setIsQR } from '../../../../redux/reducer/classroom/classroom.reducer';
 const EditableCell = ({ value: initialValue, row: { index }, column: { id }, updateMyData }) => {
   const [value, setValue] = React.useState(initialValue);
 
@@ -89,17 +89,25 @@ export function DetailClassroomTable(props) {
     setShow(false);
   };
   const renderBody = () => {
-    return createQRCode ? (
-      <>
-        <QRCodeGenerator />
-      </>
-    ) : (
+    return (
       <Form>
         <div className="row p-5">
           <div className="col md-6">
             <Form.Group className=" mb-3">
               <div className="cp-input">
                 <p className="font-weight-bold">Phạm vi điểm danh</p>
+                <Form.Select aria-label="Default select example">
+                  <option>Open this select menu</option>
+                  <option value="1">10 </option>
+                  <option value="2">15</option>
+                  <option value="3">20</option>
+                </Form.Select>
+                <small className="text-danger font-weight-bold"></small>
+              </div>
+            </Form.Group>
+            <Form.Group className=" mb-3">
+              <div className="cp-input">
+                <p className="font-weight-bold">Thời gian điểm danh</p>
                 <Form.Select aria-label="Default select example">
                   <option>Open this select menu</option>
                   <option value="1">10 </option>
@@ -125,11 +133,14 @@ export function DetailClassroomTable(props) {
     );
   };
   const createQTCode = () => {
-    setCreateQRCode(true);
+    // setCreateQRCode(true);
+    dispatch(setIsQR(true));
+    dispatch(setIsDetailClassroom(false));
   };
   const backToPage = () => {
     // props.isDetailClassroom = true;
     dispatch(setIsDetailClassroom(false));
+    dispatch(setIsQR(false));
   };
   return (
     <>

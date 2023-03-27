@@ -17,6 +17,7 @@
   border-collapse: separate;
   border-spacing: 0 8px;
   background-color: var(--bs-white);
+  font-weight: 600;
 }
 /* .listdetail_classroom table th,
 .listdetail_classroom table td {

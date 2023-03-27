@@ -7,6 +7,7 @@ import { ClassRoom } from '../../../components/Admin/Classroom';
 import CreateClassroom from '../../../components/Admin/Classroom/CreateClassroom';
 import { DetailClassroomTable } from '../../../components/Admin/Classroom/DetailClassroom';
 import QRCodeGenerator from '../../../components/Admin/Classroom/DetailClassroom/QRCode';
+import { ClientOverview } from '../../../components/Client/Overview';
 import Modal from '../../../components/Layouts/Modal';
 import PaginationUI from '../../../components/Layouts/Pagination';
 import { setIsDetailClassroom, setIsQR } from '../../../redux/reducer/classroom/classroom.reducer';
@@ -15,7 +16,7 @@ import {
   isQRClassroomSelector,
 } from '../../../redux/selectors/classroom/classroom.selector';
 
-export function ClassroomPage() {
+export function ClientOverviewPage() {
   const dispatch = useDispatch();
   const [totalRecord, setTotalRecords] = React.useState(11);
   // const [isDetailClassroom, setIsDetailClassroom] = React.useState(false);
@@ -101,7 +102,7 @@ export function ClassroomPage() {
 
           {!isDetailClassroom && !isQRClassroom && (
             <div className="row">
-              <ClassRoom />
+              <ClientOverview />
               {totalRecord > 10 && (
                 <PaginationUI
                   // handlePageChange={handlePageChange}
@@ -113,17 +114,6 @@ export function ClassroomPage() {
             </div>
           )}
         </div>
-        {/* <Modal setStateModal={() => setShowCreate(false)} show={show} elementModalBody={bodyModalCreateClass()} /> */}
-
-        {isDetailClassroom && !isQRClassroom && (
-          <DetailClassroomTable
-            tableBody={dataTableBody}
-            tableHeader={dataHeaderDetailClassroom}
-            // isDetailClassroom={}
-          />
-        )}
-
-        {!isDetailClassroom && isQRClassroom && <QRCodeGenerator />}
       </section>
     </>
   );
