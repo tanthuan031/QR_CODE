@@ -11,8 +11,10 @@ import { FaEdit, FaSearch } from 'react-icons/fa';
 import './style.css';
 import { QRCodeSVG } from 'qrcode.react';
 import QRCodeGenerator from './QRCode';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setIsDetailClassroom, setIsQR } from '../../../../redux/reducer/classroom/classroom.reducer';
+import { dataDetailClassroomSelector } from '../../../../redux/selectors/classroom/classroom.selector';
+import { render } from 'react-dom';
 const EditableCell = ({ value: initialValue, row: { index }, column: { id }, updateMyData }) => {
   const [value, setValue] = React.useState(initialValue);
 
@@ -36,7 +38,8 @@ export function DetailClassroomTable(props) {
   const [createQRCode, setCreateQRCode] = React.useState(false);
   const [show, setShow] = React.useState(false);
   const dispatch = useDispatch();
-
+  const dataDetail = useSelector(dataDetailClassroomSelector);
+  console.log(dataDetail);
   const updateMyData = (rowIndex, columnId, value) => {
     setData((old) =>
       old.map((row, index) => {
@@ -142,6 +145,7 @@ export function DetailClassroomTable(props) {
     dispatch(setIsDetailClassroom(false));
     dispatch(setIsQR(false));
   };
+
   return (
     <>
       <div className="row mb-5 justify-content-end ">
@@ -260,28 +264,23 @@ export function DetailClassroomTable(props) {
             <p className="">-</p>
             <p className="">-</p>
           </div>
-          <div className="d-flex justify-content-between">
-            <div className="d-flex align-items-center justify-content-center">
-              <p className="">1</p>
-            </div>
-            <div className="d-flex align-items-center justify-content-center">
-              <p className="">3119410420</p>
-            </div>
-            <div className="d-flex align-items-center justify-content-center">
-              <p className="">Nguyen Van A</p>
-            </div>
-          </div>
-          <div className="d-flex justify-content-between">
-            <div className="d-flex align-items-center justify-content-center">
-              <p className="">1</p>
-            </div>
-            <div className="d-flex align-items-center justify-content-center">
-              <p className="">3119410420</p>
-            </div>
-            <div className="d-flex align-items-center justify-content-center">
-              <p className="">Nguyen Van A</p>
-            </div>
-          </div>
+          {dataDetail.data !== undefined &&
+            dataDetail.data !== null &&
+            dataDetail.data.map((item, index) => {
+              return (
+                <div className="d-flex justify-content-between">
+                  <div className="d-flex align-items-center justify-content-center">
+                    <p className="">{index + 1}</p>
+                  </div>
+                  <div className="d-flex align-items-center justify-content-center">
+                    <p className="">{item.student_code}</p>
+                  </div>
+                  <div className="d-flex align-items-center justify-content-center">
+                    <p className="">{item.first_name + ' ' + item.last_name}</p>
+                  </div>
+                </div>
+              );
+            })}
         </div>
         <div className="col col-md-7">
           <div className="d-flex align-items-center" style={{ position: 'relative' }}>
@@ -289,103 +288,36 @@ export function DetailClassroomTable(props) {
               <div className="d-flex my-custom-scrollbar">
                 <div>
                   {/* Buoi */}
-                  <div className="d-flex text-center">
-                    <p style={{ width: '90px', border: '1px solid' }}>1</p>
-                    <p style={{ width: '90px', border: '1px solid' }}>2</p>
-                    <p style={{ width: '90px', border: '1px solid' }}>3</p>
-                    <p style={{ width: '90px', border: '1px solid' }}>4</p>
-                    <p style={{ width: '90px', border: '1px solid' }}>5</p>
-                    <p style={{ width: '90px', border: '1px solid' }}>6</p>
-                    <p style={{ width: '90px', border: '1px solid' }}>7</p>
-                    <p style={{ width: '90px', border: '1px solid' }}>8</p>
-                    <p style={{ width: '90px', border: '1px solid' }}>9</p>
-                    <p style={{ width: '90px', border: '1px solid' }}>10</p>
-                    <p style={{ width: '90px', border: '1px solid' }}>11</p>
-                    <p style={{ width: '90px', border: '1px solid' }}>12</p>
-                    <p style={{ width: '90px', border: '1px solid' }}>13</p>
-                    <p style={{ width: '90px', border: '1px solid' }}>14</p>
-                    <p style={{ width: '90px', border: '1px solid' }}>15</p>
-                  </div>
+                  {(() => {
+                    const divs = Array.from({ length: dataDetail.numberRollCall }, (_, index) => (
+                      <p key={index} style={{ width: '90px', border: '1px solid' }}>
+                        {index + 1}
+                      </p>
+                    ));
+                    return <div className="d-flex text-center">{divs} </div>;
+                  })()}
                   {/* Diem danh */}
-                  <div className="d-flex">
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                  </div>
 
-                  <div className="d-flex">
+                  {dataDetail.data !== undefined &&
+                    dataDetail.data !== null &&
+                    dataDetail.data.map((item, index) => {
+                      return (() => {
+                        const divs = Array.from({ length: dataDetail.numberRollCall }, (_, index) => (
+                          <div className="d-flex">
+                            {(() => {
+                              const divs = Array.from({ length: dataDetail.numberLessonWeek }, (_, index) => (
+                                <p style={{ width: 90 / dataDetail.numberLessonWeek, border: '1px solid' }}>
+                                  <input type="radio" name="" id="" />
+                                </p>
+                              ));
+                              return <div className="d-flex text-center">{divs} </div>;
+                            })()}
+                          </div>
+                        ));
+                        return <div className="d-flex text-center">{divs} </div>;
+                      })();
+                    })}
+                  {/* <div className="d-flex">
                     <div className="d-flex text-center">
                       <p style={{ width: '30px', border: '1px solid' }}>X</p>
                       <p style={{ width: '30px', border: '1px solid' }}>X</p>
@@ -461,7 +393,85 @@ export function DetailClassroomTable(props) {
                       <p style={{ width: '30px', border: '1px solid' }}>X</p>
                       <p style={{ width: '30px', border: '1px solid' }}>X</p>
                     </div>
-                  </div>
+                  </div> */}
+
+                  {/* <div className="d-flex">
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                    <div className="d-flex text-center">
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
+                    </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -476,26 +486,23 @@ export function DetailClassroomTable(props) {
               <p className="">-</p>
             </div>
           </div>
-          <div>
-            <div className="d-flex align-items-center text-center justify-content-center">
-              <p className="" style={{ width: '60%' }}>
-                10.0
-              </p>
-              <p className="">
-                <FaEdit />
-              </p>
-            </div>
-          </div>
-          <div>
-            <div className="d-flex align-items-center text-center justify-content-center">
-              <p className="" style={{ width: '60%' }}>
-                10.0
-              </p>
-              <p className="">
-                <FaEdit />
-              </p>
-            </div>
-          </div>
+
+          {dataDetail.data !== undefined &&
+            dataDetail.data !== null &&
+            dataDetail.data.map((item, index) => {
+              return (
+                <div>
+                  <div className="d-flex align-items-center text-center justify-content-center">
+                    <p className="" style={{ width: '60%' }}>
+                      {item.score}
+                    </p>
+                    <p className="">
+                      <FaEdit />
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
         </div>
       </div>
 

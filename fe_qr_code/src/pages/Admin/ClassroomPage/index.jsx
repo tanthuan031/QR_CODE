@@ -11,13 +11,18 @@ import Modal from '../../../components/Layouts/Modal';
 import PaginationUI from '../../../components/Layouts/Pagination';
 import { setIsDetailClassroom, setIsQR } from '../../../redux/reducer/classroom/classroom.reducer';
 import {
+  dataDetailClassroomSelector,
   isDetailClassroomSelector,
   isQRClassroomSelector,
 } from '../../../redux/selectors/classroom/classroom.selector';
+import { getAllClassroom } from '../../../api/Admin/Classroom/classroomAPI';
+import { configureStore } from '@reduxjs/toolkit';
 
 export function ClassroomPage() {
   const dispatch = useDispatch();
   const [totalRecord, setTotalRecords] = React.useState(11);
+  const [data, setData] = React.useState([]);
+  const [page, setPage] = React.useState(1);
   // const [isDetailClassroom, setIsDetailClassroom] = React.useState(false);
   const isDetailClassroom = useSelector(isDetailClassroomSelector);
   const isQRClassroom = useSelector(isQRClassroomSelector);
@@ -93,21 +98,59 @@ export function ClassroomPage() {
     },
   ];
 
+  React.useEffect(() => {
+    const handleGetAllClassroom = async () => {
+      const result = await getAllClassroom({
+        key: 'id',
+        value: 'asc',
+      });
+
+      if (result === 401) {
+        return false;
+      } else if (result === 500) {
+        return false;
+      } else {
+        setClassroom(result);
+      }
+    };
+    handleGetAllClassroom();
+  }, [dispatch]);
+  const setClassroom = (result, value) => {
+    setData(result.data);
+    if (value !== 'page') {
+      setPage(1);
+    }
+    setTotalRecords(result.total);
+    // setTotalPage(result.meta.last_page);
+  };
+  const handlePageChange = async (page) => {
+    setPage(page);
+    const result = await getAllClassroom({
+      page,
+    });
+    if (result === 401) {
+    } else if (result === 500) {
+      return false;
+    } else {
+      setClassroom(result, 'page');
+    }
+  };
+
   return (
     <>
       <section>
         <div className="container-fluid mt-5">
-          <h5 className="font-weight-bold mb-3">Class Room</h5>
+          <h5 className="font-weight-bold mb-3">Danh sách lớp học</h5>
 
           {!isDetailClassroom && !isQRClassroom && (
             <div className="row">
-              <ClassRoom />
+              <ClassRoom data={data} />
               {totalRecord > 10 && (
                 <PaginationUI
-                  // handlePageChange={handlePageChange}
-                  perPage={10}
-                  totalRecord={200}
-                  currentPage={1}
+                  handlePageChange={handlePageChange}
+                  perPage={8}
+                  totalRecord={totalRecord}
+                  currentPage={page}
                 />
               )}
             </div>
@@ -119,6 +162,7 @@ export function ClassroomPage() {
           <DetailClassroomTable
             tableBody={dataTableBody}
             tableHeader={dataHeaderDetailClassroom}
+
             // isDetailClassroom={}
           />
         )}

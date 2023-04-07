@@ -1,13 +1,16 @@
 import axios from 'axios';
-import queryString from 'query-string';
 import { URL_SERVER } from '../utils/urlPath';
-
+import queryString from 'query-string';
 const axiosClient = axios.create({
   baseURL: URL_SERVER,
   headers: {
     'content-type': 'application/json',
   },
-  paramsSerializer: (params) => queryString.stringify(params),
+  paramsSerializer: {
+    // encode: parse,
+    serialize: (params) => queryString.stringify(params),
+  },
+
   // withCredentials: true,
 });
 

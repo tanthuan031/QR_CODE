@@ -43,6 +43,7 @@
 .classroom_footer {
   margin-top: 10px;
   border-top: 1px solid #333;
+  padding: 10px;
   position: relative;
   bottom: 0;
 }
