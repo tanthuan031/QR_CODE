@@ -33,14 +33,30 @@ class ClassroomRepository
     }
     public function createClassroom($request,$dataDetailRequest){
         try {
+            $checkClassname=Classroom::query()->where('class_name',$request['class_name'])->first();
+            if ($checkClassname===null){
+                $classroom=Classroom::query()->create($request);
+                $this->createDetailClassroom($dataDetailRequest,$classroom['id']);
+                $data=[
+                    'data'=>$classroom,
+                    'message'=>'Create classroom successfully',
+                    'status'=>'success'
+                ];
+            }else{
+                $data=[
+                    'message'=>"Classname available",
+                    'status'=>403
+                ];
+            }
 
-            $classroom=Classroom::query()->create($request);
-            $this->createDetailClassroom($dataDetailRequest,$classroom['id']);
 
         }catch (\Exception $e){
-            return $e;
+            $data=[
+                'message'=>$e,
+                'status'=>403
+            ];
         }
-        return Classroom::query()->find($classroom['id']);
+        return $data;
     }
 
     public function createDetailClassroom($dataDetailRequest,$id){

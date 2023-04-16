@@ -15,94 +15,50 @@ import {
   isDetailClassroomSelector,
   isQRClassroomSelector,
 } from '../../../redux/selectors/classroom/classroom.selector';
+import { getAllClassroomClient } from '../../../api/Client/Classroom/classroomClientAPI';
 
 export function ClientOverviewPage() {
   const dispatch = useDispatch();
   const [totalRecord, setTotalRecords] = React.useState(11);
+  const [page, setPage] = React.useState(1);
+  const [data, setData] = React.useState([]);
   // const [isDetailClassroom, setIsDetailClassroom] = React.useState(false);
   const isDetailClassroom = useSelector(isDetailClassroomSelector);
   const isQRClassroom = useSelector(isQRClassroomSelector);
-  const dataTableBody = [];
-  const dataHeaderDetailClassroom = [
-    {
-      id: 1,
-      name: 'STT',
-    },
-    {
-      id: 2,
-      name: 'MSSV',
-    },
-    {
-      id: 3,
-      name: 'Tên SV',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-  ];
+  React.useEffect(() => {
+    const handleGetAllClassroomClient = async () => {
+      const result = await getAllClassroomClient({
+        key: 'id',
+        value: 'asc',
+      });
 
+      if (result === 401) {
+        return false;
+      } else if (result === 500) {
+        return false;
+      } else {
+        setClassroom(result);
+      }
+    };
+    handleGetAllClassroomClient();
+  }, [dispatch]);
+  const setClassroom = (result, value) => {
+    setData(result.data);
+    if (value !== 'page') {
+      setPage(1);
+    }
+    setTotalRecords(result.total);
+    // setTotalPage(result.meta.last_page);
+  };
   return (
     <>
       <section>
         <div className="container-fluid mt-5">
-          <h5 className="font-weight-bold mb-3">Class Room</h5>
+          <h5 className="font-weight-bold mb-3">Danh sách lớp học</h5>
 
           {!isDetailClassroom && !isQRClassroom && (
             <div className="row">
-              <ClientOverview />
+              <ClientOverview data={data} />
               {totalRecord > 10 && (
                 <PaginationUI
                   // handlePageChange={handlePageChange}

@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
-use App\Services\Admin\ClassroomService;
+use App\Services\Client\ClassroomClientService;
 use Illuminate\Http\Request;
 
-class ClassroomController extends Controller
+class ClassroomClientController extends Controller
 {
-    protected ClassroomService $classroomService;
-    public function __construct(ClassroomService $classroomService)
+    protected ClassroomClientService $classroomService;
+    public function __construct(ClassroomClientService $classroomService)
     {
         $this->classroomService=$classroomService;
     }
-
     /**
      * Display a listing of the resource.
      *
@@ -21,10 +20,8 @@ class ClassroomController extends Controller
      */
     public function index(Request $request)
     {
-
-
-        return $this->classroomService->getAll($request);
-
+        //
+        return $this->classroomService->getAllClient($request);
     }
 
     /**
@@ -46,13 +43,6 @@ class ClassroomController extends Controller
     public function store(Request $request)
     {
         //
-        if($request->has('add-class-detail')){
-            $data=$request->detail_classroom;
-          return $this->classroomService->createClassroomDetail($data,$request['classroom_id']);
-        }else{
-            return $this->classroomService->createClassroom($request);
-        }
-
     }
 
     /**
@@ -61,11 +51,9 @@ class ClassroomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,$id)
-
+    public function show($id)
     {
         //
-        return $this->classroomService->showDetailClassroom($request,$id);
     }
 
     /**

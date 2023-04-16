@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('detail_classrooms', function (Blueprint $table) {
             $table->id();
-            $table->integer('student_code');
+            $table->string('student_code');
             $table->string('first_name');
             $table->string('last_name');
             $table->string('roll_coll');

@@ -6,9 +6,10 @@ import { useDispatch } from 'react-redux';
 import { setIsDetailClassroom } from '../../../redux/reducer/classroom/classroom.reducer';
 
 import './style.css';
+import JoinClassroom from './JoinClassroom';
 export function ClientOverview(props) {
   const dispatch = useDispatch();
-  const [show, setShowCreate] = React.useState(false);
+  const [show, setShowJoin] = React.useState(false);
   const handleDetailClassroom = () => {
     dispatch(setIsDetailClassroom(true));
   };
@@ -22,7 +23,7 @@ export function ClientOverview(props) {
               <InputGroup>
                 <Form.Control
                   id="search-order"
-                  placeholder="Code classroom"
+                  placeholder="Nhập mã lớp để tìm kiếm"
                   // onChange={(e) => setSearch(e.target.value)}
                 />
 
@@ -35,15 +36,46 @@ export function ClientOverview(props) {
               id="create-new-product"
               variant="info"
               className="font-weight-bold ms-3 m-r-15"
-              onClick={() => setShowCreate(true)}
+              onClick={() => setShowJoin(true)}
             >
               Tham gia lớp
             </Button>
           </div>
         </div>
       </div>
-      <div className="row justify-content-center">
-        <div className="col md-3  mb-4 cursor-pointer" onClick={() => handleDetailClassroom()}>
+      <div className="row ">
+        {props.data.map((item, index) => {
+          return (
+            <div
+              className="col col-md-3  mb-4 cursor-pointer"
+              // onClick={() =>
+              //   handleDetailClassroom(item.id, item.class_code, item.number_roll_call, item.number_lesson_week)
+              // }
+              key={index}
+            >
+              <div className="classroom_content">
+                <div className="classroom_header">
+                  <div className="classroom_background_header"></div>
+                  <div className="classroom_content_header">
+                    <h3>{item.class_name}</h3>
+                    <span>Tên giảng viên : {item.teachers.first_name + ' ' + item.teachers.last_name}</span>
+                  </div>
+                </div>
+                <div className="classroom_footer">
+                  <div className="row">
+                    <div className="col col-md-12">
+                      <p>Số tuần học : {item.number_roll_call}</p>
+                      <p>
+                        Mã lớp: <span className="font-weight-bold ">{item.class_code}</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        {/* <div className="col md-3  mb-4 cursor-pointer" onClick={() => handleDetailClassroom()}>
           <div className="classroom_content">
             <div className="classroom_header">
               <div className="classroom_background_header"></div>
@@ -54,56 +86,9 @@ export function ClientOverview(props) {
             </div>
             <div className="classroom_footer"></div>
           </div>
-        </div>
-        <div className="col md-3  mb-4 cursor-pointer" onClick={() => handleDetailClassroom()}>
-          <div className="classroom_content">
-            <div className="classroom_header">
-              <div className="classroom_background_header"></div>
-              <div className="classroom_content_header">
-                <h3>DCT1193</h3>
-                <span>Ten giang vien</span>
-              </div>
-            </div>
-            <div className="classroom_footer"></div>
-          </div>
-        </div>
-        <div className="col md-3  mb-4 cursor-pointer" onClick={() => handleDetailClassroom()}>
-          <div className="classroom_content">
-            <div className="classroom_header">
-              <div className="classroom_background_header"></div>
-              <div className="classroom_content_header">
-                <h3>DCT1193</h3>
-                <span>Ten giang vien</span>
-              </div>
-            </div>
-            <div className="classroom_footer"></div>
-          </div>
-        </div>
-        <div className="col md-3  mb-4 cursor-pointer" onClick={() => handleDetailClassroom()}>
-          <div className="classroom_content">
-            <div className="classroom_header">
-              <div className="classroom_background_header"></div>
-              <div className="classroom_content_header">
-                <h3>DCT1193</h3>
-                <span>Ten giang vien</span>
-              </div>
-            </div>
-            <div className="classroom_footer"></div>
-          </div>
-        </div>
-        <div className="col md-3  mb-4 cursor-pointer" onClick={() => handleDetailClassroom()}>
-          <div className="classroom_content">
-            <div className="classroom_header">
-              <div className="classroom_background_header"></div>
-              <div className="classroom_content_header">
-                <h3>DCT1193</h3>
-                <span>Ten giang vien</span>
-              </div>
-            </div>
-            <div className="classroom_footer"></div>
-          </div>
-        </div>
+        </div> */}
       </div>
+      <JoinClassroom show={show} setStateModal={() => setShowJoin(false)} />
     </>
   );
 }

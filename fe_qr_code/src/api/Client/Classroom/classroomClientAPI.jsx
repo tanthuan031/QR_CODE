@@ -11,8 +11,8 @@ import axiosClient from '../../axiosClient';
 //   };
 // };
 
-export const getAllClassroom = async ({ sort, search, page } = {}) => {
-  const url = '/api/admin/classroom';
+export const getAllClassroomClient = async ({ sort, search, page } = {}) => {
+  const url = '/api/client/classroom';
   const queryString = [];
   if (sort && sort.length > 0) {
     sort.forEach((item) => {
@@ -34,45 +34,6 @@ export const getAllClassroom = async ({ sort, search, page } = {}) => {
     return response.data;
   } else {
     return 500;
-  }
-};
-
-export const getClassroomById = async (id) => {
-  const url = `/api/admin/classroom/${id}`;
-  const response = await axiosClient.get(url);
-  if (response.status === 'success') {
-    return response.data;
-  } else if (response.status === 401) {
-    return 401;
-  } else {
-    return {};
-  }
-};
-export const addClassroom = async (body) => {
-  const url = '/api/admin/classroom';
-  const response = await axiosClient.post(url, body);
-  if (response.status === 401) {
-    return 401;
-  } else if (response.status === 'success') {
-    return 200;
-  } else if (response.status === 500) {
-    return 500;
-  } else {
-    return 404;
-  }
-};
-
-export const addDetailClassroom = async (body) => {
-  const url = '/api/admin/classroom?add-class-detail';
-  const response = await axiosClient.post(url, body);
-  if (response.status === 401) {
-    return 401;
-  } else if (response.status === 'success') {
-    return 200;
-  } else if (response.status === 500) {
-    return 500;
-  } else {
-    return 404;
   }
 };
 

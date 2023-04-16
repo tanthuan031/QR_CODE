@@ -19,6 +19,13 @@
   background-color: var(--bs-white);
   font-weight: 600;
 }
+.text-hidden {
+  display: inline-block;
+  width: 100px; /* chiều rộng của phần tử chứa chữ */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 /* .listdetail_classroom table th,
 .listdetail_classroom table td {
   width: auto;

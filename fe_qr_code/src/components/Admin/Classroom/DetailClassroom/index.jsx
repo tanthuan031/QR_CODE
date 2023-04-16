@@ -13,8 +13,15 @@ import { QRCodeSVG } from 'qrcode.react';
 import QRCodeGenerator from './QRCode';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsDetailClassroom, setIsQR } from '../../../../redux/reducer/classroom/classroom.reducer';
-import { dataDetailClassroomSelector } from '../../../../redux/selectors/classroom/classroom.selector';
+import {
+  dataDetailClassroomSelector,
+  isDetailClassroomSelector,
+} from '../../../../redux/selectors/classroom/classroom.selector';
 import { render } from 'react-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { addSchema, addSchemaStudent } from '../../../../adapter/classroom';
+import { useForm } from 'react-hook-form';
+import { addDetailClassroom } from '../../../../api/Admin/Classroom/classroomAPI';
 const EditableCell = ({ value: initialValue, row: { index }, column: { id }, updateMyData }) => {
   const [value, setValue] = React.useState(initialValue);
 
@@ -37,9 +44,27 @@ export function DetailClassroomTable(props) {
   const [editTable, setEditTable] = React.useState(true);
   const [createQRCode, setCreateQRCode] = React.useState(false);
   const [show, setShow] = React.useState(false);
+  const [showAddStudent, setShowAddStudent] = React.useState(false);
+  const isDetailClassroom = useSelector(isDetailClassroomSelector);
+
   const dispatch = useDispatch();
   const dataDetail = useSelector(dataDetailClassroomSelector);
-  console.log(dataDetail);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { isValid, errors },
+  } = useForm({
+    mode: 'onChange',
+    resolver: yupResolver(addSchemaStudent),
+    defaultValues: {
+      student_code: '',
+      last_name: '',
+      first_name: '',
+    },
+  });
+
   const updateMyData = (rowIndex, columnId, value) => {
     setData((old) =>
       old.map((row, index) => {
@@ -101,9 +126,9 @@ export function DetailClassroomTable(props) {
                 <p className="font-weight-bold">Phạm vi điểm danh</p>
                 <Form.Select aria-label="Default select example">
                   <option>Open this select menu</option>
-                  <option value="1">10 </option>
-                  <option value="2">15</option>
-                  <option value="3">20</option>
+                  <option value="1">10 Km </option>
+                  <option value="2">15 Km</option>
+                  <option value="3">20 Km</option>
                 </Form.Select>
                 <small className="text-danger font-weight-bold"></small>
               </div>
@@ -113,9 +138,10 @@ export function DetailClassroomTable(props) {
                 <p className="font-weight-bold">Thời gian điểm danh</p>
                 <Form.Select aria-label="Default select example">
                   <option>Open this select menu</option>
-                  <option value="1">10 </option>
-                  <option value="2">15</option>
-                  <option value="3">20</option>
+                  <option value="1">5 phút </option>
+                  <option value="2">10 phút</option>
+                  <option value="3">15 phút</option>
+                  <option value="4">20 phút</option>
                 </Form.Select>
                 <small className="text-danger font-weight-bold"></small>
               </div>
@@ -128,6 +154,73 @@ export function DetailClassroomTable(props) {
               Tạo QR
             </Button>
             <Button type="button" variant="secondary" className="font-weight-bold" onClick={() => setStateModal()}>
+              Quay lại
+            </Button>
+          </Form.Group>
+        </div>
+      </Form>
+    );
+  };
+
+  const setStateModalAddStudent = (value) => {
+    setShowAddStudent(false);
+  };
+
+  const handleAddStudent = async (data) => {
+    const dataStudent = {
+      classroom_id: isDetailClassroom.idDetail,
+      detail_classroom: [data],
+    };
+    const result = await addDetailClassroom(dataStudent);
+    if (result === 200) {
+      console.log('Tao thanh cong');
+    } else if (result === 404) {
+      alert('That bai');
+    } else if (result === 401) {
+      alert('That bai');
+    } else {
+      alert('that bai');
+    }
+  };
+  const renderBodyAddStudent = () => {
+    return (
+      <Form onSubmit={handleSubmit(handleAddStudent)} encType="multipart/form-data">
+        <div className="row p-5">
+          <div className="col md-6">
+            <Form.Group className=" mb-3">
+              <div className="cp-input">
+                <p className="font-weight-bold">MSSV</p>
+                <Form.Control type="text" maxLength={128} {...register('student_code')} />
+                <small className="text-danger font-weight-bold">{errors?.student_code?.message}</small>
+              </div>
+            </Form.Group>
+            <Form.Group className=" mb-3">
+              <div className="cp-input">
+                <p className="font-weight-bold">Họ và tên lót</p>
+                <Form.Control type="text" min={1} max={20} {...register('last_name')} />
+                <small className="text-danger font-weight-bold">{errors?.last_name?.message}</small>
+              </div>
+            </Form.Group>
+            <Form.Group className=" mb-3">
+              <div className="cp-input">
+                <p className="font-weight-bold">Tên sinh viên</p>
+                <Form.Control type="text" min={1} max={5} {...register('first_name')} />
+                <small className="text-danger font-weight-bold">{errors?.first_name?.message}</small>
+              </div>
+            </Form.Group>
+          </div>
+        </div>
+        <div className="row pb-3">
+          <Form.Group className="d-flex justify-content-center">
+            <Button type="submit" variant="info" className="me-3 font-weight-bold">
+              Lưu lại
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              className="font-weight-bold"
+              onClick={() => setStateModalAddStudent()}
+            >
               Quay lại
             </Button>
           </Form.Group>
@@ -150,7 +243,9 @@ export function DetailClassroomTable(props) {
     <>
       <div className="row mb-5 justify-content-end ">
         <div className="d-flex justify-content-between">
-          <div className="d-flex  "></div>
+          <div className="d-flex  ">
+            Mã lớp:<span className="font-weight-bold  padding-left-12px"> {isDetailClassroom.classCode}</span>
+          </div>
           <div className="d-flex justify-content-between ">
             {/* <Form>
               <InputGroup>
@@ -165,6 +260,14 @@ export function DetailClassroomTable(props) {
                 </Button>
               </InputGroup>
             </Form> */}
+            <Button
+              id="create-new-product"
+              variant="info"
+              className="font-weight-bold ms-3 m-r-15"
+              onClick={() => setShowAddStudent(true)}
+            >
+              Thêm sinh viên
+            </Button>
             <Button
               id="create-new-product"
               variant="info"
@@ -234,13 +337,11 @@ export function DetailClassroomTable(props) {
       {/* <TableLayout tableHeader={props.tableHeader} tableBody={props.tableBody} /> */}
 
       <div className="row header_detail_classroom">
-        <div className="col col-md-3 p-2">
-          <div className="d-flex justify-content-between ">
-            <p className="text-center">STT</p>
-
-            <p className="">MSSV</p>
-
-            <p className="">Tên sinh viên</p>
+        <div className="col col-md-4 p-2">
+          <div className="row">
+            <p className=" col col-md-2 text-center">STT</p>
+            <p className="col col-md-4 text-center">MSSV</p>
+            <p className="col col-md-6 text-center">Tên sinh viên</p>
           </div>
         </div>
         <div className="col col-md-7 p-2 ">
@@ -248,41 +349,53 @@ export function DetailClassroomTable(props) {
             <p className=" text-center">Tuần</p>
           </div>
         </div>
-        <div className="col col-md-2 p-2">
-          <div className="d-flex align-items-center justify-content-center">
-            <p className="text-center" style={{ width: '60%' }}>
-              Điểm
-            </p>
-            <p className="">Action</p>
+        <div className="col col-md-1 p-2">
+          <div className="row">
+            <p className="col col-md-6 text-center">Điểm</p>
+            <p className="col col-md-6 text-center">Action</p>
           </div>
         </div>
       </div>
       <div className="row">
-        <div className="col col-md-3">
-          <div className="d-flex justify-content-between">
-            <p className="">-</p>
-            <p className="">-</p>
-            <p className="">-</p>
+        <div className="col col-md-4" style={{ marginTop: '2px' }}>
+          <div className="row">
+            <p className=" col col-md-2 text-center">-</p>
+            <p className="col col-md-4 text-center">-</p>
+            <p className="col col-md-6 text-center">-</p>
           </div>
           {dataDetail.data !== undefined &&
             dataDetail.data !== null &&
             dataDetail.data.map((item, index) => {
               return (
-                <div className="d-flex justify-content-between">
-                  <div className="d-flex align-items-center justify-content-center">
-                    <p className="">{index + 1}</p>
-                  </div>
-                  <div className="d-flex align-items-center justify-content-center">
-                    <p className="">{item.student_code}</p>
-                  </div>
-                  <div className="d-flex align-items-center justify-content-center">
-                    <p className="">{item.first_name + ' ' + item.last_name}</p>
-                  </div>
+                <div className="row" key={index}>
+                  <p className="col col-md-2 " style={{ border: '1px solid' }}>
+                    {index + 1}
+                  </p>
+
+                  <p
+                    className="col col-md-4 text-hidden"
+                    style={{ border: '1px solid' }}
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title={item.student_code}
+                  >
+                    {item.student_code}
+                  </p>
+
+                  <p
+                    className="col col-md-6 text-hidden "
+                    style={{ border: '1px solid', padding: '0px 1px 0px 2px' }}
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title={item.last_name + ' ' + item.first_name}
+                  >
+                    {item.last_name + ' ' + item.first_name}
+                  </p>
                 </div>
               );
             })}
         </div>
-        <div className="col col-md-7">
+        <div className="col col-md-7" style={{ paddingLeft: 0 }}>
           <div className="d-flex align-items-center" style={{ position: 'relative' }}>
             <div className="justify-content-center">
               <div className="d-flex my-custom-scrollbar">
@@ -303,7 +416,7 @@ export function DetailClassroomTable(props) {
                     dataDetail.data.map((item, index) => {
                       return (() => {
                         const divs = Array.from({ length: dataDetail.numberRollCall }, (_, index) => (
-                          <div className="d-flex">
+                          <div className="d-flex" key={index}>
                             {(() => {
                               const divs = Array.from({ length: dataDetail.numberLessonWeek }, (_, index) => (
                                 <p style={{ width: 90 / dataDetail.numberLessonWeek, border: '1px solid' }}>
@@ -314,192 +427,35 @@ export function DetailClassroomTable(props) {
                             })()}
                           </div>
                         ));
-                        return <div className="d-flex text-center">{divs} </div>;
+                        return (
+                          <div className="d-flex text-center" key={index}>
+                            {divs}{' '}
+                          </div>
+                        );
                       })();
                     })}
-                  {/* <div className="d-flex">
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                  </div> */}
-
-                  {/* <div className="d-flex">
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                    <div className="d-flex text-center">
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                      <p style={{ width: '30px', border: '1px solid' }}>X</p>
-                    </div>
-                  </div> */}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="col col-md-2">
-          <div>
-            <div className="d-flex align-items-center justify-content-center text-center">
-              <p className="" style={{ width: '60%' }}>
-                -
-              </p>
-              <p className="">-</p>
-            </div>
+        <div className="col col-md-1">
+          <div className="row">
+            <p className=" col col-md-6 text-center">-</p>
+            <p className="col col-md-6 text-center">-</p>
           </div>
 
           {dataDetail.data !== undefined &&
             dataDetail.data !== null &&
             dataDetail.data.map((item, index) => {
               return (
-                <div>
-                  <div className="d-flex align-items-center text-center justify-content-center">
-                    <p className="" style={{ width: '60%' }}>
-                      {item.score}
-                    </p>
-                    <p className="">
-                      <FaEdit />
-                    </p>
-                  </div>
+                <div className="row" key={index}>
+                  <p className="col col-md-6 text-center" style={{ border: '1px solid #f3f3f5' }}>
+                    {item.score}
+                  </p>
+                  <p className="col col-md-6 text-center" style={{ border: '1px solid #f3f3f5' }}>
+                    <FaEdit />
+                  </p>
                 </div>
               );
             })}
@@ -512,6 +468,14 @@ export function DetailClassroomTable(props) {
         setStateModal={() => setStateModal()}
         elementModalTitle={<p>Tạo QR điểm danh</p>}
         elementModalBody={renderBody()}
+      />
+
+      <Modal
+        show={showAddStudent}
+        backdrop={backdrop}
+        setStateModal={() => setStateModalAddStudent()}
+        elementModalTitle={<p>Thêm sinh viên</p>}
+        elementModalBody={renderBodyAddStudent()}
       />
     </>
   );

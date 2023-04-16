@@ -10,14 +10,20 @@ import { getClassroomById } from '../../../api/Admin/Classroom/classroomAPI';
 export function ClassRoom(props) {
   const dispatch = useDispatch();
   const [show, setShowCreate] = React.useState(false);
-  const handleDetailClassroom = async (id, numberRollCall, numberLessonWeek) => {
+  const handleDetailClassroom = async (id, classCode, numberRollCall, numberLessonWeek) => {
     const result = await getClassroomById(id);
     if (result === 401) {
       return false;
     } else if (result === 500) {
       return false;
     } else {
-      dispatch(setIsDetailClassroom(true));
+      dispatch(
+        setIsDetailClassroom({
+          checkDetail: true,
+          idDetail: id,
+          classCode: classCode,
+        })
+      );
       dispatch(
         setDataDetailClassroom({
           data: result,
@@ -38,7 +44,7 @@ export function ClassRoom(props) {
               <InputGroup>
                 <Form.Control
                   id="search-order"
-                  placeholder="Code classroom"
+                  placeholder="Nhập mã lớp để tìm kiếm"
                   // onChange={(e) => setSearch(e.target.value)}
                 />
 
@@ -58,12 +64,15 @@ export function ClassRoom(props) {
           </div>
         </div>
       </div>
-      <div className="row justify-content-center">
+      <div className="row ">
         {props.data.map((item, index) => {
           return (
             <div
-              className="col md-3  mb-4 cursor-pointer"
-              onClick={() => handleDetailClassroom(item.id, item.number_roll_call, item.number_lesson_week)}
+              className="col col-md-3  mb-4 cursor-pointer"
+              onClick={() =>
+                handleDetailClassroom(item.id, item.class_code, item.number_roll_call, item.number_lesson_week)
+              }
+              key={index}
             >
               <div className="classroom_content">
                 <div className="classroom_header">
@@ -74,8 +83,14 @@ export function ClassRoom(props) {
                   </div>
                 </div>
                 <div className="classroom_footer">
-                  <p>Số tuần học : {item.number_roll_call}</p>
-                  <p>Sĩ số : {100}</p>
+                  <div className="row">
+                    <div className="col col-md-12">
+                      <p>Số tuần học : {item.number_roll_call}</p>
+                      <p>
+                        Mã lớp: <span className="font-weight-bold ">{item.class_code}</span>
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

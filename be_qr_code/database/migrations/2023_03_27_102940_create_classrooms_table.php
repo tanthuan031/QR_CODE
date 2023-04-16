@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('classrooms', function (Blueprint $table) {
             $table->id();
             $table->string('class_name');
+            $table->string('class_code')->unique();
             $table->integer('number_roll_call');
             $table->integer('number_lesson_week');
             $table->foreignId('teacher_code')->constrained('teachers');

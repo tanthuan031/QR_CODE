@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('join_classrooms', function (Blueprint $table) {
             $table->id();
-            $table->string('student_code')->unique();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->rememberToken();
+            $table->string('classroom_id');
+            $table->foreign('classroom_id')->references('class_code')->on('classrooms');
+            $table->string('student_code');
+            $table->foreign('student_code')->references('student_code')->on('users');
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('join_classrooms');
     }
 };

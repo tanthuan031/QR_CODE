@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ClassroomController;
+use App\Http\Controllers\Client\ClassroomClientController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,3 +27,9 @@ Route::group([
     Route::resource('classroom', ClassroomController::class);
 });
 
+Route::group([
+    'prefix' => 'client',
+//    'middleware' => ['auth:sanctum'],
+],function(){
+    Route::resource('classroom', ClassroomClientController::class);
+});

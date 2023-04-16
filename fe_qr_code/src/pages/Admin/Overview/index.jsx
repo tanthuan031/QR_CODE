@@ -1,15 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-import SummaryStatisTic from '../../../components/admin/Statistic/Summary';
-import { Col, Row } from 'react-bootstrap';
-
-import BarChartCustomer from '../../../components/admin/Statistic/Selling/Customer';
-import { setExpiredToken } from '../../../redux/reducer/auth/auth.reducer';
-import { deleteCookie, getCookies } from '../../../api/Admin/Auth';
 import { useDispatch } from 'react-redux';
-import SkeletonDashboard from '../../../components/commons/Layouts/Skeleton/SkeletonDashboard';
+import { Overview } from '../../../components/Admin/Overview';
 
-export function DashBoardPage(props) {
+export function OverviewPage(props) {
   const month = new Date().getMonth();
   console.log(month);
   const [loading, setLoading] = useState(true);
@@ -26,7 +20,7 @@ export function DashBoardPage(props) {
   return (
     <>
       <div className="container-fluid mt-5">
-        <SummaryStatisTic />
+        <Overview />
       </div>
     </>
   );

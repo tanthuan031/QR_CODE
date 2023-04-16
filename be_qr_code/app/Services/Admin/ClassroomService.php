@@ -4,6 +4,7 @@ namespace App\Services\Admin;
 
 use App\Http\Traits\ApiResponse;
 use App\Repositories\Admin\ClassroomRepository;
+use Nette\Utils\Random;
 
 class ClassroomService
 {
@@ -43,13 +44,24 @@ class ClassroomService
             'number_roll_call'=>$request->number_roll_call,
             'number_lesson_week'=>$request->number_lesson_week,
             'teacher_code'=>$request->teacher_code,
+            'class_code'=>Random::generate(6,'1-9A-Z')
         ];
+
         $dataDetailRequest=$request->detail_classroom;
         $result=$this->classroomRepository->createClassroom($dataRequest,$dataDetailRequest);
-        if($result){
-            return $this->apiResponse($result,'success',"Create classroom successfully");
+        if($result['status']=='success'){
+            return $this->apiResponse($result['data'],'success',$result['message']);
         }else{
-            return $this->apiResponse([],'fail','Create classroom unsuccessfully');
+            return $this->apiResponse([],'fail',$result['message']);
+        }
+    }
+
+    public function createClassroomDetail($data,$idClass){
+        $result=$this->classroomRepository->createDetailClassroom($data,$idClass);
+        if($result){
+            return $this->apiResponse($result,'success','Create student classroom detail successfully');
+        }else{
+            return $this->apiResponse([],'fail','Create student classroom detail unsuccessfully');
         }
     }
 

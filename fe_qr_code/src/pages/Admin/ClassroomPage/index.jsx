@@ -142,7 +142,7 @@ export function ClassroomPage() {
         <div className="container-fluid mt-5">
           <h5 className="font-weight-bold mb-3">Danh sách lớp học</h5>
 
-          {!isDetailClassroom && !isQRClassroom && (
+          {!isDetailClassroom.checkDetail && !isQRClassroom && (
             <div className="row">
               <ClassRoom data={data} />
               {totalRecord > 10 && (
@@ -158,16 +158,16 @@ export function ClassroomPage() {
         </div>
         {/* <Modal setStateModal={() => setShowCreate(false)} show={show} elementModalBody={bodyModalCreateClass()} /> */}
 
-        {isDetailClassroom && !isQRClassroom && (
+        {isDetailClassroom.checkDetail && !isQRClassroom && (
           <DetailClassroomTable
             tableBody={dataTableBody}
             tableHeader={dataHeaderDetailClassroom}
 
-            // isDetailClassroom={}
+            // isDetailClassroom.checkDetail={}
           />
         )}
 
-        {!isDetailClassroom && isQRClassroom && <QRCodeGenerator />}
+        {!isDetailClassroom.checkDetail && isQRClassroom && <QRCodeGenerator />}
       </section>
     </>
   );
