@@ -12,10 +12,14 @@ import Modal from '../../../components/Layouts/Modal';
 import PaginationUI from '../../../components/Layouts/Pagination';
 import { setIsDetailClassroom, setIsQR } from '../../../redux/reducer/classroom/classroom.reducer';
 import {
+  isDetailClassroomClientSelector,
   isDetailClassroomSelector,
   isQRClassroomSelector,
+  isScanQRClassroomSelector,
 } from '../../../redux/selectors/classroom/classroom.selector';
 import { getAllClassroomClient } from '../../../api/Client/Classroom/classroomClientAPI';
+import { DetailClassroomClientTable } from '../../../components/Client/Overview/DetailClassroom';
+import ScanQRCode from '../../../components/Client/Overview/DetailClassroom/ScanQRCode';
 
 export function ClientOverviewPage() {
   const dispatch = useDispatch();
@@ -23,8 +27,8 @@ export function ClientOverviewPage() {
   const [page, setPage] = React.useState(1);
   const [data, setData] = React.useState([]);
   // const [isDetailClassroom, setIsDetailClassroom] = React.useState(false);
-  const isDetailClassroom = useSelector(isDetailClassroomSelector);
-  const isQRClassroom = useSelector(isQRClassroomSelector);
+  const isDetailClassroomClient = useSelector(isDetailClassroomClientSelector);
+  const isScanQRClassroom = useSelector(isScanQRClassroomSelector);
   React.useEffect(() => {
     const handleGetAllClassroomClient = async () => {
       const result = await getAllClassroomClient({
@@ -56,7 +60,7 @@ export function ClientOverviewPage() {
         <div className="container-fluid mt-5">
           <h5 className="font-weight-bold mb-3">Danh sách lớp học</h5>
 
-          {!isDetailClassroom && !isQRClassroom && (
+          {!isDetailClassroomClient && !isScanQRClassroom && (
             <div className="row">
               <ClientOverview data={data} />
               {totalRecord > 10 && (
@@ -70,6 +74,8 @@ export function ClientOverviewPage() {
             </div>
           )}
         </div>
+        {isDetailClassroomClient.checkDetail && !isScanQRClassroom && <DetailClassroomClientTable />}
+        {!isDetailClassroomClient.checkDetail && isScanQRClassroom && <ScanQRCode />}
       </section>
     </>
   );

@@ -160,10 +160,7 @@ export function ClassroomPage() {
 
         {isDetailClassroom.checkDetail && !isQRClassroom && (
           <DetailClassroomTable
-            tableBody={dataTableBody}
-            tableHeader={dataHeaderDetailClassroom}
-
-            // isDetailClassroom.checkDetail={}
+          // isDetailClassroom.checkDetail={}
           />
         )}
 

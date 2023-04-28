@@ -73,7 +73,7 @@ export default function CreateClassroom(props) {
       number_lesson_week: data.number_lesson_week,
       detail_classroom: resultDataList,
     };
-    console.log('dta', dataCreate);
+
     const result = await addClassroom(dataCreate);
     if (result === 200) {
       console.log('Tao thanh cong');

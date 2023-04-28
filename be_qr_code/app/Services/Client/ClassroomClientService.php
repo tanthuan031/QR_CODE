@@ -27,4 +27,44 @@ class ClassroomClientService
         }
 
     }
+
+    public function createJoinClassroom($request){
+        $studentCode='1925535440';
+        $dataRequest=[
+            'student_code'=>$studentCode,
+            'classroom_code'=>$request->classroom_code,
+        ];
+        $result=$this->classroomRepository->createJoinClassroom($dataRequest);
+        if($result['status']=='success'){
+            return $this->apiResponse($result['data'],'success',$result['message']);
+        }else{
+            return $this->apiResponse([],'fail',$result['message']);
+        }
+    }
+
+    public function showStudentClassroom($idClassroom){
+
+        $result=$this->classroomRepository->showStudentClassroom($idClassroom);
+//        dd($result['status']);
+        if ($result['status']=='success'){
+
+            return $this->apiResponse($result['data'],'success',$result['message']);
+        }else{
+
+            return $this->apiResponse([],'fail',$result['message']);
+        }
+    }
+
+    public function studentAttendance($request,$id){
+
+        $result=$this->classroomRepository->studentAttendance($request,$id);
+//        dd($result['status']);
+        if ($result['status']=='success'){
+
+            return $this->apiResponse($result['data'],'success',$result['message']);
+        }else{
+
+            return $this->apiResponse([],'fail',$result['message']);
+        }
+    }
 }

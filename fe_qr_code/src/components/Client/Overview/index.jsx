@@ -3,15 +3,40 @@ import * as React from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
-import { setIsDetailClassroom } from '../../../redux/reducer/classroom/classroom.reducer';
+import {
+  setDataDetailClassroomClient,
+  setIsDetailClassroom,
+  setIsDetailClassroomClient,
+} from '../../../redux/reducer/classroom/classroom.reducer';
 
 import './style.css';
 import JoinClassroom from './JoinClassroom';
+import { detailClassroomStudentClient } from '../../../api/Client/Classroom/classroomClientAPI';
 export function ClientOverview(props) {
   const dispatch = useDispatch();
   const [show, setShowJoin] = React.useState(false);
-  const handleDetailClassroom = () => {
-    dispatch(setIsDetailClassroom(true));
+  const handleDetailClassroom = async (idClassroom, classCode, numberRollCall, numberLessonWeek) => {
+    const result = await detailClassroomStudentClient(idClassroom);
+    if (result === 401) {
+      return false;
+    } else if (result === 500) {
+      return false;
+    } else {
+      dispatch(
+        setIsDetailClassroomClient({
+          checkDetail: true,
+          idDetail: idClassroom,
+          classCode: classCode,
+        })
+      );
+      dispatch(
+        setDataDetailClassroomClient({
+          data: result,
+          numberRollCall,
+          numberLessonWeek,
+        })
+      );
+    }
   };
   return (
     <>
@@ -48,9 +73,9 @@ export function ClientOverview(props) {
           return (
             <div
               className="col col-md-3  mb-4 cursor-pointer"
-              // onClick={() =>
-              //   handleDetailClassroom(item.id, item.class_code, item.number_roll_call, item.number_lesson_week)
-              // }
+              onClick={() =>
+                handleDetailClassroom(item.id, item.class_code, item.number_roll_call, item.number_lesson_week)
+              }
               key={index}
             >
               <div className="classroom_content">

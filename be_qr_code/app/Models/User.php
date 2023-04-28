@@ -47,6 +47,6 @@ class User extends Authenticatable
 
     public function classrooms():BelongsToMany
     {
-        return $this->belongsToMany(Classroom::class,'join_classrooms','student_code','classroom_id');
+        return $this->belongsToMany(Classroom::class,'join_classrooms','student_code','classroom_code');
     }
 }

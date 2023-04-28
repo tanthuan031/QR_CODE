@@ -40,3 +40,11 @@ export const addSchemaStudent = yup.object({
     .max(256)
     .trim(),
 });
+export const joinClassroomSchema = yup.object({
+  classroom_code: yup
+    .string()
+    .required('Vui lòng nhập mã lớp')
+    .matches(/^[0-9a-zA-Z\s]+$/, 'Không đúng định dạng')
+    .max(10)
+    .trim(),
+});

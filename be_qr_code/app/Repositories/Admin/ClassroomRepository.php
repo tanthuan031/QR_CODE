@@ -45,7 +45,7 @@ class ClassroomRepository
             }else{
                 $data=[
                     'message'=>"Classname available",
-                    'status'=>403
+                    'status'=>401
                 ];
             }
 
@@ -53,7 +53,7 @@ class ClassroomRepository
         }catch (\Exception $e){
             $data=[
                 'message'=>$e,
-                'status'=>403
+                'status'=>401
             ];
         }
         return $data;

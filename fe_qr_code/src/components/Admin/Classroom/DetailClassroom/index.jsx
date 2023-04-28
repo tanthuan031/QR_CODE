@@ -12,7 +12,11 @@ import './style.css';
 import { QRCodeSVG } from 'qrcode.react';
 import QRCodeGenerator from './QRCode';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsDetailClassroom, setIsQR } from '../../../../redux/reducer/classroom/classroom.reducer';
+import {
+  setDataCreateQRCode,
+  setIsDetailClassroom,
+  setIsQR,
+} from '../../../../redux/reducer/classroom/classroom.reducer';
 import {
   dataDetailClassroomSelector,
   isDetailClassroomSelector,
@@ -45,6 +49,10 @@ export function DetailClassroomTable(props) {
   const [createQRCode, setCreateQRCode] = React.useState(false);
   const [show, setShow] = React.useState(false);
   const [showAddStudent, setShowAddStudent] = React.useState(false);
+  const [attendance_range, setAttendanceRange] = React.useState(0);
+  const [attendance_time, setAttendanceTime] = React.useState(0);
+  const [attendance_week, setAttendanceWeek] = React.useState(0);
+  const [attendance_lesson, setAttendanceLesson] = React.useState(0);
   const isDetailClassroom = useSelector(isDetailClassroomSelector);
 
   const dispatch = useDispatch();
@@ -116,6 +124,20 @@ export function DetailClassroomTable(props) {
   const setStateModal = (value) => {
     setShow(false);
   };
+
+  const createQTCode = () => {
+    const data = {
+      attendance_range: attendance_range,
+      attendance_time: attendance_time,
+      attendance_week: attendance_week,
+      attendance_lesson: attendance_lesson,
+      id_classroom: isDetailClassroom.idDetail,
+    };
+    dispatch(setDataCreateQRCode(data));
+    dispatch(setIsQR(true));
+    dispatch(setIsDetailClassroom(false));
+  };
+
   const renderBody = () => {
     return (
       <Form>
@@ -124,11 +146,15 @@ export function DetailClassroomTable(props) {
             <Form.Group className=" mb-3">
               <div className="cp-input">
                 <p className="font-weight-bold">Phạm vi điểm danh</p>
-                <Form.Select aria-label="Default select example">
-                  <option>Open this select menu</option>
-                  <option value="1">10 Km </option>
-                  <option value="2">15 Km</option>
-                  <option value="3">20 Km</option>
+                <Form.Select
+                  aria-label="Default select example"
+                  onChange={(option) => setAttendanceRange(option.target.value)}
+                >
+                  <option value={0}>Open this select menu</option>
+                  <option value={5}>5 Km</option>
+                  <option value={10}>10 Km </option>
+                  <option value={15}>15 Km</option>
+                  <option value={20}>20 Km</option>
                 </Form.Select>
                 <small className="text-danger font-weight-bold"></small>
               </div>
@@ -136,12 +162,51 @@ export function DetailClassroomTable(props) {
             <Form.Group className=" mb-3">
               <div className="cp-input">
                 <p className="font-weight-bold">Thời gian điểm danh</p>
-                <Form.Select aria-label="Default select example">
-                  <option>Open this select menu</option>
-                  <option value="1">5 phút </option>
-                  <option value="2">10 phút</option>
-                  <option value="3">15 phút</option>
-                  <option value="4">20 phút</option>
+                <Form.Select
+                  aria-label="Default select example"
+                  onChange={(option) => setAttendanceTime(option.target.value)}
+                >
+                  <option value={0}>Open this select menu</option>
+                  <option value={5}>5 phút </option>
+                  <option value={10}>10 phút</option>
+                  <option value={15}>15 phút</option>
+                  <option value={20}>20 phút</option>
+                </Form.Select>
+                <small className="text-danger font-weight-bold"></small>
+              </div>
+            </Form.Group>
+            <Form.Group className=" mb-3">
+              <div className="cp-input">
+                <p className="font-weight-bold">Chọn tuần điểm danh</p>
+                <Form.Select
+                  aria-label="Default select example"
+                  onChange={(option) => setAttendanceWeek(option.target.value)}
+                >
+                  <option value={0}>Open this select menu</option>
+                  {(() => {
+                    const divs = Array.from({ length: dataDetail.numberRollCall }, (_, index) => (
+                      <option value={index + 1}>Tuần {index + 1}</option>
+                    ));
+                    return divs;
+                  })()}
+                </Form.Select>
+                <small className="text-danger font-weight-bold"></small>
+              </div>
+            </Form.Group>
+            <Form.Group className=" mb-3">
+              <div className="cp-input">
+                <p className="font-weight-bold">Chọn tiết trong tuần</p>
+                <Form.Select
+                  aria-label="Default select example"
+                  onChange={(option) => setAttendanceLesson(option.target.value)}
+                >
+                  <option value={0}>Open this select menu</option>
+                  {(() => {
+                    const divs = Array.from({ length: dataDetail.numberLessonWeek }, (_, index) => (
+                      <option value={index + 1}>Tiết thứ {index + 1} trong tuần</option>
+                    ));
+                    return divs;
+                  })()}
                 </Form.Select>
                 <small className="text-danger font-weight-bold"></small>
               </div>
@@ -150,7 +215,13 @@ export function DetailClassroomTable(props) {
         </div>
         <div className="row pb-2">
           <Form.Group className="d-flex justify-content-center">
-            <Button type="button" variant="info" className="me-3 font-weight-bold" onClick={() => createQTCode()}>
+            <Button
+              type="button"
+              variant="info"
+              className="me-3 font-weight-bold"
+              onClick={() => createQTCode()}
+              disabled={attendance_range == 0 || attendance_time == 0 || attendance_lesson == 0 || attendance_week == 0}
+            >
               Tạo QR
             </Button>
             <Button type="button" variant="secondary" className="font-weight-bold" onClick={() => setStateModal()}>
@@ -228,11 +299,7 @@ export function DetailClassroomTable(props) {
       </Form>
     );
   };
-  const createQTCode = () => {
-    // setCreateQRCode(true);
-    dispatch(setIsQR(true));
-    dispatch(setIsDetailClassroom(false));
-  };
+
   const backToPage = () => {
     // props.isDetailClassroom = true;
     dispatch(setIsDetailClassroom(false));

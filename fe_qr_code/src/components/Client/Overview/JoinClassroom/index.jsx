@@ -7,40 +7,51 @@ import Modal from '../../../Layouts/Modal';
 import * as XLSX from 'xlsx';
 import './style.css';
 import { useForm } from 'react-hook-form';
-import { addSchema } from '../../../../adapter/classroom';
+import { addSchema, joinClassroomSchema } from '../../../../adapter/classroom';
 import { FaRegQuestionCircle } from 'react-icons/fa';
 import { addClassroom } from '../../../../api/Admin/Classroom/classroomAPI';
+import { joinClassroomClient } from '../../../../api/Client/Classroom/classroomClientAPI';
 
 export default function JoinClassroom(props) {
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   control,
-  //   formState: { isValid, errors },
-  // } = useForm({
-  //   mode: 'onChange',
-  //   resolver: yupResolver(addSchema),
-  //   defaultValues: {
-  //     class_name: '',
-  //     number_roll_call: '',
-  //     number_lesson_week: '',
-  //   },
-  // });
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { isValid, errors },
+  } = useForm({
+    mode: 'onChange',
+    resolver: yupResolver(joinClassroomSchema),
+    defaultValues: {
+      classroom_code: '',
+    },
+  });
   const [backdrop, setBackdrop] = useState('static');
   const setStateModal = (value) => {
     props.setStateModal();
   };
+  const handleJoinClassroom = async (data) => {
+    const result = await joinClassroomClient(data);
+    if (result === 200) {
+      console.log('Tao thanh cong');
+    } else if (result === 404) {
+      alert('That bai');
+    } else if (result === 401) {
+      alert('That bai');
+    } else {
+      alert('that bai');
+    }
+  };
   const renderBody = () => {
     return (
       <>
-        <Form encType="multipart/form-data">
+        <Form onSubmit={handleSubmit(handleJoinClassroom)} encType="multipart/form-data">
           <div className="row p-5">
             <div className="col md-6">
               <Form.Group className=" mb-3">
                 <div className="cp-input">
                   <p className="font-weight-bold">Mã lớp</p>
-                  <Form.Control type="text" maxLength={128} placeholder="Nhập mã lớp" />
-                  <small className="text-danger font-weight-bold"></small>
+                  <Form.Control type="text" maxLength={10} placeholder="Nhập mã lớp" {...register('classroom_code')} />
+                  <small className="text-danger font-weight-bold">{errors?.classroom_code?.message}</small>
                 </div>
               </Form.Group>
             </div>
