@@ -1,46 +1,64 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 
-import Modal from '../../../Layouts/Modal';
-import * as XLSX from 'xlsx';
-import './style.css';
+import Notiflix from 'notiflix';
 import { useForm } from 'react-hook-form';
-import { addSchema } from '../../../../adapter/classroom';
-import { FaRegQuestionCircle } from 'react-icons/fa';
-import { addClassroom } from '../../../../api/Admin/Classroom/classroomAPI';
+import { joinClassroomSchema } from '../../../../adapter/classroom';
+import { joinClassroomClient } from '../../../../api/Client/Classroom/classroomClientAPI';
+import { ErrorToast, SuccessToast } from '../../../Layouts/Alerts';
+import Modal from '../../../Layouts/Modal';
+import './style.css';
 
 export default function JoinClassroom(props) {
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   control,
-  //   formState: { isValid, errors },
-  // } = useForm({
-  //   mode: 'onChange',
-  //   resolver: yupResolver(addSchema),
-  //   defaultValues: {
-  //     class_name: '',
-  //     number_roll_call: '',
-  //     number_lesson_week: '',
-  //   },
-  // });
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { isValid, errors },
+  } = useForm({
+    mode: 'onChange',
+    resolver: yupResolver(joinClassroomSchema),
+    defaultValues: {
+      classroom_code: '',
+    },
+  });
   const [backdrop, setBackdrop] = useState('static');
   const setStateModal = (value) => {
     props.setStateModal();
   };
+  const handleGetAllClassroomClient = () => {
+    props.handleGetAllClassroomClient();
+  };
+  const handleJoinClassroom = async (data) => {
+    // BlockUICLIENT('#root', 'fixed');
+    const result = await joinClassroomClient(data);
+    if (result === 200) {
+      SuccessToast('Tham gia lớp thành công', 3500);
+      Notiflix.Block.remove('.sl-box');
+
+      handleGetAllClassroomClient();
+      setStateModal(false);
+      reset();
+    } else {
+      ErrorToast('Thất bại ! Bạn không có trong danh sách lớp', 3500);
+      Notiflix.Block.remove('.sl-box');
+    }
+    // Notiflix.Block.remove('#root');
+  };
   const renderBody = () => {
     return (
       <>
-        <Form encType="multipart/form-data">
+        <Form onSubmit={handleSubmit(handleJoinClassroom)} encType="multipart/form-data">
           <div className="row p-5">
             <div className="col md-6">
               <Form.Group className=" mb-3">
                 <div className="cp-input">
                   <p className="font-weight-bold">Mã lớp</p>
-                  <Form.Control type="text" maxLength={128} placeholder="Nhập mã lớp" />
-                  <small className="text-danger font-weight-bold"></small>
+                  <Form.Control type="text" maxLength={10} placeholder="Nhập mã lớp" {...register('classroom_code')} />
+                  <small className="text-danger font-weight-bold">{errors?.classroom_code?.message}</small>
                 </div>
               </Form.Group>
             </div>
@@ -59,14 +77,17 @@ export default function JoinClassroom(props) {
       </>
     );
   };
+
   return (
-    <Modal
-      show={props.show}
-      backdrop={backdrop}
-      setStateModal={() => setStateModal()}
-      elementModalTitle={<p>Tham gia lớp học</p>}
-      elementModalBody={renderBody()}
-    />
+    <>
+      <Modal
+        show={props.show}
+        backdrop={backdrop}
+        setStateModal={() => setStateModal()}
+        elementModalTitle={<p>Tham gia lớp học</p>}
+        elementModalBody={renderBody()}
+      />
+    </>
   );
 }
 

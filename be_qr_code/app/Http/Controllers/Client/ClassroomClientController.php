@@ -11,7 +11,7 @@ class ClassroomClientController extends Controller
     protected ClassroomClientService $classroomService;
     public function __construct(ClassroomClientService $classroomService)
     {
-        $this->classroomService=$classroomService;
+        $this->classroomService = $classroomService;
     }
     /**
      * Display a listing of the resource.
@@ -43,6 +43,7 @@ class ClassroomClientController extends Controller
     public function store(Request $request)
     {
         //
+        return $this->classroomService->createJoinClassroom($request);
     }
 
     /**
@@ -51,9 +52,10 @@ class ClassroomClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($idClassroom)
     {
         //
+        return $this->classroomService->showStudentClassroom($idClassroom);
     }
 
     /**
@@ -76,7 +78,7 @@ class ClassroomClientController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return $this->classroomService->studentAttendance($request, $id);
     }
 
     /**

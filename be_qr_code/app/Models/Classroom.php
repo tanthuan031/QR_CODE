@@ -36,7 +36,7 @@ class Classroom extends Model
 
     public function joinClassrooms():HasMany
     {
-        return $this->hasMany(JoinClassroom::class,'classroom_id','class_code');
+        return $this->hasMany(JoinClassroom::class,'classroom_code','class_code');
     }
 
 }

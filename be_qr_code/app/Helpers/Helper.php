@@ -52,8 +52,8 @@ class Helper
             // $path = explode(".", $item);
             // preg_match('/.([0-9]+) /', microtime(), $m);
             // $fileName = sprintf('img%s%s.%s', date('YmdHis'), $m[1], $path[1]);
-            $checkDirectory = $storage->exists($folder);
 
+            $checkDirectory = $storage->exists($folder);
             if (!$checkDirectory) {
                 $storage->makeDirectory($folder);
             }
@@ -74,6 +74,7 @@ class Helper
      */
     public static function saveImgBase64v1($param, $folder)
     {
+
         $fileExtension = ['png', 'jpg', 'jpeg', 'gif'];
 
         if (count(explode(';', $param)) != 2) return false;

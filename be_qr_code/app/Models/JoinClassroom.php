@@ -20,7 +20,7 @@ class JoinClassroom extends Model
 
     protected $fillable=[
         "student_code",
-        "classroom_id",
+        "classroom_code",
     ];
 
     public function user():BelongsTo
@@ -30,7 +30,7 @@ class JoinClassroom extends Model
     }
     public function classroom():BelongsTo
     {
-        return $this->belongsTo(Classroom::class,'classroom_id');
+        return $this->belongsTo(Classroom::class,'classroom_code');
     }
 
 

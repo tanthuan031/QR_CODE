@@ -21,7 +21,7 @@
 }
 .text-hidden {
   display: inline-block;
-  width: 100px; /* chiều rộng của phần tử chứa chữ */
+  min-width: 100px; /* chiều rộng của phần tử chứa chữ */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -12,6 +12,7 @@ import Header from '../../components/Layouts/Header';
 // import { FaUsers } from 'react-icons/fa';
 import './style.css';
 import { menu_client_item } from '../../asset/data/menu_client_item';
+import LogoutClient from '../../components/Client/Auth/Logout';
 // import { Button, Image } from 'react-bootstrap';
 // import { useSelector } from 'react-redux';
 
@@ -27,7 +28,7 @@ export function ClientLayout(props) {
   const menu_admin_item_data = [...menu_client_item];
   // const menu_admin_item_storage_data = [...menu_admin_item_storage];
   // const expiredToken = useSelector(exPiredTokenSelector);
-  // const [showLogout, setStateModalLogout] = useState(false);
+  const [showLogout, setStateModalLogout] = React.useState(false);
   // const user = useSelector(getUserSelector);
   return (
     <>
@@ -39,9 +40,9 @@ export function ClientLayout(props) {
 
             <div className="py-5">{<ListGroup data={menu_admin_item_data} />}</div>
             <div className="d-flex justify-content-center ">
-              {/* <Button className="btn-danger" onClick={() => setStateModalLogout(true)}>
+              <Button className="btn-primary" onClick={() => setStateModalLogout(true)}>
                 Logout
-              </Button> */}
+              </Button>
             </div>
           </>
         }
@@ -49,6 +50,7 @@ export function ClientLayout(props) {
       <main id="main" className="main p-5">
         {slot}
       </main>
+      <LogoutClient show={showLogout} setStateModal={() => setStateModalLogout(false)} />
     </>
   );
 }

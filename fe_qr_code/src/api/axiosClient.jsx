@@ -5,6 +5,8 @@ const axiosClient = axios.create({
   baseURL: URL_SERVER,
   headers: {
     'content-type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
   },
   paramsSerializer: {
     // encode: parse,

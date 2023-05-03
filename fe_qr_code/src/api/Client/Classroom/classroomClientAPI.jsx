@@ -1,15 +1,16 @@
 import { concatQueryString } from '../../../utils/concatQueryString';
 import { titleToSlug } from '../../../utils/titleToSlug';
 import axiosClient from '../../axiosClient';
+import { getCookiesClient } from '../Auth';
 
-// export const configHeadersAuthenticate = () => {
-//   const token = getCookies('token');
-//   return {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   };
-// };
+export const configHeadersAuthenticate = () => {
+  const token = getCookiesClient('tokenClient');
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
 
 export const getAllClassroomClient = async ({ sort, search, page } = {}) => {
   const url = '/api/client/classroom';
@@ -27,7 +28,7 @@ export const getAllClassroomClient = async ({ sort, search, page } = {}) => {
   }
   const final_url = concatQueryString(queryString, url);
 
-  const response = await axiosClient.get(final_url);
+  const response = await axiosClient.get(final_url, configHeadersAuthenticate());
   if (response.status === 401) {
     return 401;
   } else if (response.status === 'success') {
@@ -37,30 +38,28 @@ export const getAllClassroomClient = async ({ sort, search, page } = {}) => {
   }
 };
 
-// export const editProduct = async (id, body) => {
-//   const url = `/api/admin/product/${id}`;
-//   const response = await axiosClient.put(url, body, configHeadersAuthenticate());
-//   if (response.status === 401) {
-//     return 401;
-//   } else if (response.status === 'Success') {
-//     return 200;
-//   } else if (response.status === 500) {
-//     return 500;
-//   } else {
-//     return 404;
-//   }
-// };
+export const joinClassroomClient = async (body) => {
+  const url = '/api/client/classroom';
+  const response = await axiosClient.post(url, body, configHeadersAuthenticate());
+  if (response.status === 401) {
+    return 401;
+  } else if (response.status === 'success') {
+    return 200;
+  } else if (response.status === 500) {
+    return 500;
+  } else {
+    return 404;
+  }
+};
 
-// export const requireProduct = async (body) => {
-//   const url = '/api/admin/product_import';
-//   const response = await axiosClient.post(url, body, configHeadersAuthenticate());
-//   if (response.status === 401) {
-//     return 401;
-//   } else if (response.status === 'success') {
-//     return 200;
-//   } else if (response.status === 500) {
-//     return 500;
-//   } else {
-//     return 404;
-//   }
-// };
+export const detailClassroomStudentClient = async (id) => {
+  const url = `/api/client/classroom/${id}`;
+  const response = await axiosClient.get(url, configHeadersAuthenticate());
+  if (response.status === 'success') {
+    return response.data;
+  } else if (response.status === 401) {
+    return 401;
+  } else {
+    return {};
+  }
+};

@@ -24,6 +24,7 @@ class User extends Authenticatable
         'first_name',
         'email',
         'password',
+        'image'
     ];
 
     /**
@@ -45,8 +46,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function classrooms():BelongsToMany
+    public function classrooms(): BelongsToMany
     {
-        return $this->belongsToMany(Classroom::class,'join_classrooms','student_code','classroom_id');
+        return $this->belongsToMany(Classroom::class, 'join_classrooms', 'student_code', 'classroom_code');
     }
 }

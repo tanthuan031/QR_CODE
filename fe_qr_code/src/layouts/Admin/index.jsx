@@ -11,6 +11,8 @@ import { Button } from 'react-bootstrap';
 import Header from '../../components/Layouts/Header';
 // import { FaUsers } from 'react-icons/fa';
 import './style.css';
+import LogoutAdmin from '../../components/Admin/Auth/Logout';
+import { useState } from 'react';
 // import { Button, Image } from 'react-bootstrap';
 // import { useSelector } from 'react-redux';
 
@@ -26,7 +28,7 @@ export function AdminLayout(props) {
   const menu_admin_item_data = [...menu_admin_item];
   // const menu_admin_item_storage_data = [...menu_admin_item_storage];
   // const expiredToken = useSelector(exPiredTokenSelector);
-  // const [showLogout, setStateModalLogout] = useState(false);
+  const [showLogout, setStateModalLogout] = useState(false);
   // const user = useSelector(getUserSelector);
   return (
     <>
@@ -38,9 +40,9 @@ export function AdminLayout(props) {
 
             <div className="py-5">{<ListGroup data={menu_admin_item_data} />}</div>
             <div className="d-flex justify-content-center ">
-              {/* <Button className="btn-danger" onClick={() => setStateModalLogout(true)}>
+              <Button className="btn-primary" onClick={() => setStateModalLogout(true)}>
                 Logout
-              </Button> */}
+              </Button>
             </div>
           </>
         }
@@ -48,6 +50,7 @@ export function AdminLayout(props) {
       <main id="main" className="main p-5">
         {slot}
       </main>
+      <LogoutAdmin show={showLogout} setStateModal={() => setStateModalLogout(false)} />
     </>
   );
 }

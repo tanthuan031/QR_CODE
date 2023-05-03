@@ -1,21 +1,24 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 
-import Modal from '../../../Layouts/Modal';
-import * as XLSX from 'xlsx';
-import './style.css';
+import Notiflix from 'notiflix';
 import { useForm } from 'react-hook-form';
-import { addSchema } from '../../../../adapter/classroom';
 import { FaRegQuestionCircle } from 'react-icons/fa';
+import * as XLSX from 'xlsx';
+import { addSchema } from '../../../../adapter/classroom';
 import { addClassroom } from '../../../../api/Admin/Classroom/classroomAPI';
+import { ErrorToast, SuccessToast } from '../../../Layouts/Alerts';
+import Modal from '../../../Layouts/Modal';
+import './style.css';
 
 export default function CreateClassroom(props) {
   const {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { isValid, errors },
   } = useForm({
     mode: 'onChange',
@@ -26,6 +29,9 @@ export default function CreateClassroom(props) {
       number_lesson_week: '',
     },
   });
+  const handleGetAllClassroom = () => {
+    props.handleGetAllClassroom();
+  };
   const [backdrop, setBackdrop] = useState('static');
   const setStateModal = (value) => {
     props.setStateModal();
@@ -73,16 +79,21 @@ export default function CreateClassroom(props) {
       number_lesson_week: data.number_lesson_week,
       detail_classroom: resultDataList,
     };
-    console.log('dta', dataCreate);
+
     const result = await addClassroom(dataCreate);
+    console.log(result);
     if (result === 200) {
-      console.log('Tao thanh cong');
-    } else if (result === 404) {
-      alert('That bai');
-    } else if (result === 401) {
-      alert('That bai');
+      SuccessToast('Tạo lớp thành công', 3500);
+      Notiflix.Block.remove('.sl-box');
+      handleGetAllClassroom();
+      setStateModal(false);
+      reset();
+    } else if (result === 403) {
+      ErrorToast('Tên lớp đã tồn tại', 3500);
+      Notiflix.Block.remove('.sl-box');
     } else {
-      alert('that bai');
+      ErrorToast('Tạo lớp thất bại', 3500);
+      Notiflix.Block.remove('.sl-box');
     }
   };
   const renderBody = () => {
@@ -163,14 +174,17 @@ export default function CreateClassroom(props) {
       </>
     );
   };
+
   return (
-    <Modal
-      show={props.show}
-      backdrop={backdrop}
-      setStateModal={() => setStateModal()}
-      elementModalTitle={<p>Tạo lớp học</p>}
-      elementModalBody={renderBody()}
-    />
+    <>
+      <Modal
+        show={props.show}
+        backdrop={backdrop}
+        setStateModal={() => setStateModal()}
+        elementModalTitle={<p>Tạo lớp học</p>}
+        elementModalBody={renderBody()}
+      />
+    </>
   );
 }
 

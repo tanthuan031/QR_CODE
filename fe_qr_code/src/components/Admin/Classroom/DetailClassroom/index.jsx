@@ -1,50 +1,57 @@
-import React, { useMemo } from 'react';
-import TableLayout from '../../../Layouts/Table';
-import { Table as TableBootstrap } from 'react-bootstrap';
-import { useSortBy, useTable } from 'react-table';
-import MOCK_DATA from './MOCK_DATA.json';
-import COLUMNS from './columns';
-import './style.css';
-import { Button, Form, InputGroup } from 'react-bootstrap';
-import Modal from '../../../Layouts/Modal';
-import { FaEdit, FaSearch } from 'react-icons/fa';
-import './style.css';
-import { QRCodeSVG } from 'qrcode.react';
-import QRCodeGenerator from './QRCode';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Checkbox, Table } from 'antd';
+import React, { useEffect } from 'react';
+import { Alert, Button, Form } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
+import { FaEdit } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsDetailClassroom, setIsQR } from '../../../../redux/reducer/classroom/classroom.reducer';
+import { addSchemaStudent } from '../../../../adapter/classroom';
+import {
+  addDetailClassroom,
+  editAttendanceStudent,
+  getClassroomById,
+} from '../../../../api/Admin/Classroom/classroomAPI';
+import {
+  setDataCreateQRCode,
+  setDataDetailClassroom,
+  setIsDetailClassroom,
+  setIsQR,
+} from '../../../../redux/reducer/classroom/classroom.reducer';
 import {
   dataDetailClassroomSelector,
   isDetailClassroomSelector,
 } from '../../../../redux/selectors/classroom/classroom.selector';
-import { render } from 'react-dom';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { addSchema, addSchemaStudent } from '../../../../adapter/classroom';
-import { useForm } from 'react-hook-form';
-import { addDetailClassroom } from '../../../../api/Admin/Classroom/classroomAPI';
-const EditableCell = ({ value: initialValue, row: { index }, column: { id }, updateMyData }) => {
-  const [value, setValue] = React.useState(initialValue);
+import Modal from '../../../Layouts/Modal';
 
-  const onChange = (e) => {
-    setValue(e.target.value);
-  };
+import './style.css';
+import { BlockUICLIENT } from '../../../Layouts/Notiflix';
+import Notiflix from 'notiflix';
+import { ErrorToast, SuccessToast } from '../../../Layouts/Alerts';
 
-  const onBlur = () => {
-    updateMyData(index, id, value);
-  };
-
-  return <input value={value} onChange={onChange} onBlur={onBlur} />;
-};
-
-export function DetailClassroomTable(props) {
-  const [data, setData] = React.useState(MOCK_DATA);
-  const [originalData, setOriginalData] = React.useState(data);
-  const [tableData, setTableData] = React.useState(data);
+export default function DetailClassroomTable(props) {
   const [backdrop, setBackdrop] = React.useState('static');
   const [editTable, setEditTable] = React.useState(true);
   const [createQRCode, setCreateQRCode] = React.useState(false);
+  // Show Create QR
   const [show, setShow] = React.useState(false);
+  // Show add student
   const [showAddStudent, setShowAddStudent] = React.useState(false);
+  // Show edit student
+  const [showEditStudent, setShowEditStudent] = React.useState(false);
+  const [idEditStudent, setIdEditStudent] = React.useState({
+    student_code: 0,
+    classroom_id: 0,
+    week: 0,
+    lesson: 0,
+    status: 0,
+  });
+
+  //data submit form create QR code
+  const [attendance_range, setAttendanceRange] = React.useState(0);
+  const [attendance_time, setAttendanceTime] = React.useState(0);
+  const [attendance_week, setAttendanceWeek] = React.useState(0);
+  const [attendance_lesson, setAttendanceLesson] = React.useState(0);
+
   const isDetailClassroom = useSelector(isDetailClassroomSelector);
 
   const dispatch = useDispatch();
@@ -53,6 +60,7 @@ export function DetailClassroomTable(props) {
   const {
     register,
     handleSubmit,
+    reset,
     control,
     formState: { isValid, errors },
   } = useForm({
@@ -65,56 +73,41 @@ export function DetailClassroomTable(props) {
     },
   });
 
-  const updateMyData = (rowIndex, columnId, value) => {
-    setData((old) =>
-      old.map((row, index) => {
-        if (index === rowIndex) {
-          return {
-            ...row,
-            [columnId]: value,
-          };
-        }
-        return row;
+  const setStateModal = (value) => {
+    setShow(false);
+  };
+
+  const createQTCode = () => {
+    const data = {
+      attendance_range: attendance_range,
+      attendance_time: attendance_time,
+      attendance_week: attendance_week,
+      attendance_lesson: attendance_lesson,
+      id_classroom: isDetailClassroom.idDetail,
+    };
+    dispatch(setDataCreateQRCode(data));
+    dispatch(setIsQR(true));
+    dispatch(
+      setIsDetailClassroom({
+        ...isDetailClassroom,
+        checkDetail: false,
       })
     );
   };
-
-  const columns = React.useMemo(
-    () =>
-      COLUMNS.map((column) => ({
-        ...column,
-        editable: true,
-      })),
-    []
-  );
-
-  const tableInstance = useTable(
-    {
-      columns,
-      data: tableData,
-      initialState: { pageIndex: 0 },
-      editTable: editTable,
-    },
-    useSortBy
-  );
-
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
-
-  const handleSave = () => {
-    // Cập nhật dữ liệu ban đầu với dữ liệu mới
-    console.log(data);
-    console.log(tableData);
-    // const jsonData = rows.map((row) => row.values);
-    setOriginalData(data);
-  };
-
-  const handleExport = () => {
-    const editedRows = originalData.filter((row, i) => !Object.is(row, tableData[i]));
-
-    console.log('Các dòng đã chỉnh sửa:', editedRows);
-  };
-  const setStateModal = (value) => {
-    setShow(false);
+  const getAllStudentDetails = async (data) => {
+    const result = await getClassroomById(isDetailClassroom.idDetail);
+    if (result === 401) {
+      return false;
+    } else if (result === 500) {
+      return false;
+    } else {
+      dispatch(
+        setDataDetailClassroom({
+          ...dataDetail,
+          data: result,
+        })
+      );
+    }
   };
   const renderBody = () => {
     return (
@@ -124,11 +117,15 @@ export function DetailClassroomTable(props) {
             <Form.Group className=" mb-3">
               <div className="cp-input">
                 <p className="font-weight-bold">Phạm vi điểm danh</p>
-                <Form.Select aria-label="Default select example">
-                  <option>Open this select menu</option>
-                  <option value="1">10 Km </option>
-                  <option value="2">15 Km</option>
-                  <option value="3">20 Km</option>
+                <Form.Select
+                  aria-label="Default select example"
+                  onChange={(option) => setAttendanceRange(option.target.value)}
+                >
+                  <option value={0}>Open this select menu</option>
+                  <option value={5}>5 Km</option>
+                  <option value={10}>10 Km </option>
+                  <option value={15}>15 Km</option>
+                  <option value={20}>20 Km</option>
                 </Form.Select>
                 <small className="text-danger font-weight-bold"></small>
               </div>
@@ -136,12 +133,51 @@ export function DetailClassroomTable(props) {
             <Form.Group className=" mb-3">
               <div className="cp-input">
                 <p className="font-weight-bold">Thời gian điểm danh</p>
-                <Form.Select aria-label="Default select example">
-                  <option>Open this select menu</option>
-                  <option value="1">5 phút </option>
-                  <option value="2">10 phút</option>
-                  <option value="3">15 phút</option>
-                  <option value="4">20 phút</option>
+                <Form.Select
+                  aria-label="Default select example"
+                  onChange={(option) => setAttendanceTime(option.target.value)}
+                >
+                  <option value={0}>Open this select menu</option>
+                  <option value={5}>5 phút </option>
+                  <option value={10}>10 phút</option>
+                  <option value={15}>15 phút</option>
+                  <option value={20}>20 phút</option>
+                </Form.Select>
+                <small className="text-danger font-weight-bold"></small>
+              </div>
+            </Form.Group>
+            <Form.Group className=" mb-3">
+              <div className="cp-input">
+                <p className="font-weight-bold">Chọn tuần điểm danh</p>
+                <Form.Select
+                  aria-label="Default select example"
+                  onChange={(option) => setAttendanceWeek(option.target.value)}
+                >
+                  <option value={0}>Open this select menu</option>
+                  {(() => {
+                    const divs = Array.from({ length: dataDetail.numberRollCall }, (_, index) => (
+                      <option value={index + 1}>Tuần {index + 1}</option>
+                    ));
+                    return divs;
+                  })()}
+                </Form.Select>
+                <small className="text-danger font-weight-bold"></small>
+              </div>
+            </Form.Group>
+            <Form.Group className=" mb-3">
+              <div className="cp-input">
+                <p className="font-weight-bold">Chọn tiết trong tuần</p>
+                <Form.Select
+                  aria-label="Default select example"
+                  onChange={(option) => setAttendanceLesson(option.target.value)}
+                >
+                  <option value={0}>Open this select menu</option>
+                  {(() => {
+                    const divs = Array.from({ length: dataDetail.numberLessonWeek }, (_, index) => (
+                      <option value={index + 1}>Tiết thứ {index + 1} trong tuần</option>
+                    ));
+                    return divs;
+                  })()}
                 </Form.Select>
                 <small className="text-danger font-weight-bold"></small>
               </div>
@@ -150,7 +186,13 @@ export function DetailClassroomTable(props) {
         </div>
         <div className="row pb-2">
           <Form.Group className="d-flex justify-content-center">
-            <Button type="button" variant="info" className="me-3 font-weight-bold" onClick={() => createQTCode()}>
+            <Button
+              type="button"
+              variant="info"
+              className="me-3 font-weight-bold"
+              onClick={() => createQTCode()}
+              disabled={attendance_range == 0 || attendance_time == 0 || attendance_lesson == 0 || attendance_week == 0}
+            >
               Tạo QR
             </Button>
             <Button type="button" variant="secondary" className="font-weight-bold" onClick={() => setStateModal()}>
@@ -167,20 +209,23 @@ export function DetailClassroomTable(props) {
   };
 
   const handleAddStudent = async (data) => {
+    BlockUICLIENT('#root', 'fixed');
     const dataStudent = {
       classroom_id: isDetailClassroom.idDetail,
       detail_classroom: [data],
     };
     const result = await addDetailClassroom(dataStudent);
     if (result === 200) {
-      console.log('Tao thanh cong');
-    } else if (result === 404) {
-      alert('That bai');
-    } else if (result === 401) {
-      alert('That bai');
+      getAllStudentDetails();
+      SuccessToast('Thêm sinh viên thành công', 3500);
+      Notiflix.Block.remove('.sl-box');
+      setShowAddStudent(false);
+      reset();
     } else {
-      alert('that bai');
+      ErrorToast('Thêm sinh viên thất bại', 3500);
+      Notiflix.Block.remove('.sl-box');
     }
+    Notiflix.Block.remove('#root');
   };
   const renderBodyAddStudent = () => {
     return (
@@ -228,17 +273,249 @@ export function DetailClassroomTable(props) {
       </Form>
     );
   };
-  const createQTCode = () => {
-    // setCreateQRCode(true);
-    dispatch(setIsQR(true));
-    dispatch(setIsDetailClassroom(false));
+
+  // Handle edit student
+
+  const setStateModalEditStudent = (value) => {
+    setShowEditStudent(false);
   };
-  const backToPage = () => {
-    // props.isDetailClassroom = true;
-    dispatch(setIsDetailClassroom(false));
-    dispatch(setIsQR(false));
+  const handleUpdateAttendanceStudent = async (data) => {
+    BlockUICLIENT('#root', 'fixed');
+    const dataEdit = idEditStudent;
+    const result = await editAttendanceStudent(1, dataEdit);
+    console.log('result', result);
+    if (result === 200) {
+      getAllStudentDetails();
+      SuccessToast('Điểm danh thành công', 3500);
+      Notiflix.Block.remove('.sl-box');
+
+      setShowEditStudent(false);
+    } else if (result === 401) {
+      ErrorToast('Bạn chưa đăng nhập', 3500);
+      Notiflix.Block.remove('.sl-box');
+    } else {
+      ErrorToast('Tuần hoặc tiết chưa được điểm danh', 3500);
+      Notiflix.Block.remove('.sl-box');
+    }
+    Notiflix.Block.remove('#root');
+  };
+  const renderBodyEditStudent = () => {
+    return (
+      <Form encType="multipart/form-data">
+        <div className="row p-5">
+          <div className="col md-6">
+            <Form.Group className=" mb-3">
+              <div className="cp-input">
+                <p className="font-weight-bold">MSSV</p>
+                <Form.Control
+                  type="text"
+                  maxLength={128}
+                  value={idEditStudent.student_code}
+                  name="student_code"
+                  disabled
+                />
+                <small className="text-danger font-weight-bold">{errors?.student_code?.message}</small>
+              </div>
+            </Form.Group>
+            <Form.Group className=" mb-3">
+              <div className="cp-input">
+                <p className="font-weight-bold">Chọn tuần điểm danh</p>
+                <Form.Select
+                  aria-label="Default select example"
+                  name="number_roll_call"
+                  onChange={(option) =>
+                    setIdEditStudent({
+                      ...idEditStudent,
+                      week: option.target.value,
+                    })
+                  }
+                >
+                  <option value={0}>Open this select menu</option>
+                  {(() => {
+                    const divs = Array.from({ length: dataDetail.numberRollCall }, (_, index) => (
+                      <option value={index + 1}>Tuần {index + 1}</option>
+                    ));
+                    return divs;
+                  })()}
+                </Form.Select>
+                <small className="text-danger font-weight-bold"></small>
+              </div>
+            </Form.Group>
+            <Form.Group className=" mb-3">
+              <div className="cp-input">
+                <p className="font-weight-bold">Chọn tiết trong tuần</p>
+                <Form.Select
+                  aria-label="Default select example"
+                  name="number_lesson"
+                  onChange={(option) =>
+                    setIdEditStudent({
+                      ...idEditStudent,
+                      lesson: option.target.value,
+                    })
+                  }
+                >
+                  <option value={0}>Open this select menu</option>
+                  {(() => {
+                    const divs = Array.from({ length: dataDetail.numberLessonWeek }, (_, index) => (
+                      <option value={index + 1}>Tiết thứ {index + 1} trong tuần</option>
+                    ));
+                    return divs;
+                  })()}
+                </Form.Select>
+                <small className="text-danger font-weight-bold"></small>
+              </div>
+            </Form.Group>
+
+            <Form.Group className=" mb-3">
+              <div className="cp-input">
+                <p className="font-weight-bold">Trạng thái</p>
+                <Form.Check
+                  inline
+                  label="Có"
+                  name="status"
+                  type="radio"
+                  id={`inline-radio-2`}
+                  value={0}
+                  checked={idEditStudent.status == 0}
+                  onChange={(option) =>
+                    setIdEditStudent({
+                      ...idEditStudent,
+                      status: option.target.value,
+                    })
+                  }
+                />
+                <Form.Check
+                  inline
+                  label="Vắng"
+                  name="status"
+                  type="radio"
+                  id={`inline-radio-1`}
+                  value={1}
+                  checked={idEditStudent.status == 1}
+                  onChange={(option) =>
+                    setIdEditStudent({
+                      ...idEditStudent,
+                      status: option.target.value,
+                    })
+                  }
+                />
+                <small className="text-danger font-weight-bold"></small>
+              </div>
+            </Form.Group>
+          </div>
+        </div>
+        <div className="row pb-3">
+          <Form.Group className="d-flex justify-content-center">
+            <Button
+              type="button"
+              variant="info"
+              className="me-3 font-weight-bold"
+              onClick={() => handleUpdateAttendanceStudent()}
+              disabled={idEditStudent.week == 0 || idEditStudent.lesson == 0}
+            >
+              Cập nhật
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              className="font-weight-bold"
+              onClick={() => setStateModalEditStudent()}
+            >
+              Quay lại
+            </Button>
+          </Form.Group>
+        </div>
+      </Form>
+    );
   };
 
+  const backToPage = () => {
+    BlockUICLIENT('#root', 'fixed');
+    dispatch(
+      setIsDetailClassroom({
+        ...isDetailClassroom,
+        checkDetail: false,
+      })
+    );
+    dispatch(setIsQR(false));
+    Notiflix.Block.remove('#root');
+  };
+
+  const columns01 = [
+    {
+      title: '-',
+      dataIndex: 'Action',
+      key: 'STT',
+      width: 100,
+      fixed: 'left',
+    },
+    {
+      title: 'MSSV',
+      dataIndex: 'student_code',
+      key: 'MSSV',
+      width: 100,
+      fixed: 'left',
+    },
+    {
+      title: 'TÊN SINH VIÊN',
+      dataIndex: 'full_name',
+      key: 'TENSV',
+      width: 200,
+      fixed: 'left',
+    },
+    ...Array.from({ length: dataDetail.numberRollCall }, (_, i) => ({
+      //so tuan
+      title: `Tuần ${i + 1}`,
+      dataIndex: `week${i + 1}`,
+      key: `week${i + 1}`,
+      width: 100,
+      render: (_, record) => {
+        // console.log('a', record.attendances[0][0]['week']);
+        const divs = Array.from({ length: dataDetail.numberLessonWeek }, (_, index) => {
+          const attendance = record.attendances.find(
+            (a) => a.week == i + 1 && a.lesson == index + 1 && a.student_code == record.student_code
+          );
+          const checked = attendance && attendance.status === '0';
+          return (
+            <p style={{ textAlign: 'center', width: 90 / dataDetail.numberLessonWeek, border: '1px solid' }}>
+              <Checkbox checked={checked} />
+            </p>
+          );
+        });
+        return <div className="d-flex">{divs} </div>;
+      },
+    })),
+    {
+      title: 'ĐIỂM',
+      dataIndex: 'score',
+      key: 'score',
+      fixed: 'right',
+      width: 70,
+    },
+  ];
+
+  const data01 =
+    dataDetail !== undefined &&
+    dataDetail.data.map((detail) => ({
+      key: detail.id,
+      Action: (
+        <FaEdit
+          style={{ fontSize: '1.4rem', marginLeft: '30%', color: '#1677ff', cursor: 'pointer' }}
+          onClick={() => {
+            setShowEditStudent(true);
+            setIdEditStudent({
+              ...idEditStudent,
+              student_code: detail.student_code,
+              classroom_id: detail.classroom_id,
+            });
+          }}
+        />
+      ),
+      student_code: detail.student_code,
+      full_name: `${detail.first_name} ${detail.last_name}`,
+      attendances: detail.attendances,
+      score: <span style={{ marginLeft: '30%', fontWeight: '700' }}>{Number(detail.score).toFixed(2)}</span>,
+    }));
   return (
     <>
       <div className="row mb-5 justify-content-end ">
@@ -295,171 +572,13 @@ export function DetailClassroomTable(props) {
           </div>
         </div>
       </div>
-      {/* Table auto edit */}
-      {/* <button onClick={handleExport}>Export Data</button>
-      <button onClick={handleSave}>Lưu</button>
-      <div className="row listdetail_classroom">
-        <table {...getTableProps()} className="listdetail_classroom_item" style={{ width: '100%' }}>
-          <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render('Header')}
-                    <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()} className="">
-            {rows.map((row) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>
-                        {cell.column.editable ? (
-                          <EditableCell value={cell.value} updateMyData={updateMyData} row={row} column={cell.column} />
-                        ) : (
-                          cell.render('Cell')
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div> */}
-      {/* <TableLayout tableHeader={props.tableHeader} tableBody={props.tableBody} /> */}
-
-      <div className="row header_detail_classroom">
-        <div className="col col-md-4 p-2">
-          <div className="row">
-            <p className=" col col-md-2 text-center">STT</p>
-            <p className="col col-md-4 text-center">MSSV</p>
-            <p className="col col-md-6 text-center">Tên sinh viên</p>
-          </div>
-        </div>
-        <div className="col col-md-7 p-2 ">
-          <div className="d-flex align-items-center justify-content-center">
-            <p className=" text-center">Tuần</p>
-          </div>
-        </div>
-        <div className="col col-md-1 p-2">
-          <div className="row">
-            <p className="col col-md-6 text-center">Điểm</p>
-            <p className="col col-md-6 text-center">Action</p>
-          </div>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col col-md-4" style={{ marginTop: '2px' }}>
-          <div className="row">
-            <p className=" col col-md-2 text-center">-</p>
-            <p className="col col-md-4 text-center">-</p>
-            <p className="col col-md-6 text-center">-</p>
-          </div>
-          {dataDetail.data !== undefined &&
-            dataDetail.data !== null &&
-            dataDetail.data.map((item, index) => {
-              return (
-                <div className="row" key={index}>
-                  <p className="col col-md-2 " style={{ border: '1px solid' }}>
-                    {index + 1}
-                  </p>
-
-                  <p
-                    className="col col-md-4 text-hidden"
-                    style={{ border: '1px solid' }}
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title={item.student_code}
-                  >
-                    {item.student_code}
-                  </p>
-
-                  <p
-                    className="col col-md-6 text-hidden "
-                    style={{ border: '1px solid', padding: '0px 1px 0px 2px' }}
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title={item.last_name + ' ' + item.first_name}
-                  >
-                    {item.last_name + ' ' + item.first_name}
-                  </p>
-                </div>
-              );
-            })}
-        </div>
-        <div className="col col-md-7" style={{ paddingLeft: 0 }}>
-          <div className="d-flex align-items-center" style={{ position: 'relative' }}>
-            <div className="justify-content-center">
-              <div className="d-flex my-custom-scrollbar">
-                <div>
-                  {/* Buoi */}
-                  {(() => {
-                    const divs = Array.from({ length: dataDetail.numberRollCall }, (_, index) => (
-                      <p key={index} style={{ width: '90px', border: '1px solid' }}>
-                        {index + 1}
-                      </p>
-                    ));
-                    return <div className="d-flex text-center">{divs} </div>;
-                  })()}
-                  {/* Diem danh */}
-
-                  {dataDetail.data !== undefined &&
-                    dataDetail.data !== null &&
-                    dataDetail.data.map((item, index) => {
-                      return (() => {
-                        const divs = Array.from({ length: dataDetail.numberRollCall }, (_, index) => (
-                          <div className="d-flex" key={index}>
-                            {(() => {
-                              const divs = Array.from({ length: dataDetail.numberLessonWeek }, (_, index) => (
-                                <p style={{ width: 90 / dataDetail.numberLessonWeek, border: '1px solid' }}>
-                                  <input type="radio" name="" id="" />
-                                </p>
-                              ));
-                              return <div className="d-flex text-center">{divs} </div>;
-                            })()}
-                          </div>
-                        ));
-                        return (
-                          <div className="d-flex text-center" key={index}>
-                            {divs}{' '}
-                          </div>
-                        );
-                      })();
-                    })}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col col-md-1">
-          <div className="row">
-            <p className=" col col-md-6 text-center">-</p>
-            <p className="col col-md-6 text-center">-</p>
-          </div>
-
-          {dataDetail.data !== undefined &&
-            dataDetail.data !== null &&
-            dataDetail.data.map((item, index) => {
-              return (
-                <div className="row" key={index}>
-                  <p className="col col-md-6 text-center" style={{ border: '1px solid #f3f3f5' }}>
-                    {item.score}
-                  </p>
-                  <p className="col col-md-6 text-center" style={{ border: '1px solid #f3f3f5' }}>
-                    <FaEdit />
-                  </p>
-                </div>
-              );
-            })}
-        </div>
+      <div style={{ overflow: 'scroll' }}>
+        <Table
+          columns={columns01}
+          dataSource={data01}
+          scroll={{ x: 'max-content', y: 450 }}
+          pagination={{ pageSize: 20 }}
+        />
       </div>
 
       <Modal
@@ -476,6 +595,14 @@ export function DetailClassroomTable(props) {
         setStateModal={() => setStateModalAddStudent()}
         elementModalTitle={<p>Thêm sinh viên</p>}
         elementModalBody={renderBodyAddStudent()}
+      />
+
+      <Modal
+        show={showEditStudent}
+        backdrop={backdrop}
+        setStateModal={() => setStateModalEditStudent()}
+        elementModalTitle={<p>Cập nhật trạng thái điểm danh</p>}
+        elementModalBody={renderBodyEditStudent()}
       />
     </>
   );

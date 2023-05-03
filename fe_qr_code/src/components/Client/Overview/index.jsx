@@ -3,54 +3,55 @@ import * as React from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
-import { setIsDetailClassroom } from '../../../redux/reducer/classroom/classroom.reducer';
+import {
+  setDataDetailClassroomClient,
+  setIsDetailClassroom,
+  setIsDetailClassroomClient,
+} from '../../../redux/reducer/classroom/classroom.reducer';
 
 import './style.css';
 import JoinClassroom from './JoinClassroom';
+import { detailClassroomStudentClient } from '../../../api/Client/Classroom/classroomClientAPI';
+import { BlockUICLIENT } from '../../Layouts/Notiflix';
+import Notiflix from 'notiflix';
 export function ClientOverview(props) {
   const dispatch = useDispatch();
-  const [show, setShowJoin] = React.useState(false);
-  const handleDetailClassroom = () => {
-    dispatch(setIsDetailClassroom(true));
+
+  const handleDetailClassroom = async (idClassroom, classCode, numberRollCall, numberLessonWeek) => {
+    BlockUICLIENT('#root', 'fixed');
+    const result = await detailClassroomStudentClient(idClassroom);
+    if (result === 401) {
+      return false;
+    } else if (result === 500) {
+      return false;
+    } else {
+      dispatch(
+        setIsDetailClassroomClient({
+          checkDetail: true,
+          idDetail: idClassroom,
+          classCode: classCode,
+        })
+      );
+      dispatch(
+        setDataDetailClassroomClient({
+          data: result,
+          numberRollCall,
+          numberLessonWeek,
+        })
+      );
+    }
+    Notiflix.Block.remove('#root');
   };
   return (
     <>
-      <div className="row mb-5 justify-content-end ">
-        <div className="d-flex justify-content-between">
-          <div className="d-flex  "></div>
-          <div className="d-flex justify-content-between ">
-            <Form>
-              <InputGroup>
-                <Form.Control
-                  id="search-order"
-                  placeholder="Nhập mã lớp để tìm kiếm"
-                  // onChange={(e) => setSearch(e.target.value)}
-                />
-
-                <Button id="search-user" variant="info" type="submit">
-                  <FaSearch />
-                </Button>
-              </InputGroup>
-            </Form>
-            <Button
-              id="create-new-product"
-              variant="info"
-              className="font-weight-bold ms-3 m-r-15"
-              onClick={() => setShowJoin(true)}
-            >
-              Tham gia lớp
-            </Button>
-          </div>
-        </div>
-      </div>
       <div className="row ">
         {props.data.map((item, index) => {
           return (
             <div
               className="col col-md-3  mb-4 cursor-pointer"
-              // onClick={() =>
-              //   handleDetailClassroom(item.id, item.class_code, item.number_roll_call, item.number_lesson_week)
-              // }
+              onClick={() =>
+                handleDetailClassroom(item.id, item.class_code, item.number_roll_call, item.number_lesson_week)
+              }
               key={index}
             >
               <div className="classroom_content">
@@ -88,7 +89,6 @@ export function ClientOverview(props) {
           </div>
         </div> */}
       </div>
-      <JoinClassroom show={show} setStateModal={() => setShowJoin(false)} />
     </>
   );
 }

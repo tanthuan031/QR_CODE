@@ -1,0 +1,7 @@
+.contain_qr {
+  display: flex;
+  justify-content: center;
+  border: 2px solid rgba(212, 10, 10, 0.3);
+  border-radius: 5px;
+  width: 400px !important;
+}

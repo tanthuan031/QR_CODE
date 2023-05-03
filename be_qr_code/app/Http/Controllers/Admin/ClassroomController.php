@@ -4,14 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\Admin\ClassroomService;
+use App\Services\Client\AttendanceClientService;
+use App\Services\Client\ClassroomClientService;
 use Illuminate\Http\Request;
 
 class ClassroomController extends Controller
 {
     protected ClassroomService $classroomService;
-    public function __construct(ClassroomService $classroomService)
+    protected AttendanceClientService $attendanceClientService;
+    public function __construct(ClassroomService $classroomService, AttendanceClientService $attendanceClientService)
     {
-        $this->classroomService=$classroomService;
+        $this->classroomService = $classroomService;
+        $this->attendanceClientService = $attendanceClientService;
     }
 
     /**
@@ -24,7 +28,6 @@ class ClassroomController extends Controller
 
 
         return $this->classroomService->getAll($request);
-
     }
 
     /**
@@ -46,13 +49,12 @@ class ClassroomController extends Controller
     public function store(Request $request)
     {
         //
-        if($request->has('add-class-detail')){
-            $data=$request->detail_classroom;
-          return $this->classroomService->createClassroomDetail($data,$request['classroom_id']);
-        }else{
+        if ($request->has('add-class-detail')) {
+            $data = $request->detail_classroom;
+            return $this->classroomService->createClassroomDetail($data, $request['classroom_id']);
+        } else {
             return $this->classroomService->createClassroom($request);
         }
-
     }
 
     /**
@@ -61,11 +63,11 @@ class ClassroomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,$id)
+    public function show(Request $request, $id)
 
     {
         //
-        return $this->classroomService->showDetailClassroom($request,$id);
+        return $this->classroomService->showDetailClassroom($request, $id);
     }
 
     /**
@@ -89,6 +91,7 @@ class ClassroomController extends Controller
     public function update(Request $request, $id)
     {
         //
+        return $this->attendanceClientService->updateAttendanceClassroom($request);
     }
 
     /**

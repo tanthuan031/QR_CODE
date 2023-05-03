@@ -5,7 +5,7 @@ import { FaFileExcel, FaSearch } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { ClassRoom } from '../../../components/Admin/Classroom';
 import CreateClassroom from '../../../components/Admin/Classroom/CreateClassroom';
-import { DetailClassroomTable } from '../../../components/Admin/Classroom/DetailClassroom';
+// import { DetailClassroomTable } from '../../../components/Admin/Classroom/DetailClassroom';
 import QRCodeGenerator from '../../../components/Admin/Classroom/DetailClassroom/QRCode';
 import Modal from '../../../components/Layouts/Modal';
 import PaginationUI from '../../../components/Layouts/Pagination';
@@ -17,102 +17,31 @@ import {
 } from '../../../redux/selectors/classroom/classroom.selector';
 import { getAllClassroom } from '../../../api/Admin/Classroom/classroomAPI';
 import { configureStore } from '@reduxjs/toolkit';
-
+const DetailClassroomTable = React.lazy(() => import('../../../components/Admin/Classroom/DetailClassroom'));
 export function ClassroomPage() {
   const dispatch = useDispatch();
-  const [totalRecord, setTotalRecords] = React.useState(11);
+  const [totalRecord, setTotalRecords] = React.useState(0);
+  const [show, setShowCreate] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [page, setPage] = React.useState(1);
   // const [isDetailClassroom, setIsDetailClassroom] = React.useState(false);
   const isDetailClassroom = useSelector(isDetailClassroomSelector);
   const isQRClassroom = useSelector(isQRClassroomSelector);
-  const dataTableBody = [];
-  const dataHeaderDetailClassroom = [
-    {
-      id: 1,
-      name: 'STT',
-    },
-    {
-      id: 2,
-      name: 'MSSV',
-    },
-    {
-      id: 3,
-      name: 'Tên SV',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-    {
-      id: 4,
-      name: 'Tuần 1',
-    },
-  ];
+  const handleGetAllClassroom = async () => {
+    const result = await getAllClassroom({
+      key: 'id',
+      value: 'asc',
+    });
 
+    if (result === 401) {
+      return false;
+    } else if (result === 500) {
+      return false;
+    } else {
+      setClassroom(result);
+    }
+  };
   React.useEffect(() => {
-    const handleGetAllClassroom = async () => {
-      const result = await getAllClassroom({
-        key: 'id',
-        value: 'asc',
-      });
-
-      if (result === 401) {
-        return false;
-      } else if (result === 500) {
-        return false;
-      } else {
-        setClassroom(result);
-      }
-    };
     handleGetAllClassroom();
   }, [dispatch]);
   const setClassroom = (result, value) => {
@@ -144,11 +73,39 @@ export function ClassroomPage() {
 
           {!isDetailClassroom.checkDetail && !isQRClassroom && (
             <div className="row">
+              <div className="row mb-5 justify-content-end ">
+                <div className="d-flex justify-content-between">
+                  <div className="d-flex  "></div>
+                  <div className="d-flex justify-content-between ">
+                    <Form>
+                      <InputGroup>
+                        <Form.Control
+                          id="search-order"
+                          placeholder="Nhập mã lớp để tìm kiếm"
+                          // onChange={(e) => setSearch(e.target.value)}
+                        />
+
+                        <Button id="search-user" variant="info" type="submit">
+                          <FaSearch />
+                        </Button>
+                      </InputGroup>
+                    </Form>
+                    <Button
+                      id="create-new-product"
+                      variant="info"
+                      className="font-weight-bold ms-3 m-r-15"
+                      onClick={() => setShowCreate(true)}
+                    >
+                      Create classroom
+                    </Button>
+                  </div>
+                </div>
+              </div>
               <ClassRoom data={data} />
-              {totalRecord > 10 && (
+              {totalRecord > 20 && (
                 <PaginationUI
                   handlePageChange={handlePageChange}
-                  perPage={8}
+                  perPage={20}
                   totalRecord={totalRecord}
                   currentPage={page}
                 />
@@ -159,15 +116,20 @@ export function ClassroomPage() {
         {/* <Modal setStateModal={() => setShowCreate(false)} show={show} elementModalBody={bodyModalCreateClass()} /> */}
 
         {isDetailClassroom.checkDetail && !isQRClassroom && (
-          <DetailClassroomTable
-            tableBody={dataTableBody}
-            tableHeader={dataHeaderDetailClassroom}
-
+          <React.Suspense>
+            <DetailClassroomTable
             // isDetailClassroom.checkDetail={}
-          />
+            />
+          </React.Suspense>
         )}
 
         {!isDetailClassroom.checkDetail && isQRClassroom && <QRCodeGenerator />}
+
+        <CreateClassroom
+          show={show}
+          setStateModal={() => setShowCreate(false)}
+          handleGetAllClassroom={handleGetAllClassroom}
+        />
       </section>
     </>
   );

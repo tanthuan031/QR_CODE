@@ -3,29 +3,48 @@ import QRCode from 'qrcode.react';
 import { FaEdit, FaRegClock } from 'react-icons/fa';
 import './style.css';
 import { Button } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setIsDetailClassroom, setIsQR } from '../../../../../redux/reducer/classroom/classroom.reducer';
+import {
+  dataCreateQRCodeSelector,
+  isDetailClassroomSelector,
+} from '../../../../../redux/selectors/classroom/classroom.selector';
+import Countdown from 'react-countdown-now';
+
 const QRCodeGenerator = () => {
-  const [timeLeft, setTimeLeft] = useState(10 * 60);
   const dispatch = useDispatch();
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setTimeLeft((prevTimeLeft) => prevTimeLeft - 1);
-    }, 1000);
+  const dataCreateQRCode = useSelector(dataCreateQRCodeSelector);
+  const isDetailClassroom = useSelector(isDetailClassroomSelector);
 
-    return () => clearInterval(intervalId);
-  }, []);
-  console.log(timeLeft);
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
-  const [text, setText] = useState('');
-
-  const handleInputChange = (event) => {
-    setText(event.target.value);
+  const [text, setText] = useState(dataCreateQRCode);
+  const onComplete = () => {
+    setText('');
+    cancelQR();
+    console.log('Countdown completed');
   };
-  const cancleQR = () => {
+
+  const cancelQR = () => {
     dispatch(setIsQR(false));
-    dispatch(setIsDetailClassroom(true));
+    dispatch(
+      setIsDetailClassroom({
+        ...isDetailClassroom,
+        checkDetail: true,
+      })
+    );
+  };
+
+  const renderer = ({ hours, minutes, seconds, completed }) => {
+    if (completed) {
+      // Render a completed state
+      return <>Hết giờ</>;
+    } else {
+      // Render a countdown
+      return (
+        <span>
+          {minutes}:{seconds}
+        </span>
+      );
+    }
   };
   return (
     <div>
@@ -33,11 +52,10 @@ const QRCodeGenerator = () => {
         <div className="col col-md-3"></div>
         <div className="col col-md-6">
           <div className="d-flex justify-content-center">
-            <input type="text" value={text} onChange={handleInputChange} hidden />
-            <QRCode value={text} size={450} className="text-center" />
+            <QRCode value={JSON.stringify(text)} size={450} className="text-center" />
           </div>
           <div className="d-flex justify-content-center pt-3">
-            <Button className="btn-secondary" onClick={() => cancleQR()}>
+            <Button className="btn-secondary" onClick={() => cancelQR()}>
               Hủy
             </Button>
           </div>
@@ -49,7 +67,12 @@ const QRCodeGenerator = () => {
             </p>
             <p>Thời gian còn lại</p>
             <p>
-              {minutes}:{seconds}
+              <Countdown
+                date={Date.now() + dataCreateQRCode.attendance_time * 60000}
+                renderer={renderer}
+                onComplete={onComplete}
+                zeroPadTime={2}
+              />
             </p>
           </div>
         </div>

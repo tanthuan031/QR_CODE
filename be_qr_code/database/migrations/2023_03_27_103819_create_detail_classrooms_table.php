@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('student_code');
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('roll_coll');
             $table->string('score');
             $table->foreignId('classroom_id')->constrained('classrooms');
             $table->timestamps();
