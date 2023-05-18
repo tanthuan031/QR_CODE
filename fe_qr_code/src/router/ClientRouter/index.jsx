@@ -10,6 +10,7 @@ import { handleGetMeClient } from '../../adapter/auth';
 import { deleteCookieClient, getCookiesClient } from '../../api/Client/Auth';
 import { setIsLoginClient, setUserClient } from '../../redux/reducer/auth/auth.reducer';
 import { getUserClientSelector } from '../../redux/selectors';
+import Location from '../../utils/getDistance';
 
 export default function ClientRouter() {
   const dispatch = useDispatch();
@@ -34,6 +35,7 @@ export default function ClientRouter() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/location" element={<ClientLayout slot={<Location role={1} />} />} />
       <Route element={<ClientProtectedRoutes />}>
         <Route path="/" element={<ClientLayout slot={<ClientOverviewPage role={1} />} />} />
       </Route>

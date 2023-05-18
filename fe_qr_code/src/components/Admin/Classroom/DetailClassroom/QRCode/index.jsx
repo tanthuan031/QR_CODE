@@ -10,6 +10,8 @@ import {
   isDetailClassroomSelector,
 } from '../../../../../redux/selectors/classroom/classroom.selector';
 import Countdown from 'react-countdown-now';
+import { SuccessToast } from '../../../../Layouts/Alerts';
+import CryptoJS from 'crypto-js';
 
 const QRCodeGenerator = () => {
   const dispatch = useDispatch();
@@ -19,6 +21,7 @@ const QRCodeGenerator = () => {
   const [text, setText] = useState(dataCreateQRCode);
   const onComplete = () => {
     setText('');
+    SuccessToast('Hết thời gian điểm danh', 3000);
     cancelQR();
     console.log('Countdown completed');
   };
@@ -52,7 +55,7 @@ const QRCodeGenerator = () => {
         <div className="col col-md-3"></div>
         <div className="col col-md-6">
           <div className="d-flex justify-content-center">
-            <QRCode value={JSON.stringify(text)} size={450} className="text-center" />
+            <QRCode value={btoa(JSON.stringify(text))} size={450} className="text-center" />
           </div>
           <div className="d-flex justify-content-center pt-3">
             <Button className="btn-secondary" onClick={() => cancelQR()}>

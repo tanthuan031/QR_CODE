@@ -63,3 +63,21 @@ export const detailClassroomStudentClient = async (id) => {
     return {};
   }
 };
+
+// Attendance
+
+export const attendanceStudentClient = async (body) => {
+  const url = `/api/client/attendance`;
+  const response = await axiosClient.post(url, body, configHeadersAuthenticate());
+  if (response.status === 'success') {
+    return 200;
+  } else if (response.status === 'fail') {
+    return 403;
+  } else if (response.status === 404) {
+    return 404;
+  } else if (response == 'Server error') {
+    return 401;
+  } else {
+    return 401;
+  }
+};

@@ -12,7 +12,7 @@ import { BlockUI, BlockUICLIENT } from '../../Layouts/Notiflix';
 export function ClassRoom(props) {
   const dispatch = useDispatch();
 
-  const handleDetailClassroom = async (id, classCode, numberRollCall, numberLessonWeek) => {
+  const handleDetailClassroom = async (id, classCode, nameClassroom, nameTeacher, numberRollCall, numberLessonWeek) => {
     BlockUICLIENT('#root', 'fixed');
     const result = await getClassroomById(id);
 
@@ -26,6 +26,8 @@ export function ClassRoom(props) {
           checkDetail: true,
           idDetail: id,
           classCode: classCode,
+          nameClassroom: nameClassroom,
+          nameTeacher: nameTeacher,
         })
       );
       dispatch(
@@ -47,7 +49,14 @@ export function ClassRoom(props) {
             <div
               className="col col-md-3  mb-4 cursor-pointer"
               onClick={() =>
-                handleDetailClassroom(item.id, item.class_code, item.number_roll_call, item.number_lesson_week)
+                handleDetailClassroom(
+                  item.id,
+                  item.class_code,
+                  item.class_name,
+                  item.teachers.first_name + ' ' + item.teachers.last_name,
+                  item.number_roll_call,
+                  item.number_lesson_week
+                )
               }
               key={index}
             >

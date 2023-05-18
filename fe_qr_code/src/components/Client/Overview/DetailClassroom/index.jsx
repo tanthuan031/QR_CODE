@@ -20,7 +20,7 @@ export function DetailClassroomClientTable(props) {
   const [backdrop, setBackdrop] = React.useState('static');
   const dispatch = useDispatch();
   const dataDetail = useSelector(dataDetailClassroomClientSelector);
-  console.log(isDetailClassroom);
+  console.log('DF', isDetailClassroom);
   const {
     register,
     handleSubmit,
@@ -42,7 +42,12 @@ export function DetailClassroomClientTable(props) {
   };
   const handleScanQR = () => {
     dispatch(setIsScanQR(true));
-    dispatch(setIsDetailClassroomClient(false));
+    dispatch(
+      setIsDetailClassroomClient({
+        ...isDetailClassroom,
+        checkDetail: false,
+      })
+    );
   };
   const columns = [
     {
@@ -137,7 +142,7 @@ export function DetailClassroomClientTable(props) {
       <div style={{ overflow: 'scroll' }}>
         <Table
           columns={columns}
-          dataSource={data}
+          dataSource={data.map((item, index) => ({ ...item, key: index }))}
           scroll={{ x: 'max-content', y: 300 }}
           pagination={{ pageSize: 40 }}
         />

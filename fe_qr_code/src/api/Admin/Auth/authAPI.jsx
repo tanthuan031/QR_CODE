@@ -2,6 +2,7 @@ import Notiflix from 'notiflix';
 
 import axiosClient from '../../axiosClient';
 import { ErrorToast, SuccessToast } from '../../../components/Layouts/Alerts';
+import axiosAdmin from '../../axiosAdmin';
 
 export const setCookiesAdmin = (cname, cvalue, exdays) => {
   const d = new Date();
@@ -122,3 +123,16 @@ export const logoutAdmin = async () => {
 //     return 404;
 //   }
 // };
+
+export const getDistanceFromLatLonInKm = async (body) => {
+  const url = `/api/calculate-distance`;
+
+  const response = await axiosClient.get('/api/calculate-distance', {
+    params: body,
+  });
+  if (response.status === 'OK') {
+    return response.routes[0].legs[0].distance;
+  } else {
+    return false;
+  }
+};

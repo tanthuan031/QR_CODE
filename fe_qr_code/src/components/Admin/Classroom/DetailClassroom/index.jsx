@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Checkbox, Table } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { FaEdit } from 'react-icons/fa';
@@ -27,6 +27,8 @@ import './style.css';
 import { BlockUICLIENT } from '../../../Layouts/Notiflix';
 import Notiflix from 'notiflix';
 import { ErrorToast, SuccessToast } from '../../../Layouts/Alerts';
+import { getCookiesAdmin } from '../../../../api/Admin/Auth/authAPI';
+import { getDistanceFromLatLonInKm } from '../../../../utils/getDistanceFromLatLonInKm';
 
 export default function DetailClassroomTable(props) {
   const [backdrop, setBackdrop] = React.useState('static');
@@ -51,10 +53,24 @@ export default function DetailClassroomTable(props) {
   const [attendance_time, setAttendanceTime] = React.useState(0);
   const [attendance_week, setAttendanceWeek] = React.useState(0);
   const [attendance_lesson, setAttendanceLesson] = React.useState(0);
-
+  // Get location
+  const dispatch = useDispatch();
+  const [currentLocation, setCurrentLocation] = useState({
+    latitude: null,
+    longitude: null,
+  });
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setCurrentLocation({ latitude, longitude });
+      },
+      (error) => console.log(error)
+    );
+  }, [dispatch]);
+  console.log('admin location', currentLocation);
   const isDetailClassroom = useSelector(isDetailClassroomSelector);
 
-  const dispatch = useDispatch();
   const dataDetail = useSelector(dataDetailClassroomSelector);
 
   const {
@@ -78,12 +94,21 @@ export default function DetailClassroomTable(props) {
   };
 
   const createQTCode = () => {
+    const now = new Date();
+    const options = { timeZone: 'Asia/Ho_Chi_Minh' };
+    const tokensAdmin = getCookiesAdmin('token');
     const data = {
       attendance_range: attendance_range,
       attendance_time: attendance_time,
       attendance_week: attendance_week,
       attendance_lesson: attendance_lesson,
       id_classroom: isDetailClassroom.idDetail,
+      name_classroom: isDetailClassroom.nameClassroom,
+      code_classroom: isDetailClassroom.classCode,
+      name_teacher: isDetailClassroom.nameTeacher,
+      create_at: now.toLocaleString('en-US', options),
+      tokensAdmin: tokensAdmin,
+      location: currentLocation,
     };
     dispatch(setDataCreateQRCode(data));
     dispatch(setIsQR(true));
@@ -138,6 +163,7 @@ export default function DetailClassroomTable(props) {
                   onChange={(option) => setAttendanceTime(option.target.value)}
                 >
                   <option value={0}>Open this select menu</option>
+                  <option value={1}>1 phút </option>
                   <option value={5}>5 phút </option>
                   <option value={10}>10 phút</option>
                   <option value={15}>15 phút</option>
