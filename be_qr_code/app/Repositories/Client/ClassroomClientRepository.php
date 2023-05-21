@@ -29,6 +29,7 @@ class ClassroomClientRepository
                     ->whereColumn('classrooms.class_code', '=', 'join_classrooms.classroom_code')
                     ->where('student_code', $studentCode);
             })
+                ->search($request)
                 ->with('teachers')->paginate($this->paginate);
 
             return $data;

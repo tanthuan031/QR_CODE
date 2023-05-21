@@ -2,8 +2,10 @@
 
 namespace App\Repositories\Admin;
 
+use App\Models\Attendance;
 use App\Models\Classroom;
 use App\Models\DetailClassroom;
+use App\Models\JoinClassroom;
 use Illuminate\Support\Facades\Auth;
 
 class ClassroomRepository
@@ -18,7 +20,7 @@ class ClassroomRepository
     {
         $user = Auth::user();
         $data = Classroom::query()
-            //            ->filter($request)
+            ->search($request)
             ->where('teacher_code', $user['id'])
             ->with('teachers')
             ->paginate($this->paginate);
@@ -81,5 +83,90 @@ class ClassroomRepository
         } catch (\Exception $e) {
             return $e;
         }
+    }
+
+    public function updateClassroom($dataRequest, $id)
+    {
+        try {
+            if (isset($dataRequest->number_lesson_week) || isset($dataRequest->number_roll_call)) {
+                $attendance = Attendance::query()->where('classroom_id', $id)->first();
+                if ($attendance !== null) {
+                    return [
+                        'message' => 'Classroom has been attendanced. Not updated number lesson week & number roll call',
+                        'status' => 'fail'
+                    ];
+                }
+            }
+            $resultClassroom = Classroom::query()->where('id', '=', $id)->first();
+            $resultClassroom->update($dataRequest->all());
+            return [
+                'message' => 'Update classroom successfully',
+                'status' => 'success',
+                'data' => $resultClassroom
+            ];
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $teacher = Auth::user();
+            $classroom = Classroom::query()
+                ->where('teacher_code', $teacher['id'])
+                ->find($id);
+            if ($classroom !== null) {
+                Attendance::where('classroom_id', $id)->delete();
+                JoinClassroom::where('classroom_code', $classroom['class_code'])->delete();
+                DetailClassroom::where('classroom_id', $id)->delete();
+                $classroom->delete();
+                return $classroom;
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function exportClassroom($request, $id)
+    {
+        // $headings = [
+        //     'STT', 'MSSV', 'Họ và tên lót', 'Tên', 'Mã l', 'Giá mua', 'Ngày mua', 'Mô tả', 'Người tạo'
+        // ];
+
+        // if ($request->has('allocation')) {
+        //     $results = AssetModem::query()
+        //         ->join('customer_modem', 'assets_modems.id', '=', 'customer_modem.asset_modem_id')
+        //         ->select(
+
+        //             'asset_code',
+        //             'asset_name',
+        //             'supplier',
+        //             'warranty',
+        //             'serial',
+        //             'purchase_cost',
+        //             'purchase_date',
+        //             'asset_description',
+        //             'assets_modems.user_created',
+        //         )->get();
+        // } else {
+        //     $results = AssetModem::query()
+        //         ->select(
+
+        //             'asset_code',
+        //             'asset_name',
+        //             'supplier',
+        //             'warranty',
+        //             'serial',
+        //             'purchase_cost',
+        //             'purchase_date',
+        //             'asset_description',
+        //             'user_created',
+        //         )->get();
+        // }
+
+        // return Excel::download(new AssetModemExport($results, $headings), 'DS TB.xlsx');
     }
 }

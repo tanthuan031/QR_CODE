@@ -30,7 +30,7 @@ Route::group(['as' => 'api.', 'middleware' => ['cors']], function () {
         $lon1 = request('lon1');
         $lat2 = request('lat2');
         $lon2 = request('lon2');
-        $apiKey = 'AIzaSyDHwXONPg967AbSvciO9_5lNLTM2zswS80';
+        $apiKey = 'AIzaSyCoL04ySb4d8ygpEmfFixur0OoaTEvjObI';
 
         // $response = Http::get("https://maps.googleapis.com/maps/api/directions/json", [
         //     'origin' => "$lat1,$lon1",
@@ -75,4 +75,5 @@ Route::group([
     Route::post('logout', [AuthClientController::class, 'logoutClient']);
     Route::resource('classroom', ClassroomClientController::class);
     Route::resource('attendance', AttendanceController::class);
+    Route::post('face_verify', [AttendanceController::class, 'verifyFace']);
 });

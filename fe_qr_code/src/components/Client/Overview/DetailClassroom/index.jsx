@@ -5,7 +5,11 @@ import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { addSchemaStudent } from '../../../../adapter/classroom';
-import { setIsDetailClassroomClient, setIsScanQR } from '../../../../redux/reducer/classroom/classroom.reducer';
+import {
+  setIsAttendanceClient,
+  setIsDetailClassroomClient,
+  setIsScanQR,
+} from '../../../../redux/reducer/classroom/classroom.reducer';
 import {
   dataDetailClassroomClientSelector,
   isDetailClassroomClientSelector,
@@ -38,7 +42,14 @@ export function DetailClassroomClientTable(props) {
 
   const backToPage = () => {
     // props.isDetailClassroom = true;
-    dispatch(setIsDetailClassroomClient(false));
+    dispatch(
+      setIsDetailClassroomClient({
+        ...isDetailClassroom,
+        checkDetail: false,
+      })
+    );
+    dispatch(setIsScanQR(false));
+    dispatch(setIsAttendanceClient(false));
   };
   const handleScanQR = () => {
     dispatch(setIsScanQR(true));
@@ -48,6 +59,7 @@ export function DetailClassroomClientTable(props) {
         checkDetail: false,
       })
     );
+    dispatch(setIsAttendanceClient(false));
   };
   const columns = [
     {

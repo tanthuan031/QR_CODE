@@ -3,7 +3,9 @@ import { useZxing } from 'react-zxing';
 import './style.css';
 import { Button, Form } from 'react-bootstrap';
 import {
+  setAttendanceClient,
   setDataDetailClassroomClient,
+  setIsAttendanceClient,
   setIsDetailClassroomClient,
   setIsScanQR,
 } from '../../../../../redux/reducer/classroom/classroom.reducer';
@@ -34,13 +36,36 @@ const ScanQRCode = ({ onDetected }) => {
   let countStep = 0;
   const detailClassroomClient = useSelector(isDetailClassroomClientSelector);
   const dataDetail = useSelector(dataDetailClassroomClientSelector);
+  const [currentLocation, setCurrentLocation] = useState({
+    latitude: null,
+    longitude: null,
+  });
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setCurrentLocation({ latitude, longitude });
+      },
+      (error) => console.log(error)
+    );
+  }, []);
   const { ref, off, start } = useZxing({
     onResult(result) {
       try {
         const checkData = JSON.parse(atob(result.getText()));
         if (checkData.name_classroom && checkData.attendance_time && checkData.attendance_week) {
           setResult(atob(result.getText()));
-          setShowAttendance(true);
+          // setShowAttendance(true);
+
+          const parsedResult = checkData;
+          dispatch(
+            setAttendanceClient({
+              dataLocation: currentLocation,
+              dataAttendance: parsedResult,
+            })
+          );
+          dispatch(setIsAttendanceClient(true));
+          dispatch(setIsScanQR(false));
         } else {
           countStep++;
           if (countStep == 5) {
@@ -60,6 +85,7 @@ const ScanQRCode = ({ onDetected }) => {
                     checkDetail: false,
                   })
                 );
+                dispatch(setIsAttendanceClient(false));
               },
               okButtonProps: {
                 style: {
@@ -91,6 +117,7 @@ const ScanQRCode = ({ onDetected }) => {
                   checkDetail: false,
                 })
               );
+              dispatch(setIsAttendanceClient(false));
             },
             okButtonProps: {
               style: {
@@ -113,25 +140,28 @@ const ScanQRCode = ({ onDetected }) => {
         checkDetail: true,
       })
     );
+    dispatch(setIsAttendanceClient(false));
   };
   // Get location
-  const [currentLocation, setCurrentLocation] = useState({
-    latitude: null,
-    longitude: null,
-  });
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        setCurrentLocation({ latitude, longitude });
-      },
-      (error) => console.log(error)
-    );
-    if (result) {
-      const parsedResult = JSON.parse(result);
-      setResultAtt(parsedResult);
-    }
-  }, [result]);
+
+  // useEffect(() => {
+  //   navigator.geolocation.getCurrentPosition(
+  //     (position) => {
+  //       const { latitude, longitude } = position.coords;
+  //       setCurrentLocation({ latitude, longitude });
+  //     },
+  //     (error) => console.log(error)
+  //   );
+  //   if (result) {
+  //     const parsedResult = JSON.parse(result);
+  //     dispatch(
+  //       setAttendanceClient({
+  //         dataLocation: currentLocation,
+  //         dataAttendance: parsedResult,
+  //       })
+  //     );
+  //   }
+  // }, [result]);
 
   const {
     register,
@@ -177,7 +207,7 @@ const ScanQRCode = ({ onDetected }) => {
     };
     if (formatData) {
       const checkKm = await getDistanceFromLatLonInKm(location);
-      if (checkKm.value <= Number(resultAtt.attendance_range)) {
+      if (checkKm.value <= Number(resultAtt.attendance_range) * 1000) {
         BlockUICLIENT('#root', 'fixed');
         const result = await attendanceStudentClient(formatData);
         if (result === 200) {
@@ -389,9 +419,6 @@ const ScanQRCode = ({ onDetected }) => {
           <span>{result}</span>
         </p>
         <div className="d-flex justify-content-center pt-3">
-          <Button className="btn-info margin-right-24px" onClick={() => setShowAttendance(true)}>
-            Điểm danh
-          </Button>
           <Button className="btn-secondary" onClick={() => cancelScanQR()}>
             Hủy
           </Button>

@@ -39,7 +39,8 @@ class AttendanceClientService
             return $this->apiResponse([], 'fail', "Time out");
         }
         // Check token
-        $parts = explode('|', $request['tokensAdmin']);
+        $enCode = base64_decode($request['key_value']);
+        $parts = explode('|', $enCode);
         $token_value = $parts[1];
         $tokenExists = DB::table('personal_access_tokens')
             ->where('token', hash('sha256', $token_value))
@@ -82,6 +83,16 @@ class AttendanceClientService
             return $this->apiResponse($result['data'], 'success', $result['message']);
         } else {
             return $this->apiResponse([], 'fail', $result['message']);
+        }
+    }
+
+    public function verifyFace($request)
+    {
+        $result = $this->attendanceRepository->verifyFace($request);
+        if ($result['status'] == 'success') {
+            return $this->apiResponse($result['data'], 'success', $result['message']);
+        } else {
+            return $this->apiResponse($result['data'], 'fail', $result['message']);
         }
     }
 }

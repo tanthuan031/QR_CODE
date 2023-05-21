@@ -91,4 +91,10 @@ class AttendanceController extends Controller
     {
         //
     }
+
+    // Face
+    public function verifyFace(Request $request)
+    {
+        return $this->attendanceService->verifyFace($request);
+    }
 }

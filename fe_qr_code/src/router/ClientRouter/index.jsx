@@ -1,16 +1,15 @@
 import React, { useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import { ClientLayout } from '../../layouts/Client';
-import { ClientOverviewPage } from '../../pages/Client/OverviewPage';
-import { ClientProtectedRoutes } from '../ProtectedRouter/client';
-import { LoginPage } from '../../pages/Common/Auth/LoginPage';
-import { RegisterPage } from '../../pages/Common/Auth/RegisterPage';
 import { useDispatch, useSelector } from 'react-redux';
+import { Route, Routes } from 'react-router-dom';
 import { handleGetMeClient } from '../../adapter/auth';
 import { deleteCookieClient, getCookiesClient } from '../../api/Client/Auth';
+import { ClientLayout } from '../../layouts/Client';
+import { ClientOverviewPage } from '../../pages/Client/OverviewPage';
+import { LoginPage } from '../../pages/Common/Auth/LoginPage';
+import { RegisterPage } from '../../pages/Common/Auth/RegisterPage';
 import { setIsLoginClient, setUserClient } from '../../redux/reducer/auth/auth.reducer';
 import { getUserClientSelector } from '../../redux/selectors';
-import Location from '../../utils/getDistance';
+import { ClientProtectedRoutes } from '../ProtectedRouter/client';
 
 export default function ClientRouter() {
   const dispatch = useDispatch();
@@ -30,12 +29,11 @@ export default function ClientRouter() {
     });
   }, [dispatch]);
   const userInfo = useSelector(getUserClientSelector);
-  console.log(userInfo);
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/location" element={<ClientLayout slot={<Location role={1} />} />} />
+      {/* <Route path="/location" element={<ClientLayout slot={<Location role={1} />} />} /> */}
       <Route element={<ClientProtectedRoutes />}>
         <Route path="/" element={<ClientLayout slot={<ClientOverviewPage role={1} />} />} />
       </Route>

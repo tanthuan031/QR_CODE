@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Classroom extends Model
 {
     use HasFactory;
-//    use SoftDeletes;
+    // use SoftDeletes;
 
-    protected $table ="classrooms";
+    protected $table = "classrooms";
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +21,7 @@ class Classroom extends Model
      * @var array
      */
 
-    protected $fillable=[
+    protected $fillable = [
         "class_name",
         "number_roll_call",
         "number_lesson_week",
@@ -29,14 +29,23 @@ class Classroom extends Model
         "class_code"
     ];
 
-    public function teachers():BelongsTo
+    public function teachers(): BelongsTo
     {
-        return $this->belongsTo(Teacher::class,'teacher_code');
+        return $this->belongsTo(Teacher::class, 'teacher_code');
     }
 
-    public function joinClassrooms():HasMany
+    public function joinClassrooms(): HasMany
     {
-        return $this->hasMany(JoinClassroom::class,'classroom_code','class_code');
+        return $this->hasMany(JoinClassroom::class, 'classroom_code', 'class_code');
     }
 
+    public function scopeSearch($query, $request)
+    {
+        return $query
+            ->when($request->has('search'), function ($query) use ($request) {
+                $search = $request->query('search');
+                $query
+                    ->where("class_code", "LIKE", "%{$search}%");
+            });
+    }
 }

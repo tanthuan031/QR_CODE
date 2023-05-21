@@ -6,6 +6,10 @@ use App\Models\Attendance;
 use App\Models\Classroom;
 use App\Models\DetailClassroom;
 use Exception;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class AttendanceClientRepository
 {
@@ -153,5 +157,72 @@ class AttendanceClientRepository
             ];
         }
         return $data;
+    }
+
+    // Face
+
+    public function verifyFace($request)
+    {
+        try {
+            $api_key = "yz2NUwCpZzKWM-55htquHvcTClkyb1G5";
+            $api_secret = "B_2yp6twWIfNRISDjGBKDvYruM_KQr1K";
+            $imageUser = Auth::user();
+            $imagePath = "public/User/{$imageUser->image}";
+            $client = new Client();
+            $imageContent = Storage::get($imagePath);
+            if ($imageContent !== null) {
+                $imageOriginal = base64_encode($imageContent);
+                $imageVerify = $request->imageVeryfile;
+                $response =
+                    $client->post("https://api-us.faceplusplus.com/facepp/v3/compare", [
+                        'multipart' => [
+                            [
+                                'name' => 'api_key',
+                                'contents' => $api_key,
+                            ],
+                            [
+                                'name' => 'api_secret',
+                                'contents' => $api_secret,
+                            ],
+                            [
+                                'name' => 'image_base64_1',
+                                'contents' => $imageOriginal,
+                            ],
+                            [
+                                'name' => 'image_base64_2',
+                                'contents' => $imageVerify,
+                            ],
+                        ],
+                        'verify' => false
+                    ]);
+                $result = json_decode($response->getBody(), true);
+                if ($result['confidence'] >= 80) {
+                    $data = [
+                        'status' => 'success',
+                        'message' => "Verify face successfully",
+                        'data' => $result['confidence']
+                    ];
+                } else {
+                    $data = [
+                        'status' => 'fail',
+                        'message' => "Verify face mismatch",
+                        'data' => $result['confidence']
+                    ];
+                }
+            } else {
+                $data = [
+                    'status' => 'error',
+                    'message' => "Error image uploaded",
+                    'data' => []
+                ];
+            }
+            return $data;
+        } catch (Exception $e) {
+            return [
+                'status' => 'error',
+                'message' => "Data face not found",
+                'data' => []
+            ];
+        }
     }
 }

@@ -2,13 +2,15 @@
 import Notiflix from 'notiflix';
 import * as React from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
-import { FaSearch } from 'react-icons/fa';
+import { FaEye, FaFileExport, FaSearch, FaTrash } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import { setDataDetailClassroom, setIsDetailClassroom } from '../../../redux/reducer/classroom/classroom.reducer';
 import CreateClassroom from './CreateClassroom';
 import './style.css';
-import { getClassroomById } from '../../../api/Admin/Classroom/classroomAPI';
+import { deleteClassroom, getClassroomById } from '../../../api/Admin/Classroom/classroomAPI';
 import { BlockUI, BlockUICLIENT } from '../../Layouts/Notiflix';
+import { Modal as ModalConfirm } from 'antd';
+import { ErrorToast, SuccessToast } from '../../Layouts/Alerts';
 export function ClassRoom(props) {
   const dispatch = useDispatch();
 
@@ -40,7 +42,39 @@ export function ClassRoom(props) {
     }
     Notiflix.Block.remove('#root');
   };
-
+  const handleDeleteClassroom = async (e, id) => {
+    e.stopPropagation();
+    ModalConfirm.confirm({
+      title: 'Cảnh báo',
+      icon: '',
+      content: `Bạn muốn xóa lớp học này`,
+      okText: 'Xóa',
+      // cancelText: 'Đóng',
+      onOk: async () => {
+        BlockUICLIENT('#root', 'fixed');
+        const result = await deleteClassroom(id);
+        if (result === 200) {
+          SuccessToast('Xóa lớp học thành công', 3500);
+          Notiflix.Block.remove('.sl-box');
+          props.handleGetAllClassroom();
+        } else if (result === 403) {
+          ErrorToast('Xóa lớp học thất bại', 3500);
+          Notiflix.Block.remove('.sl-box');
+        } else {
+          ErrorToast('Có lỗi . Vui lòng thử lại', 3500);
+          Notiflix.Block.remove('.sl-box');
+        }
+        Notiflix.Block.remove('#root');
+      },
+      okButtonProps: {
+        style: {
+          backgroundColor: '#ff4d4f',
+        },
+      },
+      centered: true,
+    });
+  };
+  const handleExport = () => {};
   return (
     <>
       <div className="row ">
@@ -70,11 +104,27 @@ export function ClassRoom(props) {
                 </div>
                 <div className="classroom_footer">
                   <div className="row">
-                    <div className="col col-md-12">
+                    <div className="col col-md-9">
                       <p>Số tuần học : {item.number_roll_call}</p>
                       <p>
                         Mã lớp: <span className="font-weight-bold ">{item.class_code}</span>
                       </p>
+                    </div>
+                    <div className="d-flex col col-md-3 text-danger ">
+                      <button
+                        id="edit-product"
+                        onClick={(e) => handleExport(e, item.id)}
+                        className="cursor-pointer  mt-2 padding-right-1x  bg-gray-100 text-success  d-flex align-items-center justify-content-center border-none"
+                      >
+                        <FaEye />
+                      </button>
+                      <button
+                        id="edit-product"
+                        onClick={(e) => handleDeleteClassroom(e, item.id)}
+                        className="cursor-pointer  mt-2  bg-gray-100 text-danger  d-flex align-items-center justify-content-center border-none "
+                      >
+                        <FaTrash />
+                      </button>
                     </div>
                   </div>
                 </div>

@@ -68,4 +68,34 @@ class ClassroomService
             return $this->apiResponse([], 'fail', 'Create student classroom detail unsuccessfully');
         }
     }
+
+    public function updateClassroom($data, $idClass)
+    {
+        $result = $this->classroomRepository->updateClassroom($data, $idClass);
+        if ($result['status'] == 'success') {
+            return $this->apiResponse($result['data'], 'success', $result['message']);
+        } else {
+            return $this->apiResponse([], 'fail', $result['message']);
+        }
+    }
+
+    public function destroy($idClass)
+    {
+        $result = $this->classroomRepository->destroy($idClass);
+        if ($result) {
+            return $this->apiResponse($result, 'success', 'Deleted classroom successfully');
+        } else {
+            return $this->apiResponse([], 'fail', 'Deleted classroom unsuccessfully');
+        }
+    }
+
+    public function exportClassroom($request, $id)
+    {
+        $result = $this->classroomRepository->exportClassroom($request, $id);
+        if ($result) {
+            return $this->apiResponse($result, 'success', 'Export classroom successfully');
+        } else {
+            return $this->apiResponse([], 'fail', 'Export classroom unsuccessfully');
+        }
+    }
 }

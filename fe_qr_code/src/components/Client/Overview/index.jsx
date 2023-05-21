@@ -5,6 +5,7 @@ import { FaSearch } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import {
   setDataDetailClassroomClient,
+  setIsAttendanceClient,
   setIsDetailClassroom,
   setIsDetailClassroomClient,
 } from '../../../redux/reducer/classroom/classroom.reducer';
@@ -39,6 +40,7 @@ export function ClientOverview(props) {
           numberLessonWeek,
         })
       );
+      dispatch(setIsAttendanceClient(false));
     }
     Notiflix.Block.remove('#root');
   };

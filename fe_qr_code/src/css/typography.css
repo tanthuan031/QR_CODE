@@ -95,8 +95,11 @@ a {
   padding-right: 4rem;
   font-size: 1.8rem;
 }
+.padding-right-10x {
+  padding-right: 10rem;
+}
 .padding-right-1x {
-  padding-right: 2px;
+  padding-right: 6px;
 }
 .margin-left-12px {
   margin-left: var(--12px);

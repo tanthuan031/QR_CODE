@@ -17,6 +17,8 @@ import {
 } from '../../../redux/selectors/classroom/classroom.selector';
 import { getAllClassroom } from '../../../api/Admin/Classroom/classroomAPI';
 import { configureStore } from '@reduxjs/toolkit';
+import { ErrorToast } from '../../../components/Layouts/Alerts';
+import Notiflix from 'notiflix';
 const DetailClassroomTable = React.lazy(() => import('../../../components/Admin/Classroom/DetailClassroom'));
 export function ClassroomPage() {
   const dispatch = useDispatch();
@@ -27,6 +29,7 @@ export function ClassroomPage() {
   // const [isDetailClassroom, setIsDetailClassroom] = React.useState(false);
   const isDetailClassroom = useSelector(isDetailClassroomSelector);
   const isQRClassroom = useSelector(isQRClassroomSelector);
+  const [search, setSearch] = React.useState('');
   const handleGetAllClassroom = async () => {
     const result = await getAllClassroom({
       key: 'id',
@@ -64,7 +67,37 @@ export function ClassroomPage() {
       setClassroom(result, 'page');
     }
   };
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (search !== '') {
+      const result = await getAllClassroom({
+        page: page,
+        search,
+      });
+      if (result === 401) {
+        ErrorToast('Something went wrong. Please try again', 3000);
+      } else if (result === 500) {
+        ErrorToast('Something went wrong. Please try again', 3000);
+      } else {
+        setClassroom(result, 'page');
+      }
 
+      Notiflix.Block.remove('#root');
+    } else {
+      const result = await getAllClassroom({
+        page: page,
+      });
+      if (result === 401) {
+        ErrorToast('Something went wrong. Please try again', 3000);
+      } else if (result === 500) {
+        ErrorToast('Something went wrong. Please try again', 3000);
+      } else {
+        setClassroom(result, 'page');
+      }
+
+      Notiflix.Block.remove('#root');
+    }
+  };
   return (
     <>
       <section>
@@ -77,12 +110,12 @@ export function ClassroomPage() {
                 <div className="d-flex justify-content-between">
                   <div className="d-flex  "></div>
                   <div className="d-flex justify-content-between ">
-                    <Form>
+                    <Form onSubmit={(e) => handleSearch(e)}>
                       <InputGroup>
                         <Form.Control
                           id="search-order"
                           placeholder="Nhập mã lớp để tìm kiếm"
-                          // onChange={(e) => setSearch(e.target.value)}
+                          onChange={(e) => setSearch(e.target.value)}
                         />
 
                         <Button id="search-user" variant="info" type="submit">
@@ -101,7 +134,7 @@ export function ClassroomPage() {
                   </div>
                 </div>
               </div>
-              <ClassRoom data={data} />
+              <ClassRoom data={data} handleGetAllClassroom={handleGetAllClassroom} />
               {totalRecord > 20 && (
                 <PaginationUI
                   handlePageChange={handlePageChange}

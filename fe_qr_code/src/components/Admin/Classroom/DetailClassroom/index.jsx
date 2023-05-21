@@ -3,7 +3,7 @@ import { Checkbox, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { FaEdit } from 'react-icons/fa';
+import { FaEdit, FaFileExport } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { addSchemaStudent } from '../../../../adapter/classroom';
 import {
@@ -68,7 +68,7 @@ export default function DetailClassroomTable(props) {
       (error) => console.log(error)
     );
   }, [dispatch]);
-  console.log('admin location', currentLocation);
+
   const isDetailClassroom = useSelector(isDetailClassroomSelector);
 
   const dataDetail = useSelector(dataDetailClassroomSelector);
@@ -309,7 +309,7 @@ export default function DetailClassroomTable(props) {
     BlockUICLIENT('#root', 'fixed');
     const dataEdit = idEditStudent;
     const result = await editAttendanceStudent(1, dataEdit);
-    console.log('result', result);
+
     if (result === 200) {
       getAllStudentDetails();
       SuccessToast('Điểm danh thành công', 3500);
@@ -466,10 +466,83 @@ export default function DetailClassroomTable(props) {
     dispatch(setIsQR(false));
     Notiflix.Block.remove('#root');
   };
+  const handleExport = () => {
+    const XLSX = require('xlsx');
 
+    // Chuyển đổi dữ liệu thành định dạng có thể xuất ra
+    const exportData = dataDetail.data.map((detail) => {
+      const exportItem = {
+        '-': '', // Cột hành động
+        MSSV: detail.student_code,
+        'TÊN SINH VIÊN': `${detail.first_name} ${detail.last_name}`,
+      };
+
+      // Thêm cột cho từng tuần
+      for (let i = 0; i < dataDetail.numberRollCall; i++) {
+        const week = i + 1;
+        const weekData = detail.attendances.filter((attendance) => attendance.week == week);
+
+        if (weekData.length > 0) {
+          const mergedCell = {
+            s: { r: 0, c: i + 3 }, // Tọa độ ô bắt đầu (dòng, cột)
+            e: { r: dataDetail.numberLessonWeek - 1, c: i + 3 }, // Tọa độ ô kết thúc (dòng, cột)
+          };
+
+          const lessons = weekData.map((attendance) => attendance.lesson);
+          const checkedLessons = Array.from({ length: dataDetail.numberLessonWeek }, (_, j) =>
+            lessons.includes(String(j + 1)) ? 'X' : ''
+          );
+
+          exportItem[`Tuần ${week}`] = { v: checkedLessons.join(' '), s: mergedCell }; // Gán ô đã gộp cho cột tuần
+        } else {
+          exportItem[`Tuần ${week}`] = ''; // Không có dữ liệu điểm danh cho tuần này
+        }
+      }
+      exportItem['ĐIỂM'] = Number(detail.score).toFixed(2);
+
+      return exportItem;
+    });
+
+    // Tạo worksheet từ dữ liệu
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+
+    // Điều chỉnh độ rộng cột
+    const columnWidths = [
+      { wch: 2 }, // Độ rộng cột hành động
+      { wch: 10 }, // Độ rộng cột MSSV
+      { wch: 20 }, // Độ rộng cột TÊN SINH VIÊN
+      { wch: 5 }, // Độ rộng cột ĐIỂM
+    ];
+
+    for (let i = 0; i < dataDetail.numberRollCall; i++) {
+      columnWidths.push({ wch: 10 }); // Độ rộng cột tuần
+    }
+
+    worksheet['!cols'] = columnWidths;
+
+    // Tạo workbook và thêm worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1');
+
+    // Xuất workbook ra file Excel
+    const excelFileName = `${isDetailClassroom.nameClassroom}.xlsx`;
+    XLSX.writeFile(workbook, excelFileName);
+  };
   const columns01 = [
     {
-      title: '-',
+      title: (
+        <>
+          <Button
+            id="create-new-product"
+            variant="success"
+            className=" btn btn-sm font-weight-bold ms-3 m-r-15"
+            size="small"
+            onClick={() => handleExport()}
+          >
+            <FaFileExport />
+          </Button>
+        </>
+      ),
       dataIndex: 'Action',
       key: 'STT',
       width: 100,
@@ -542,15 +615,22 @@ export default function DetailClassroomTable(props) {
       attendances: detail.attendances,
       score: <span style={{ marginLeft: '30%', fontWeight: '700' }}>{Number(detail.score).toFixed(2)}</span>,
     }));
+
   return (
     <>
-      <div className="row mb-5 justify-content-end ">
-        <div className="d-flex justify-content-between">
-          <div className="d-flex  ">
+      <div className="row">
+        <div className="col col-md-12">
+          <div className="d-flex">
             Mã lớp:<span className="font-weight-bold  padding-left-12px"> {isDetailClassroom.classCode}</span>
           </div>
-          <div className="d-flex justify-content-between ">
-            {/* <Form>
+        </div>
+
+        <div className="col col-md-2"></div>
+        <div className="col col-md-10">
+          {' '}
+          <div className="row mb-5 justify-content-end ">
+            <div className="d-flex justify-content-end ">
+              {/* <Form>
               <InputGroup>
                 <Form.Control
                   id="search-order"
@@ -563,23 +643,23 @@ export default function DetailClassroomTable(props) {
                 </Button>
               </InputGroup>
             </Form> */}
-            <Button
-              id="create-new-product"
-              variant="info"
-              className="font-weight-bold ms-3 m-r-15"
-              onClick={() => setShowAddStudent(true)}
-            >
-              Thêm sinh viên
-            </Button>
-            <Button
-              id="create-new-product"
-              variant="info"
-              className="font-weight-bold ms-3 m-r-15"
-              onClick={() => setShow(true)}
-            >
-              Điểm danh QR
-            </Button>
-            {/* <Button
+              <Button
+                id="create-new-product"
+                variant="info"
+                className="font-weight-bold ms-3 m-r-15"
+                onClick={() => setShowAddStudent(true)}
+              >
+                Thêm sinh viên
+              </Button>
+              <Button
+                id="create-new-product"
+                variant="info"
+                className="font-weight-bold ms-3 m-r-15"
+                onClick={() => setShow(true)}
+              >
+                Điểm danh QR
+              </Button>
+              {/* <Button
               id="create-new-product"
               variant="info"
               className="font-weight-bold ms-3 m-r-15"
@@ -587,17 +667,19 @@ export default function DetailClassroomTable(props) {
             >
               Cập nhật danh sách
             </Button> */}
-            <Button
-              id="create-new-product"
-              variant="info"
-              className="font-weight-bold ms-3 m-r-15"
-              onClick={() => backToPage()}
-            >
-              Quay lại
-            </Button>
+              <Button
+                id="create-new-product"
+                variant="info"
+                className="font-weight-bold ms-3 m-r-15"
+                onClick={() => backToPage()}
+              >
+                Quay lại
+              </Button>
+            </div>
           </div>
         </div>
       </div>
+
       <div style={{ overflow: 'scroll' }}>
         <Table
           columns={columns01}

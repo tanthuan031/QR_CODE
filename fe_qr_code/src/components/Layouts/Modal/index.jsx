@@ -37,6 +37,6 @@ Modal.propTypes = {
   elementModalBody: PropTypes.element,
   //   elementModalTitle: PropTypes.element,
   setStateModal: PropTypes.func.isRequired,
-  show: PropTypes.bool.isRequired,
+  // show: PropTypes.bool.isRequired,
   backdrop: PropTypes.any,
 };

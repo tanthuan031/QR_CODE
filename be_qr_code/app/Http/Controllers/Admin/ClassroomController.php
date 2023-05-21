@@ -25,8 +25,6 @@ class ClassroomController extends Controller
      */
     public function index(Request $request)
     {
-
-
         return $this->classroomService->getAll($request);
     }
 
@@ -91,7 +89,11 @@ class ClassroomController extends Controller
     public function update(Request $request, $id)
     {
         //
-        return $this->attendanceClientService->updateAttendanceClassroom($request);
+        if ($request->has('update_classroom')) {
+            return $this->classroomService->updateClassroom($request, $id);
+        } else {
+            return $this->attendanceClientService->updateAttendanceClassroom($request);
+        }
     }
 
     /**
@@ -103,5 +105,11 @@ class ClassroomController extends Controller
     public function destroy($id)
     {
         //
+        return $this->classroomService->destroy($id);
+    }
+
+    public function exportClassroom(Request $request, $id)
+    {
+        return $this->classroomService->exportClassroom($request, $id);
     }
 }

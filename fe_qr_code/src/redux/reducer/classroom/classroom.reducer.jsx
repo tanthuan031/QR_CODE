@@ -11,6 +11,8 @@ export const classroomReducer = createSlice({
     isDetailClient: false,
     dataDetailClient: undefined,
     isScanQR: false,
+    dataAttendance: undefined,
+    isAttendance: false,
   },
   reducers: {
     setIsDetailClassroom: (state, action) => {
@@ -36,6 +38,12 @@ export const classroomReducer = createSlice({
     setIsScanQR: (state, action) => {
       state.isScanQR = action.payload;
     },
+    setIsAttendanceClient: (state, action) => {
+      state.isAttendance = action.payload;
+    },
+    setAttendanceClient: (state, action) => {
+      state.dataAttendance = action.payload;
+    },
   },
 });
 export const {
@@ -46,5 +54,7 @@ export const {
   setIsDetailClassroomClient,
   setDataDetailClassroomClient,
   setIsScanQR,
+  setIsAttendanceClient,
+  setAttendanceClient,
 } = classroomReducer.actions;
 export default classroomReducer.reducer;

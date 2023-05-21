@@ -6,3 +6,5 @@ export const dataCreateQRCodeSelector = (state) => state.classroom.dataCreateQR;
 export const isDetailClassroomClientSelector = (state) => state.classroom.isDetailClient;
 export const dataDetailClassroomClientSelector = (state) => state.classroom.dataDetailClient;
 export const isScanQRClassroomSelector = (state) => state.classroom.isScanQR;
+export const dataAttendanceClientSelector = (state) => state.classroom.dataAttendance;
+export const isAttendanceClientSelector = (state) => state.classroom.isAttendance;
