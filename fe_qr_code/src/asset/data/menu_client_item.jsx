@@ -17,7 +17,7 @@ import {
 export const menu_client_item = [
   {
     id: 1,
-    name: 'Overview',
+    name: 'Quản lý lớp học',
     active: true,
     link: '/',
     icon: <FaHome />,
@@ -25,9 +25,9 @@ export const menu_client_item = [
   },
   {
     id: 2,
-    name: 'Classroom',
+    name: 'Lịch sử nghỉ phép',
     active: false,
-    link: '/classroom',
+    link: '/history',
     icon: <FaThLarge />,
     role: 2,
   },

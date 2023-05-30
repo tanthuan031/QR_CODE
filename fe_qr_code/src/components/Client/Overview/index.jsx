@@ -15,6 +15,8 @@ import JoinClassroom from './JoinClassroom';
 import { detailClassroomStudentClient } from '../../../api/Client/Classroom/classroomClientAPI';
 import { BlockUICLIENT } from '../../Layouts/Notiflix';
 import Notiflix from 'notiflix';
+import { getAllNotificationsClient } from '../../../api/Client/NotificationClient/notificationClientAPI';
+import { setDataNotificationClient } from '../../../redux/reducer/notification/notification.reducer';
 export function ClientOverview(props) {
   const dispatch = useDispatch();
 
@@ -26,21 +28,37 @@ export function ClientOverview(props) {
     } else if (result === 500) {
       return false;
     } else {
-      dispatch(
-        setIsDetailClassroomClient({
-          checkDetail: true,
-          idDetail: idClassroom,
-          classCode: classCode,
-        })
-      );
-      dispatch(
-        setDataDetailClassroomClient({
-          data: result,
-          numberRollCall,
-          numberLessonWeek,
-        })
-      );
-      dispatch(setIsAttendanceClient(false));
+      const result1 = await getAllNotificationsClient({
+        classCode: classCode,
+        sort: [
+          {
+            key: 'created_at',
+            value: 'desc',
+          },
+        ],
+      });
+      if (result1 === 401) {
+        return false;
+      } else if (result1 === 400 || result1 === 404 || result1 === 500) {
+        return false;
+      } else {
+        dispatch(
+          setIsDetailClassroomClient({
+            checkDetail: true,
+            idDetail: idClassroom,
+            classCode: classCode,
+          })
+        );
+        dispatch(
+          setDataDetailClassroomClient({
+            data: result,
+            numberRollCall,
+            numberLessonWeek,
+          })
+        );
+        dispatch(setIsAttendanceClient(false));
+        dispatch(setDataNotificationClient(result1.data));
+      }
     }
     Notiflix.Block.remove('#root');
   };

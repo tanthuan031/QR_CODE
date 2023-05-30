@@ -103,43 +103,46 @@ export function ClientOverviewPage() {
     <>
       <section>
         <div className="container-fluid mt-5">
-          <h5 className="font-weight-bold mb-3">Danh sách lớp học</h5>
-
           {!isDetailClassroomClient.checkDetail && !isScanQRClassroom && !isAttendance && (
-            <div className="row">
-              <div className="row mb-5 justify-content-end ">
-                <div className="d-flex justify-content-between">
-                  <div className="d-flex  "></div>
-                  <div className="d-flex justify-content-between ">
-                    <Form onSubmit={(e) => handleSearch(e)}>
-                      <InputGroup>
-                        <Form.Control
-                          id="search-order"
-                          placeholder="Nhập mã lớp để tìm kiếm"
-                          onChange={(e) => setSearch(e.target.value)}
-                        />
+            <>
+              <h5 className="font-weight-bold mb-3">Chi tiết lớp học</h5>
+              <div className="row">
+                <div className="row mb-5 justify-content-end ">
+                  <div className="d-flex justify-content-between">
+                    <div className="d-flex  "></div>
+                    <div className="d-flex justify-content-between ">
+                      <Form onSubmit={(e) => handleSearch(e)}>
+                        <InputGroup>
+                          <Form.Control
+                            id="search-order"
+                            placeholder="Nhập mã lớp để tìm kiếm"
+                            onChange={(e) => setSearch(e.target.value)}
+                            size="sm"
+                          />
 
-                        <Button id="search-user" variant="info" type="submit">
-                          <FaSearch />
-                        </Button>
-                      </InputGroup>
-                    </Form>
-                    <Button
-                      id="create-new-product"
-                      variant="info"
-                      className="font-weight-bold ms-3 m-r-15"
-                      onClick={() => setShowJoin(true)}
-                    >
-                      Tham gia lớp
-                    </Button>
+                          <Button id="search-user" variant="info" type="submit">
+                            <FaSearch />
+                          </Button>
+                        </InputGroup>
+                      </Form>
+                      <Button
+                        id="create-new-product"
+                        variant="outline-success"
+                        size="sm"
+                        className="font-weight-bold ms-3 m-r-15"
+                        onClick={() => setShowJoin(true)}
+                      >
+                        Tham gia lớp
+                      </Button>
+                    </div>
                   </div>
                 </div>
+                <ClientOverview data={data} />
+                {totalRecord > 10 && (
+                  <PaginationUI handlePageChange={handlePageChange} perPage={10} totalRecord={200} currentPage={1} />
+                )}
               </div>
-              <ClientOverview data={data} />
-              {totalRecord > 10 && (
-                <PaginationUI handlePageChange={handlePageChange} perPage={10} totalRecord={200} currentPage={1} />
-              )}
-            </div>
+            </>
           )}
         </div>
         {isDetailClassroomClient.checkDetail && !isAttendance && !isScanQRClassroom && <DetailClassroomClientTable />}

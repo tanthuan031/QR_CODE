@@ -2,9 +2,14 @@
 
 use App\Http\Controllers\Admin\AuthAdminController;
 use App\Http\Controllers\Admin\ClassroomController;
+use App\Http\Controllers\Admin\HistoryAskPermission;
+use App\Http\Controllers\Admin\HistoryAskPermissionController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Client\AttendanceController;
 use App\Http\Controllers\Client\AuthClientController;
 use App\Http\Controllers\Client\ClassroomClientController;
+use App\Http\Controllers\Client\HistoryAskPermissionClientController;
+use App\Http\Controllers\Client\NotificationClientController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -30,7 +35,7 @@ Route::group(['as' => 'api.', 'middleware' => ['cors']], function () {
         $lon1 = request('lon1');
         $lat2 = request('lat2');
         $lon2 = request('lon2');
-        $apiKey = 'AIzaSyCoL04ySb4d8ygpEmfFixur0OoaTEvjObI';
+        $apiKey = env('API_KEY_GOOGLE_MAP');
 
         // $response = Http::get("https://maps.googleapis.com/maps/api/directions/json", [
         //     'origin' => "$lat1,$lon1",
@@ -61,6 +66,8 @@ Route::group([
     Route::get('getme', [AuthAdminController::class, 'getMeAdmin']);
     Route::post('logout', [AuthAdminController::class, 'logoutAdmin']);
     Route::resource('classroom', ClassroomController::class);
+    Route::resource('history-permission', HistoryAskPermissionController::class);
+    Route::resource('notification', NotificationController::class);
 });
 
 // Client routes
@@ -76,4 +83,6 @@ Route::group([
     Route::resource('classroom', ClassroomClientController::class);
     Route::resource('attendance', AttendanceController::class);
     Route::post('face_verify', [AttendanceController::class, 'verifyFace']);
+    Route::resource('history-permission', HistoryAskPermissionClientController::class);
+    Route::resource('notification', NotificationClientController::class);
 });

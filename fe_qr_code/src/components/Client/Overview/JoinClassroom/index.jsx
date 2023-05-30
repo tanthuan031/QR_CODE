@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
-
+import { BlockUICLIENT } from '../../../Layouts/Notiflix';
 import Notiflix from 'notiflix';
 import { useForm } from 'react-hook-form';
 import { joinClassroomSchema } from '../../../../adapter/classroom';
@@ -33,7 +33,7 @@ export default function JoinClassroom(props) {
     props.handleGetAllClassroomClient();
   };
   const handleJoinClassroom = async (data) => {
-    // BlockUICLIENT('#root', 'fixed');
+    BlockUICLIENT('#root', 'fixed');
     const result = await joinClassroomClient(data);
     if (result === 200) {
       SuccessToast('Tham gia lớp thành công', 3500);
@@ -46,7 +46,7 @@ export default function JoinClassroom(props) {
       ErrorToast('Thất bại ! Bạn không có trong danh sách lớp', 3500);
       Notiflix.Block.remove('.sl-box');
     }
-    // Notiflix.Block.remove('#root');
+    Notiflix.Block.remove('#root');
   };
   const renderBody = () => {
     return (

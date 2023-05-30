@@ -1,0 +1,21 @@
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.pulse-animation {
+  animation: pulse 1s infinite;
+  margin: 50%;
+  font-weight: 600;
+}
+.star-new {
+  font-size: 2rem;
+  color: #d2e006;
+}

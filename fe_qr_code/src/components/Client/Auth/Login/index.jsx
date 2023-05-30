@@ -89,7 +89,7 @@ export default function FormLogin() {
                 </div>
               </Form.Group>
               <Form.Group className="mb-3 text-end ">
-                <span className="text-primary  text-end cursor-pointer ">Quên mật khâur ?</span>
+                <span className="text-primary  text-end cursor-pointer ">Quên mật khẩu ?</span>
               </Form.Group>
               <div className="d-flex justify-content-end">
                 <Button

@@ -164,8 +164,8 @@ class AttendanceClientRepository
     public function verifyFace($request)
     {
         try {
-            $api_key = "yz2NUwCpZzKWM-55htquHvcTClkyb1G5";
-            $api_secret = "B_2yp6twWIfNRISDjGBKDvYruM_KQr1K";
+            $api_key = env('API_KEY_FACE');
+            $api_secret = env('API_SECRET_FACE');
             $imageUser = Auth::user();
             $imagePath = "public/User/{$imageUser->image}";
             $client = new Client();
@@ -195,7 +195,10 @@ class AttendanceClientRepository
                         ],
                         'verify' => false
                     ]);
+
+
                 $result = json_decode($response->getBody(), true);
+
                 if ($result['confidence'] >= 80) {
                     $data = [
                         'status' => 'success',

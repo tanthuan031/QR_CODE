@@ -11,6 +11,8 @@ import { deleteClassroom, getClassroomById } from '../../../api/Admin/Classroom/
 import { BlockUI, BlockUICLIENT } from '../../Layouts/Notiflix';
 import { Modal as ModalConfirm } from 'antd';
 import { ErrorToast, SuccessToast } from '../../Layouts/Alerts';
+import { getAllNotificationsAdmin } from '../../../api/Admin/NotificationAdmin/notificationAdminAPI';
+import { setDataNotificationAdmin } from '../../../redux/reducer/notification/notification.reducer';
 export function ClassRoom(props) {
   const dispatch = useDispatch();
 
@@ -23,22 +25,43 @@ export function ClassRoom(props) {
     } else if (result === 500) {
       return false;
     } else {
-      dispatch(
-        setIsDetailClassroom({
-          checkDetail: true,
-          idDetail: id,
-          classCode: classCode,
-          nameClassroom: nameClassroom,
-          nameTeacher: nameTeacher,
-        })
-      );
-      dispatch(
-        setDataDetailClassroom({
-          data: result,
-          numberRollCall,
-          numberLessonWeek,
-        })
-      );
+      const result1 = await getAllNotificationsAdmin({
+        classCode: classCode,
+        sort: [
+          {
+            key: 'updated_at',
+            value: 'desc',
+          },
+        ],
+      });
+      if (result1 === 401) {
+        ErrorToast('Có lỗi xảy ra . Vui lòng thử lại sau', 1500);
+        Notiflix.Block.remove('#root');
+        return false;
+      } else if (result1 === 400 || result1 === 404 || result1 === 500) {
+        ErrorToast('Có lỗi xảy ra . Vui lòng thử lại sau', 1500);
+        Notiflix.Block.remove('#root');
+        return false;
+      } else {
+        dispatch(
+          setIsDetailClassroom({
+            checkDetail: true,
+            idDetail: id,
+            classCode: classCode,
+            nameClassroom: nameClassroom,
+            nameTeacher: nameTeacher,
+          })
+        );
+        dispatch(
+          setDataDetailClassroom({
+            data: result,
+            numberRollCall,
+            numberLessonWeek,
+          })
+        );
+
+        dispatch(setDataNotificationAdmin(result1.data));
+      }
     }
     Notiflix.Block.remove('#root');
   };

@@ -17,7 +17,7 @@ import {
 export const menu_admin_item = [
   {
     id: 1,
-    name: 'Overview',
+    name: 'Tổng quan',
     active: true,
     link: '/admin/',
     icon: <FaHome />,
@@ -25,9 +25,17 @@ export const menu_admin_item = [
   },
   {
     id: 2,
-    name: 'Classroom',
+    name: 'Quản lý lớp học',
     active: false,
     link: '/admin/classroom',
+    icon: <FaThLarge />,
+    role: 2,
+  },
+  {
+    id: 3,
+    name: 'Quản lý nghỉ phép ',
+    active: false,
+    link: '/admin/ask-for-permission',
     icon: <FaThLarge />,
     role: 2,
   },

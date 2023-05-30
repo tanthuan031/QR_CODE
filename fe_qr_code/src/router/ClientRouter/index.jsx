@@ -10,6 +10,7 @@ import { RegisterPage } from '../../pages/Common/Auth/RegisterPage';
 import { setIsLoginClient, setUserClient } from '../../redux/reducer/auth/auth.reducer';
 import { getUserClientSelector } from '../../redux/selectors';
 import { ClientProtectedRoutes } from '../ProtectedRouter/client';
+import { ClientHistoryPermissionPage } from '../../pages/Client/HistoryAskPermission';
 
 export default function ClientRouter() {
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ export default function ClientRouter() {
       {/* <Route path="/location" element={<ClientLayout slot={<Location role={1} />} />} /> */}
       <Route element={<ClientProtectedRoutes />}>
         <Route path="/" element={<ClientLayout slot={<ClientOverviewPage role={1} />} />} />
+        <Route path="/history" element={<ClientLayout slot={<ClientHistoryPermissionPage role={1} />} />} />
       </Route>
     </Routes>
   );

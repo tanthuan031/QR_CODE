@@ -1,11 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Checkbox, Table } from 'antd';
+import { Button as ButtonAntd, Checkbox, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, Form } from 'react-bootstrap';
+import { Alert, Button, Form, InputGroup } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { FaEdit, FaFileExport } from 'react-icons/fa';
+import { FaEdit, FaFileExport, FaSearch } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
-import { addSchemaStudent } from '../../../../adapter/classroom';
+import { addSchemaNotification, addSchemaStudent } from '../../../../adapter/classroom';
 import {
   addDetailClassroom,
   editAttendanceStudent,
@@ -29,6 +29,12 @@ import Notiflix from 'notiflix';
 import { ErrorToast, SuccessToast } from '../../../Layouts/Alerts';
 import { getCookiesAdmin } from '../../../../api/Admin/Auth/authAPI';
 import { getDistanceFromLatLonInKm } from '../../../../utils/getDistanceFromLatLonInKm';
+import {
+  createNotificationAdmin,
+  getAllNotificationsAdmin,
+} from '../../../../api/Admin/NotificationAdmin/notificationAdminAPI';
+import { NotificationAdmin } from '../Notification';
+import { setDataNotificationAdmin } from '../../../../redux/reducer/notification/notification.reducer';
 
 export default function DetailClassroomTable(props) {
   const [backdrop, setBackdrop] = React.useState('static');
@@ -47,7 +53,7 @@ export default function DetailClassroomTable(props) {
     lesson: 0,
     status: 0,
   });
-
+  const [showCreateNotification, setCreateNotification] = React.useState(false);
   //data submit form create QR code
   const [attendance_range, setAttendanceRange] = React.useState(0);
   const [attendance_time, setAttendanceTime] = React.useState(0);
@@ -87,6 +93,17 @@ export default function DetailClassroomTable(props) {
       last_name: '',
       first_name: '',
     },
+  });
+
+  const {
+    register: registerCreateNotification,
+    handleSubmit: handleSubmitCreateNotification,
+    reset: resetNotification,
+    control: controlNotification,
+    formState: { isValid: isValidNotification, errors: notificationErrors },
+  } = useForm({
+    mode: 'onChange',
+    resolver: yupResolver(addSchemaNotification),
   });
 
   const setStateModal = (value) => {
@@ -305,6 +322,9 @@ export default function DetailClassroomTable(props) {
   const setStateModalEditStudent = (value) => {
     setShowEditStudent(false);
   };
+
+  //
+
   const handleUpdateAttendanceStudent = async (data) => {
     BlockUICLIENT('#root', 'fixed');
     const dataEdit = idEditStudent;
@@ -455,6 +475,146 @@ export default function DetailClassroomTable(props) {
     );
   };
 
+  // Notification
+  const handleSubmitNotifications = async (data) => {
+    BlockUICLIENT('#root', 'fixed');
+    const dataNotifi = {
+      class_code: data.class_code,
+      title: data.title,
+      content: data.content,
+    };
+    const result = await createNotificationAdmin(dataNotifi);
+    if (result === 200) {
+      const result1 = await getAllNotificationsAdmin({
+        classCode: isDetailClassroom.classCode,
+        sort: [
+          {
+            key: 'updated_at',
+            value: 'desc',
+          },
+        ],
+      });
+      if (result1 === 401) {
+        ErrorToast('Có lỗi xảy ra . Vui lòng thử lại sau', 1500);
+        Notiflix.Block.remove('#root');
+        return false;
+      } else if (result1 === 400 || result1 === 404 || result1 === 500) {
+        ErrorToast('Có lỗi xảy ra . Vui lòng thử lại sau', 1500);
+        Notiflix.Block.remove('#root');
+        return false;
+      } else {
+        dispatch(setDataNotificationAdmin(result1.data));
+        SuccessToast('Thêm sinh viên thành công', 3500);
+        Notiflix.Block.remove('.sl-box');
+        setCreateNotification(false);
+        resetNotification();
+      }
+    } else {
+      ErrorToast('Tạo thông báo thất bại', 3500);
+      Notiflix.Block.remove('.sl-box');
+    }
+    Notiflix.Block.remove('#root');
+  };
+
+  const renderBodyCreateNotification = () => {
+    return (
+      <Form encType="multipart/form-data" onSubmit={handleSubmitCreateNotification(handleSubmitNotifications)}>
+        <div className="row p-5">
+          <div className="col md-6">
+            <div className="row">
+              <div className="col-md-6">
+                <Form.Group className=" mb-3">
+                  <div className="cp-input">
+                    <p className="font-weight-bold">Mã lớp</p>
+                    <Form.Control
+                      type="text"
+                      maxLength={128}
+                      value={isDetailClassroom.classCode}
+                      name="class_code"
+                      disabled
+                    />
+                  </div>
+                </Form.Group>
+              </div>
+              <div className="col-md-6">
+                <Form.Group className=" mb-3">
+                  <div className="cp-input">
+                    <p className="font-weight-bold">Tên lớp</p>
+                    <Form.Control
+                      type="text"
+                      maxLength={128}
+                      value={isDetailClassroom.nameClassroom}
+                      name="class_name"
+                      disabled
+                    />
+                  </div>
+                </Form.Group>
+              </div>
+            </div>
+
+            <Form.Group className=" mb-3">
+              <div className="cp-input">
+                <p className="font-weight-bold">
+                  Tiêu đề <span className="text-danger">*</span>
+                </p>
+                <Form.Control
+                  type="text"
+                  maxLength={128}
+                  name="title"
+                  placeholder="Nhập tiêu đề..."
+                  {...registerCreateNotification('title')}
+                />
+                <small className="text-danger font-weight-bold">{notificationErrors?.title?.message}</small>
+              </div>
+            </Form.Group>
+            <Form.Group className=" mb-3">
+              <div className="cp-input">
+                <p className="font-weight-bold">
+                  Nội dung <span className="text-danger">*</span>
+                </p>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  placeholder="Nhập nội dung...  "
+                  name="content"
+                  {...registerCreateNotification('content')}
+                />
+                <small className="text-danger font-weight-bold">{notificationErrors?.content?.message}</small>
+              </div>
+            </Form.Group>
+            <Form.Control
+              type="text"
+              maxLength={128}
+              value={isDetailClassroom.classCode}
+              name="class_code"
+              {...registerCreateNotification('class_code')}
+              hidden
+            />
+          </div>
+        </div>
+        <div className="row pb-3">
+          <Form.Group className="d-flex justify-content-center">
+            <Button type="submit" variant="info" className="me-3 font-weight-bold">
+              Tạo
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              className="font-weight-bold"
+              onClick={() => setCreateNotification(false)}
+            >
+              Quay lại
+            </Button>
+          </Form.Group>
+        </div>
+      </Form>
+    );
+  };
+
+  const setStateModalCreateNotification = (value) => {
+    setCreateNotification(false);
+  };
+
   const backToPage = () => {
     BlockUICLIENT('#root', 'fixed');
     dispatch(
@@ -589,7 +749,7 @@ export default function DetailClassroomTable(props) {
       dataIndex: 'score',
       key: 'score',
       fixed: 'right',
-      width: 70,
+      width: 90,
     },
   ];
 
@@ -625,16 +785,56 @@ export default function DetailClassroomTable(props) {
           </div>
         </div>
 
-        <div className="col col-md-2"></div>
-        <div className="col col-md-10">
-          {' '}
-          <div className="row mb-5 justify-content-end ">
-            <div className="d-flex justify-content-end ">
-              {/* <Form>
+        <div className="col col-md-9">
+          <div className="row mb-3 mt-4 justify-content-start ">
+            <div className="d-flex justify-content-start ">
+              <Button
+                id="create-new-product"
+                variant="outline-primary"
+                className="font-weight-bold ms-3 m-r-15"
+                onClick={() => setCreateNotification(true)}
+                size="sm"
+              >
+                Tạo thông báo
+              </Button>
+              <Button
+                id="create-new-product"
+                variant="outline-success"
+                className="font-weight-bold ms-3 m-r-15"
+                onClick={() => setShowAddStudent(true)}
+                size="sm"
+              >
+                Thêm sinh viên
+              </Button>
+              <Button
+                id="create-new-product"
+                variant="outline-info"
+                className="font-weight-bold ms-3 m-r-15"
+                onClick={() => setShow(true)}
+                size="sm"
+              >
+                Điểm danh QR
+              </Button>
+              <Button
+                size="sm"
+                id="create-new-product"
+                variant="outline-secondary"
+                className="font-weight-bold ms-3 m-r-15"
+                onClick={() => backToPage()}
+              >
+                Quay lại
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className="col mb-3 mt-4 col-md-3">
+          <div className="row justify-content-end ">
+            <Form>
               <InputGroup>
                 <Form.Control
                   id="search-order"
-                  placeholder="Code classroom"
+                  placeholder="Nhập mã lớp..."
+                  size="sm"
                   // onChange={(e) => setSearch(e.target.value)}
                 />
 
@@ -642,40 +842,7 @@ export default function DetailClassroomTable(props) {
                   <FaSearch />
                 </Button>
               </InputGroup>
-            </Form> */}
-              <Button
-                id="create-new-product"
-                variant="info"
-                className="font-weight-bold ms-3 m-r-15"
-                onClick={() => setShowAddStudent(true)}
-              >
-                Thêm sinh viên
-              </Button>
-              <Button
-                id="create-new-product"
-                variant="info"
-                className="font-weight-bold ms-3 m-r-15"
-                onClick={() => setShow(true)}
-              >
-                Điểm danh QR
-              </Button>
-              {/* <Button
-              id="create-new-product"
-              variant="info"
-              className="font-weight-bold ms-3 m-r-15"
-              onClick={() => setEditTable(false)}
-            >
-              Cập nhật danh sách
-            </Button> */}
-              <Button
-                id="create-new-product"
-                variant="info"
-                className="font-weight-bold ms-3 m-r-15"
-                onClick={() => backToPage()}
-              >
-                Quay lại
-              </Button>
-            </div>
+            </Form>
           </div>
         </div>
       </div>
@@ -687,6 +854,10 @@ export default function DetailClassroomTable(props) {
           scroll={{ x: 'max-content', y: 450 }}
           pagination={{ pageSize: 20 }}
         />
+      </div>
+      <div className="row mt-5">
+        <h4 className="header-notification">Danh sách thông báo</h4>
+        <NotificationAdmin />
       </div>
 
       <Modal
@@ -711,6 +882,14 @@ export default function DetailClassroomTable(props) {
         setStateModal={() => setStateModalEditStudent()}
         elementModalTitle={<p>Cập nhật trạng thái điểm danh</p>}
         elementModalBody={renderBodyEditStudent()}
+      />
+
+      <Modal
+        show={showCreateNotification}
+        backdrop={backdrop}
+        setStateModal={() => setStateModalCreateNotification()}
+        elementModalTitle={<p>Tạo thông báo</p>}
+        elementModalBody={renderBodyCreateNotification()}
       />
     </>
   );

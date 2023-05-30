@@ -11,6 +11,7 @@ import { handleGetMeAdmin } from '../../adapter/auth';
 import { deleteCookieAdmin, getCookiesAdmin } from '../../api/Admin/Auth/authAPI';
 import { setIsLoginAdmin, setUserAdmin } from '../../redux/reducer/auth/auth.reducer';
 import { RegisterAdminPage } from '../../pages/Common/AuthAdmin/RegisterPage';
+import { AdminHistoryPermissionPage } from '../../pages/Admin/HistoryAskPermission';
 export default function AdminRouter() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -34,6 +35,10 @@ export default function AdminRouter() {
       <Route element={<ProtectedRoutes />}>
         <Route path="/admin/classroom" element={<AdminLayout slot={<ClassroomPage role={1} />} />} />
         <Route path="/admin" element={<AdminLayout slot={<OverviewPage role={1} />} />} />
+        <Route
+          path="/admin/ask-for-permission"
+          element={<AdminLayout slot={<AdminHistoryPermissionPage role={1} />} />}
+        />
       </Route>
     </Routes>
   );

@@ -335,6 +335,7 @@ const ScanQRCode = ({ onDetected }) => {
                 placeholder="Nhập mã lớp"
                 value={resultAtt && resultAtt.attendance_range}
                 {...register('attendance_range')}
+                hidden
               />
               {/* Time */}
               <Form.Control
@@ -343,6 +344,7 @@ const ScanQRCode = ({ onDetected }) => {
                 placeholder="Nhập mã lớp"
                 value={resultAtt && resultAtt.attendance_time}
                 {...register('attendance_time')}
+                hidden
               />
               {/* ID classroom */}
               <Form.Control
@@ -351,6 +353,7 @@ const ScanQRCode = ({ onDetected }) => {
                 placeholder="Nhập mã lớp"
                 value={resultAtt && resultAtt.id_classroom}
                 {...register('classroom_id')}
+                hidden
               />
               {/*hour create */}
               <Form.Control
@@ -359,6 +362,7 @@ const ScanQRCode = ({ onDetected }) => {
                 placeholder="Nhập mã lớp"
                 value={resultAtt && resultAtt.create_at}
                 {...register('create_at')}
+                hidden
               />
               {/*Token */}
               <Form.Control
@@ -367,6 +371,7 @@ const ScanQRCode = ({ onDetected }) => {
                 placeholder="Nhập mã lớp"
                 value={resultAtt && resultAtt.tokensAdmin}
                 {...register('tokensAdmin')}
+                hidden
               />
 
               {/*Location Latitude */}
@@ -376,6 +381,7 @@ const ScanQRCode = ({ onDetected }) => {
                 maxLength={10}
                 placeholder="Nhập mã lớp"
                 value={resultAtt && resultAtt.location.latitude}
+                hidden
               />
 
               {/*Location Longitude */}
@@ -385,6 +391,7 @@ const ScanQRCode = ({ onDetected }) => {
                 maxLength={10}
                 placeholder="Nhập mã lớp"
                 value={resultAtt && resultAtt.location.longitude}
+                hidden={true}
               />
             </div>
           </div>
@@ -409,15 +416,14 @@ const ScanQRCode = ({ onDetected }) => {
   };
   return (
     <>
+      <h5 className="font-weight-bold mb-3">Điểm danh</h5>
       <div className="row mt-5 justify-content-center">
+        <h6 className="font-weight-bold mb-3 text-center text-success">
+          Vui lòng quét mã QR được cung cấp bởi giảng viên
+        </h6>
         <div className="contain_qr">
           <video ref={ref} width={340} height={300} />
         </div>
-
-        <p>
-          <span>Last result:</span>
-          <span>{result}</span>
-        </p>
         <div className="d-flex justify-content-center pt-3">
           <Button className="btn-secondary" onClick={() => cancelScanQR()}>
             Hủy

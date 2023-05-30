@@ -102,7 +102,7 @@ export function ClassroomPage() {
     <>
       <section>
         <div className="container-fluid mt-5">
-          <h5 className="font-weight-bold mb-3">Danh sách lớp học</h5>
+          <h5 className="font-weight-bold mb-3">Chi tiết lớp học</h5>
 
           {!isDetailClassroom.checkDetail && !isQRClassroom && (
             <div className="row">
@@ -116,20 +116,22 @@ export function ClassroomPage() {
                           id="search-order"
                           placeholder="Nhập mã lớp để tìm kiếm"
                           onChange={(e) => setSearch(e.target.value)}
+                          size="sm"
                         />
 
-                        <Button id="search-user" variant="info" type="submit">
+                        <Button id="search-user" variant="info" type="submit" size="sm">
                           <FaSearch />
                         </Button>
                       </InputGroup>
                     </Form>
                     <Button
                       id="create-new-product"
-                      variant="info"
+                      variant="outline-success"
                       className="font-weight-bold ms-3 m-r-15"
                       onClick={() => setShowCreate(true)}
+                      size="sm"
                     >
-                      Create classroom
+                      Tạo lớp học
                     </Button>
                   </div>
                 </div>

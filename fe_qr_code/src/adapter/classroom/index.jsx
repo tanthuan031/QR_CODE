@@ -30,13 +30,19 @@ export const addSchemaStudent = yup.object({
   last_name: yup
     .string()
     .required('Vui lòng nhập tên')
-    .matches(/^[0-9a-zA-Z\s]+$/, 'Không đúng định dạng')
+    .matches(
+      /^[0-9a-zA-Z\sáàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵ.\-\_]+$/,
+      'Không đúng định dạng'
+    )
     .max(256)
     .trim(),
   first_name: yup
     .string()
     .required('Vui lòng nhập họ')
-    .matches(/^[0-9a-zA-Z\s]+$/, 'Không đúng định dạng')
+    .matches(
+      /^[0-9a-zA-Z\sáàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵ.\-\_]+$/,
+      'Không đúng định dạng'
+    )
     .max(256)
     .trim(),
 });
@@ -46,5 +52,26 @@ export const joinClassroomSchema = yup.object({
     .required('Vui lòng nhập mã lớp')
     .matches(/^[0-9a-zA-Z\s]+$/, 'Không đúng định dạng')
     .max(10)
+    .trim(),
+});
+
+export const addSchemaNotification = yup.object({
+  title: yup
+    .string()
+    .required('Vui lòng nhập tiêu đề')
+    .matches(
+      /^[0-9a-zA-Z\sáàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵ.\-\_]+$/,
+      'Không đúng định dạng'
+    )
+    .max(256)
+    .trim(),
+  content: yup
+    .string()
+    .required('Vui lòng nhập nội dung')
+    .matches(
+      /^[0-9a-zA-Z\sáàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵ.\-\_]+$/,
+      'Không đúng định dạng'
+    )
+    .max(256)
     .trim(),
 });

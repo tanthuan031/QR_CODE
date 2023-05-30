@@ -23,7 +23,7 @@ export default function ListGroup(props) {
             key={element.id}
             className={({ isActive }) => (isActive ? 'app-active-link' : ' app-not-active-link')}
           >
-            <ListGroupBootstrap.Item className="py-3 d-flex align-items-center" as="li">
+            <ListGroupBootstrap.Item className="py-2 d-flex align-items-center" as="li">
               <h5>{element.icon}</h5>
               <h5 className="font-weight-bold ms-3">{element.name}</h5>
             </ListGroupBootstrap.Item>

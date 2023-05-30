@@ -81,7 +81,6 @@ export default function CreateClassroom(props) {
     };
 
     const result = await addClassroom(dataCreate);
-    console.log(result);
     if (result === 200) {
       SuccessToast('Tạo lớp thành công', 3500);
       Notiflix.Block.remove('.sl-box');
@@ -105,21 +104,21 @@ export default function CreateClassroom(props) {
               <Form.Group className=" mb-3">
                 <div className="cp-input">
                   <p className="font-weight-bold">Tên lớp</p>
-                  <Form.Control type="text" maxLength={128} {...register('class_name')} />
+                  <Form.Control type="text" maxLength={128} {...register('class_name')} size="sm" />
                   <small className="text-danger font-weight-bold">{errors?.class_name?.message}</small>
                 </div>
               </Form.Group>
               <Form.Group className=" mb-3">
                 <div className="cp-input">
                   <p className="font-weight-bold">Số tuần điểm danh</p>
-                  <Form.Control type="number" min={1} max={20} {...register('number_roll_call')} />
+                  <Form.Control type="number" min={1} max={20} {...register('number_roll_call')} size="sm" />
                   <small className="text-danger font-weight-bold">{errors?.number_roll_call?.message}</small>
                 </div>
               </Form.Group>
               <Form.Group className=" mb-3">
                 <div className="cp-input">
                   <p className="font-weight-bold">Số tiết trong tuần</p>
-                  <Form.Control type="number" min={1} max={5} {...register('number_lesson_week')} />
+                  <Form.Control type="number" min={1} max={5} {...register('number_lesson_week')} size="sm" />
                   <small className="text-danger font-weight-bold">{errors?.number_lesson_week?.message}</small>
                 </div>
               </Form.Group>
@@ -154,18 +153,24 @@ export default function CreateClassroom(props) {
                       <FaRegQuestionCircle fontSize="0.9rem" />
                     </div>
                   </div>
-                  <Form.Control type="file" onChange={handleFileUpload} disabled={checkFileImport} />
+                  <Form.Control type="file" onChange={handleFileUpload} disabled={checkFileImport} size="sm" />
                   <small className="text-danger font-weight-bold">{validateFileImport}</small>
                 </div>
               </Form.Group>
             </div>
           </div>
-          <div className="row pb-2">
+          <div className="row pb-4">
             <Form.Group className="d-flex justify-content-center">
-              <Button type="submit" variant="info" className="me-3 font-weight-bold">
+              <Button type="submit" variant="info" className="me-3 font-weight-bold" size="sm">
                 Tạo lớp
               </Button>
-              <Button type="button" variant="secondary" className="font-weight-bold" onClick={() => setStateModal()}>
+              <Button
+                type="button"
+                variant="secondary"
+                className="font-weight-bold"
+                onClick={() => setStateModal()}
+                size="sm"
+              >
                 Quay lại
               </Button>
             </Form.Group>

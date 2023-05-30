@@ -14,6 +14,7 @@ import { SuccessToast } from '../../../../Layouts/Alerts';
 import CryptoJS from 'crypto-js';
 
 const QRCodeGenerator = () => {
+  const encoder = new TextEncoder();
   const dispatch = useDispatch();
   const dataCreateQRCode = useSelector(dataCreateQRCodeSelector);
   const isDetailClassroom = useSelector(isDetailClassroomSelector);
@@ -49,13 +50,15 @@ const QRCodeGenerator = () => {
       );
     }
   };
+
+  const data = encoder.encode(JSON.stringify(text));
   return (
     <div>
       <div className="row mt-5">
         <div className="col col-md-3"></div>
         <div className="col col-md-6">
           <div className="d-flex justify-content-center">
-            <QRCode value={btoa(JSON.stringify(text))} size={450} className="text-center" />
+            <QRCode value={btoa(String.fromCharCode.apply(null, data))} size={450} className="text-center" />
           </div>
           <div className="d-flex justify-content-center pt-3">
             <Button className="btn-secondary" onClick={() => cancelQR()}>

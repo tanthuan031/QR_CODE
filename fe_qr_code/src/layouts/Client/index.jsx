@@ -13,6 +13,12 @@ import Header from '../../components/Layouts/Header';
 import './style.css';
 import { menu_client_item } from '../../asset/data/menu_client_item';
 import LogoutClient from '../../components/Client/Auth/Logout';
+import {
+  getUserAdminSelector,
+  getUserClientSelector,
+  isLoginClientSelector,
+} from '../../redux/selectors/auth/auth.selector';
+import { useSelector } from 'react-redux';
 // import { Button, Image } from 'react-bootstrap';
 // import { useSelector } from 'react-redux';
 
@@ -29,7 +35,7 @@ export function ClientLayout(props) {
   // const menu_admin_item_storage_data = [...menu_admin_item_storage];
   // const expiredToken = useSelector(exPiredTokenSelector);
   const [showLogout, setStateModalLogout] = React.useState(false);
-  // const user = useSelector(getUserSelector);
+  const user = useSelector(getUserClientSelector);
   return (
     <>
       <Header />
@@ -37,10 +43,29 @@ export function ClientLayout(props) {
         slot={
           <>
             {/* <img src={Logo} alt="Logo" width="80" height="80" /> */}
-
-            <div className="py-5">{<ListGroup data={menu_admin_item_data} />}</div>
+            <div
+              style={{
+                color: '#ffffff',
+                textAlign: 'center',
+                fontWeight: 'bold',
+                fontSize: '1.3rem',
+              }}
+            >
+              {Object.keys(user).length !== 0 && user.data.last_name + ' ' + user.data.first_name}
+            </div>
+            <div
+              style={{
+                color: '#ffffff',
+                textAlign: 'center',
+                fontWeight: 'bold',
+                fontSize: '.8rem',
+              }}
+            >
+              {Object.keys(user).length !== 0 && user.data.student_code}
+            </div>
+            <div className="py-3">{<ListGroup data={menu_admin_item_data} />}</div>
             <div className="d-flex justify-content-center ">
-              <Button className="btn-primary" onClick={() => setStateModalLogout(true)}>
+              <Button className="btn-primary" onClick={() => setStateModalLogout(true)} size="sm">
                 Logout
               </Button>
             </div>
