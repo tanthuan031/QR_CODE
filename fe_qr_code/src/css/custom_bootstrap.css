@@ -8,7 +8,7 @@ form label {
 }
 
 .form-control {
-  border-width: var(--2px);
+  /* border-width: var(--1px); */
 }
 
 .form-control:focus {

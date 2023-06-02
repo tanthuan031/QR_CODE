@@ -54,7 +54,7 @@ export function AdminHistoryPermission(props) {
   const columns = [
     {
       title: 'STT',
-      width: 100,
+      width: 50,
       dataIndex: 'key',
       key: 'key',
       // fixed: 'left',
@@ -80,7 +80,7 @@ export function AdminHistoryPermission(props) {
       title: 'Action',
       key: 'operation',
       // fixed: 'right',
-      width: 100,
+      // width: 100,
       render: (record) => (
         <Button
           id="edit-product"
@@ -102,7 +102,14 @@ export function AdminHistoryPermission(props) {
   return (
     <>
       <div className="row ">
-        <Table columns={columns} dataSource={data} bordered size="small" scroll={{ x: 'calc(500px + 50%)', y: 240 }} />
+        <Table
+          columns={columns}
+          dataSource={data}
+          bordered
+          size="small"
+          scroll={{ x: 'calc(500px + 50%)', y: 240 }}
+          pagination={false}
+        />
       </div>
     </>
   );

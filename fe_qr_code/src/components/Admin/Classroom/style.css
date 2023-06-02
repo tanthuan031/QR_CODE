@@ -47,3 +47,7 @@
   position: relative;
   bottom: 0;
 }
+#edit-product {
+  background: none;
+  z-index: 100;
+}

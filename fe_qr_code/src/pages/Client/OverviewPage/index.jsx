@@ -17,6 +17,8 @@ import {
 } from '../../../redux/selectors/classroom/classroom.selector';
 import Notiflix from 'notiflix';
 import { ErrorToast } from '../../../components/Layouts/Alerts';
+import SkeletonCart from '../../../components/Layouts/Skeleton/SkeletonCart';
+import Skeleton from '../../../components/Layouts/Skeleton';
 
 export function ClientOverviewPage() {
   const dispatch = useDispatch();
@@ -24,6 +26,7 @@ export function ClientOverviewPage() {
   const [show, setShowJoin] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [data, setData] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
   // const [isDetailClassroom, setIsDetailClassroom] = React.useState(false);
   const isDetailClassroomClient = useSelector(isDetailClassroomClientSelector);
   const isScanQRClassroom = useSelector(isScanQRClassroomSelector);
@@ -39,8 +42,12 @@ export function ClientOverviewPage() {
   };
   const handleGetAllClassroomClient = async () => {
     const result = await getAllClassroomClient({
-      key: 'id',
-      value: 'asc',
+      sort: [
+        {
+          key: 'class_name',
+          value: 'asc',
+        },
+      ],
     });
 
     if (result === 401) {
@@ -68,6 +75,7 @@ export function ClientOverviewPage() {
     }
   };
   const handleSearch = async (e) => {
+    setLoading(true);
     e.preventDefault();
     if (search !== '') {
       const result = await getAllClassroomClient({
@@ -97,20 +105,30 @@ export function ClientOverviewPage() {
 
       Notiflix.Block.remove('#root');
     }
+    setLoading(false);
   };
-  console.log(isDetailClassroomClient, isScanQRClassroom, isAttendance);
   return (
     <>
       <section>
         <div className="container-fluid mt-5">
           {!isDetailClassroomClient.checkDetail && !isScanQRClassroom && !isAttendance && (
             <>
-              <h5 className="font-weight-bold mb-3">Chi tiết lớp học</h5>
+              <h5 className="font-weight-bold mb-3">Danh sách lớp học</h5>
               <div className="row">
-                <div className="row mb-5 justify-content-end ">
-                  <div className="d-flex justify-content-between">
-                    <div className="d-flex  "></div>
-                    <div className="d-flex justify-content-between ">
+                <div className="row mb-4 justify-content-end ">
+                  <div className="row">
+                    <div className="col-md-8 col-sm-12 mb-2 order-sm-1 order-2">
+                      <Button
+                        id="create-new-product"
+                        variant="outline-success"
+                        size="sm"
+                        className="font-weight-bold  m-r-15 "
+                        onClick={() => setShowJoin(true)}
+                      >
+                        Tham gia lớp
+                      </Button>
+                    </div>
+                    <div className="col-md-4 col-sm-12 mb-2 order-sm-2 order-1">
                       <Form onSubmit={(e) => handleSearch(e)}>
                         <InputGroup>
                           <Form.Control
@@ -120,24 +138,20 @@ export function ClientOverviewPage() {
                             size="sm"
                           />
 
-                          <Button id="search-user" variant="info" type="submit">
+                          <Button
+                            id="search-user"
+                            variant="info"
+                            type="submit"
+                            // style={{ backgroundColor: 'linear-gradient(to right, #20ec9e, #0260ec) !important' }}
+                          >
                             <FaSearch />
                           </Button>
                         </InputGroup>
                       </Form>
-                      <Button
-                        id="create-new-product"
-                        variant="outline-success"
-                        size="sm"
-                        className="font-weight-bold ms-3 m-r-15"
-                        onClick={() => setShowJoin(true)}
-                      >
-                        Tham gia lớp
-                      </Button>
                     </div>
                   </div>
                 </div>
-                <ClientOverview data={data} />
+                {loading === true ? <Skeleton column={4} /> : <ClientOverview data={data} />}
                 {totalRecord > 10 && (
                   <PaginationUI handlePageChange={handlePageChange} perPage={10} totalRecord={200} currentPage={1} />
                 )}
@@ -145,7 +159,12 @@ export function ClientOverviewPage() {
             </>
           )}
         </div>
-        {isDetailClassroomClient.checkDetail && !isAttendance && !isScanQRClassroom && <DetailClassroomClientTable />}
+        {isDetailClassroomClient.checkDetail && !isAttendance && !isScanQRClassroom && (
+          <>
+            <h5 className="font-weight-bold mb-3">Chi tiết lớp học</h5>
+            <DetailClassroomClientTable />
+          </>
+        )}
 
         {!isDetailClassroomClient.checkDetail && !isAttendance && isScanQRClassroom && <ScanQRCode />}
         {!isDetailClassroomClient.checkDetail && !isScanQRClassroom && isAttendance && <Attendance />}

@@ -48,4 +48,20 @@ class Classroom extends Model
                     ->where("class_code", "LIKE", "%{$search}%");
             });
     }
+    public function scopeSort($query, $request)
+    {
+
+        return $query
+            ->when($request->has("sort"), function ($query) use ($request) {
+                $sortBy = '';
+                $sortValue = '';
+
+                foreach ($request->query("sort") as $key => $value) {
+                    $sortBy = $key;
+                    $sortValue = $value;
+                }
+
+                $query->orderBy($sortBy, $sortValue);
+            });
+    }
 }

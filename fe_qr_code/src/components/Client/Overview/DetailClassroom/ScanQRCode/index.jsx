@@ -424,6 +424,10 @@ const ScanQRCode = ({ onDetected }) => {
         <div className="contain_qr">
           <video ref={ref} width={340} height={300} />
         </div>
+        <div className="mb-3 text-center ">
+          <span className="text-danger font-weight-bold ">Lưu ý: </span>Mọi hành vi gian lận trong điểm danh sẽ bị khóa
+          tài khoản và không được điểm danh.
+        </div>
         <div className="d-flex justify-content-center pt-3">
           <Button className="btn-secondary" onClick={() => cancelScanQR()}>
             Hủy

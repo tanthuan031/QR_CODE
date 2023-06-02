@@ -8,7 +8,7 @@ import Skeleton from '../Skeleton';
 import './style.css';
 
 export default function ListGroup(props) {
-  const { data } = props;
+  const { data, handleNavLinkClick, setShowOffcanvas } = props;
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -22,6 +22,10 @@ export default function ListGroup(props) {
             to={element.link}
             key={element.id}
             className={({ isActive }) => (isActive ? 'app-active-link' : ' app-not-active-link')}
+            onClick={(e) => {
+              props.handleNavLinkClick(e); // Gọi hàm handleNavLinkClick từ props
+              setShowOffcanvas(false); // Đặt trạng thái của offcanvas về false khi người dùng nhấp vào mục
+            }}
           >
             <ListGroupBootstrap.Item className="py-2 d-flex align-items-center" as="li">
               <h5>{element.icon}</h5>

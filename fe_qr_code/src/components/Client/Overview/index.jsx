@@ -17,6 +17,7 @@ import { BlockUICLIENT } from '../../Layouts/Notiflix';
 import Notiflix from 'notiflix';
 import { getAllNotificationsClient } from '../../../api/Client/NotificationClient/notificationClientAPI';
 import { setDataNotificationClient } from '../../../redux/reducer/notification/notification.reducer';
+import ImgBg from '../../../asset/img/circle.svg';
 export function ClientOverview(props) {
   const dispatch = useDispatch();
 
@@ -62,34 +63,38 @@ export function ClientOverview(props) {
     }
     Notiflix.Block.remove('#root');
   };
+  const colors = ['bg-gradient-success', 'bg-gradient-2', 'bg-gradient-info'];
+  let colorIndex = 0;
   return (
     <>
-      <div className="row ">
+      <div className="row  mb-6" style={{ margin: '0 auto' }}>
         {props.data.map((item, index) => {
+          const currentColor = colors[colorIndex];
+          colorIndex = (colorIndex + 1) % colors.length;
           return (
             <div
-              className="col col-md-3  mb-4 cursor-pointer"
+              className="col-xl-3 col-sm-6 col-12 mb-4 cursor-pointer"
               onClick={() =>
                 handleDetailClassroom(item.id, item.class_code, item.number_roll_call, item.number_lesson_week)
               }
               key={index}
             >
-              <div className="classroom_content">
-                <div className="classroom_header">
-                  <div className="classroom_background_header"></div>
-                  <div className="classroom_content_header">
-                    <h3>{item.class_name}</h3>
-                    <span>Tên giảng viên : {item.teachers.first_name + ' ' + item.teachers.last_name}</span>
-                  </div>
-                </div>
-                <div className="classroom_footer">
-                  <div className="row">
-                    <div className="col col-md-12">
-                      <p>Số tuần học : {item.number_roll_call}</p>
-                      <p>
-                        Mã lớp: <span className="font-weight-bold ">{item.class_code}</span>
-                      </p>
+              <div className={`card ${currentColor} shadow border-0`}>
+                <div className="card-body">
+                  <img src={ImgBg} className="card-img-absolute" alt="circle-image"></img>
+                  <div className="row ">
+                    <div className="col">
+                      <span className="h4  text-bold  d-block mb-2 text-center">{item.class_name}</span>
+                      <span className="h6 font-bold mb-0">
+                        GV: {item.teachers.last_name + ' ' + item.teachers.first_name}
+                      </span>
                     </div>
+                  </div>
+                  <div className="mt-2 mb-0 text-sm">
+                    <p>
+                      Mã lớp: <span className="font-weight-bold ">{item.class_code}</span>
+                    </p>
+                    <span className="text-nowrap text-xs text-muted">Số tuần học : {item.number_roll_call}</span>
                   </div>
                 </div>
               </div>

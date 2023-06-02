@@ -1,3 +1,28 @@
+.bg-gradient-success {
+  background: linear-gradient(to right, #84d9d2, #07cdae) !important;
+}
+.bg-gradient-info {
+  background: linear-gradient(to right, #90caf9, #047edf 99%) !important;
+}
+.bg-gradient-danger {
+  /* background: -webkit-gradient(linear, left top, right top, from(#ffbf96), to(#fe7096)) !important; */
+  background: linear-gradient(to right, #ffbf96, #fe7096) !important;
+}
+.bg-gradient-1 {
+  /* background: -webkit-gradient(linear, left top, right top, from(#ffbf96), to(#fe7096)) !important; */
+  background: linear-gradient(to right, #0ee492, #e2547a) !important;
+}
+.bg-gradient-2 {
+  /* background: -webkit-gradient(linear, left top, right top, from(#ffbf96), to(#fe7096)) !important; */
+  background: linear-gradient(to right, #20ec9e, #0260ec) !important;
+}
+
+.card-img-absolute {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+}
 .classroom_content {
   height: 146px;
   width: 270px !important;
@@ -13,15 +38,9 @@
   position: relative;
 }
 .classroom_background_header {
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
+
   background-image: url('https://gstatic.com/classroom/themes/img_code.jpg');
 }
 

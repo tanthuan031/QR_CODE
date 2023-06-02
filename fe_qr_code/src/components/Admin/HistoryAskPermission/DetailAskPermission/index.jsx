@@ -169,7 +169,7 @@ export function AdminHistoryPermissionDetail(props) {
   const columns = [
     {
       title: 'STT',
-      width: 60,
+      width: 50,
       dataIndex: 'key',
       key: 'key',
       // fixed: 'left',
@@ -193,7 +193,7 @@ export function AdminHistoryPermissionDetail(props) {
     {
       title: 'Mã sinh viên',
       dataIndex: 'student_code',
-      width: 100,
+      // width: 100,
       key: 'student_code',
     },
     {
@@ -217,7 +217,7 @@ export function AdminHistoryPermissionDetail(props) {
     {
       title: 'Lý do',
       dataIndex: 'reason',
-      width: 200,
+      // width: 200,
       key: 'reason',
     },
     {
@@ -246,7 +246,7 @@ export function AdminHistoryPermissionDetail(props) {
       title: 'Action',
       key: 'operation',
       // fixed: 'right',
-      width: 100,
+      // width: 100,
       render: (record) => (
         <Button
           id="edit-product"
@@ -307,7 +307,14 @@ export function AdminHistoryPermissionDetail(props) {
         </div>
       </div>
       <div className="row ">
-        <Table columns={columns} dataSource={data} bordered size="small" scroll={{ x: 'calc(500px + 50%)', y: 240 }} />
+        <Table
+          columns={columns}
+          dataSource={data}
+          bordered
+          size="small"
+          scroll={{ x: 'calc(500px + 50%)', y: 240 }}
+          pagination={false}
+        />
       </div>
 
       <Modal

@@ -10,7 +10,10 @@
   background-color: #343a3f;
   overflow-y: scroll;
 }
-@media (min-width: 1024px) {
+.offcanvas {
+  z-index: 9998;
+}
+/* @media (min-width: 1024px) {
   .drawer {
     width: 290px;
   }
@@ -26,4 +29,4 @@
   .drawer {
     width: 190px;
   }
-}
+} */

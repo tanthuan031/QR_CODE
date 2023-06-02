@@ -13,6 +13,7 @@ import { Modal as ModalConfirm } from 'antd';
 import { ErrorToast, SuccessToast } from '../../Layouts/Alerts';
 import { getAllNotificationsAdmin } from '../../../api/Admin/NotificationAdmin/notificationAdminAPI';
 import { setDataNotificationAdmin } from '../../../redux/reducer/notification/notification.reducer';
+import ImgBg from '../../../asset/img/circle.svg';
 export function ClassRoom(props) {
   const dispatch = useDispatch();
 
@@ -98,13 +99,17 @@ export function ClassRoom(props) {
     });
   };
   const handleExport = () => {};
+  const colors = ['bg-gradient-success', 'bg-gradient-2', 'bg-gradient-info'];
+  let colorIndex = 0;
   return (
     <>
-      <div className="row ">
+      <div className="row " style={{ margin: '0 auto' }}>
         {props.data.map((item, index) => {
+          const currentColor = colors[colorIndex];
+          colorIndex = (colorIndex + 1) % colors.length;
           return (
             <div
-              className="col col-md-3  mb-4 cursor-pointer"
+              className="col-xl-3 col-sm-6 col-12 mb-4 cursor-pointer"
               onClick={() =>
                 handleDetailClassroom(
                   item.id,
@@ -117,38 +122,41 @@ export function ClassRoom(props) {
               }
               key={index}
             >
-              <div className="classroom_content">
-                <div className="classroom_header">
-                  <div className="classroom_background_header"></div>
-                  <div className="classroom_content_header">
-                    <h3>{item.class_name}</h3>
-                    <span>Tên giảng viên : {item.teachers.first_name + ' ' + item.teachers.last_name}</span>
+              <div className={`card ${currentColor} shadow border-0`}>
+                <div className="card-body">
+                  <img src={ImgBg} className="card-img-absolute" alt="circle-image"></img>
+                  <div className="row ">
+                    <div className="col">
+                      <span className="h4  text-bold  d-block mb-2 text-center">{item.class_name}</span>
+                      <span className="h6 font-bold mb-0">
+                        GV:{item.teachers.last_name + ' ' + item.teachers.first_name}
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <div className="classroom_footer">
-                  <div className="row">
-                    <div className="col col-md-9">
-                      <p>Số tuần học : {item.number_roll_call}</p>
-                      <p>
-                        Mã lớp: <span className="font-weight-bold ">{item.class_code}</span>
-                      </p>
-                    </div>
-                    <div className="d-flex col col-md-3 text-danger ">
-                      <button
-                        id="edit-product"
-                        onClick={(e) => handleExport(e, item.id)}
-                        className="cursor-pointer  mt-2 padding-right-1x  bg-gray-100 text-success  d-flex align-items-center justify-content-center border-none"
-                      >
-                        <FaEye />
-                      </button>
-                      <button
-                        id="edit-product"
-                        onClick={(e) => handleDeleteClassroom(e, item.id)}
-                        className="cursor-pointer  mt-2  bg-gray-100 text-danger  d-flex align-items-center justify-content-center border-none "
-                      >
-                        <FaTrash />
-                      </button>
-                    </div>
+                  <div className="mt-2 mb-0 text-sm">
+                    <p>
+                      Mã lớp: <span className="font-weight-bold ">{item.class_code}</span>
+                    </p>
+                    <span className="text-nowrap text-xs text-muted">Số tuần học : {item.number_roll_call}</span>
+                  </div>
+
+                  <div className="d-flex justify-content-end text-danger ">
+                    <button
+                      id="edit-product"
+                      onClick={(e) => handleExport(e, item.id)}
+                      className="cursor-pointer  mt-2 padding-right-1x text-success  d-flex align-items-center justify-content-center border-none"
+                      style={{ background: 'none !important' }}
+                    >
+                      <FaEye />
+                    </button>
+                    <button
+                      id="edit-product"
+                      onClick={(e) => handleDeleteClassroom(e, item.id)}
+                      className="cursor-pointer  mt-2 text-danger  d-flex align-items-center justify-content-center border-none "
+                      style={{ background: 'none !important' }}
+                    >
+                      <FaTrash />
+                    </button>
                   </div>
                 </div>
               </div>

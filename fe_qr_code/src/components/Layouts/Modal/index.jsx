@@ -18,6 +18,7 @@ export default function Modal(props) {
       dialogClassName="modal-90w"
       centered
       backdrop={props.backdrop}
+      style={{ zIndex: 9999 }}
     >
       {isHeader && (
         <ModalBootstrap.Header closeButton className="">

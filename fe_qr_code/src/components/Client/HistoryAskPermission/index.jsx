@@ -55,7 +55,7 @@ export function ClientHistoryPermission(props) {
       dataIndex: 'class_code',
       key: 'class_code',
       // fixed: 'left',
-      width: 100,
+      // width: 100,
       sorter: true,
     },
     {
@@ -78,14 +78,14 @@ export function ClientHistoryPermission(props) {
     {
       title: 'Lý do',
       dataIndex: 'reason',
-      width: 200,
+      // width: 200,
       key: 'reason',
     },
     {
       title: 'Ngày tạo',
       dataIndex: 'created_at',
       key: 'created_at',
-      width: 150,
+      // width: 150,
       render: (text) => formatDate(text, 'DD-MM-YYYY HH:mm:ss'),
     },
     {
@@ -98,7 +98,7 @@ export function ClientHistoryPermission(props) {
         } else if (text == 1) {
           return <span className="text-success text-bold">Chấp nhận</span>;
         } else if (text == 3) {
-          return <span className="text-secondary text-bold">Yêu cầu đã hủy</span>;
+          return <span className="text-info text-bold">Yêu cầu đã hủy</span>;
         } else {
           return <span className="text-danger text-bold">Từ chối</span>;
         }
@@ -202,7 +202,14 @@ export function ClientHistoryPermission(props) {
   return (
     <>
       <div className="row ">
-        <Table columns={columns} dataSource={data} bordered size="small" scroll={{ x: 'calc(500px + 50%)', y: 400 }} />
+        <Table
+          columns={columns}
+          dataSource={data}
+          bordered
+          size="small"
+          scroll={{ x: 'calc(500px + 50%)', y: 400 }}
+          pagination={false}
+        />
       </div>
       <Modal
         show={showAskPermission}

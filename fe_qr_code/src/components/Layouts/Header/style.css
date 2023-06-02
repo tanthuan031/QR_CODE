@@ -6,8 +6,35 @@
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 2000;
 }
 .logo {
   margin-left: 50px;
+}
+.drawer {
+  position: fixed;
+  top: 50px;
+  left: 0;
+  bottom: 0;
+  width: 300px;
+  z-index: 100;
+  transition: all 0.3s;
+  box-shadow: var(--box-shadow);
+  background-color: #343a3f;
+  overflow-y: scroll;
+}
+.btn-toggle-custom {
+  border: none;
+}
+button:focus:not(:focus-visible) {
+  outline: 1 !important;
+}
+.navbar-toggler:focus {
+  text-decoration: none;
+  outline: none;
+  box-shadow: none !important;
+}
+.offcanvas.offcanvas-start {
+  top: 0;
+  width: 300px !important;
 }

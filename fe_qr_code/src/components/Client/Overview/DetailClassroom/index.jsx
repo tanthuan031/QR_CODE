@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Checkbox, Table } from 'antd';
-import React, { useState } from 'react';
+import { Checkbox, List, Table } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,7 +32,21 @@ export function DetailClassroomClientTable(props) {
   const [backdrop, setBackdrop] = React.useState('static');
   const dispatch = useDispatch();
   const dataDetail = useSelector(dataDetailClassroomClientSelector);
-  console.log('DF', isDetailClassroom);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   const [idEditStudent, setIdEditStudent] = React.useState({
     student_code: 0,
     classroom_id: 0,
@@ -214,13 +228,13 @@ export function DetailClassroomClientTable(props) {
     );
   };
   const columns = [
-    {
-      title: 'STT',
-      dataIndex: 'STT',
-      key: 'STT',
-      width: 100,
-      fixed: 'left',
-    },
+    // {
+    //   title: 'STT',
+    //   dataIndex: 'STT',
+    //   key: 'STT',
+    //   width: 100,
+    //   fixed: 'left',
+    // },
     {
       title: 'MSSV',
       dataIndex: 'student_code',
@@ -233,7 +247,6 @@ export function DetailClassroomClientTable(props) {
       dataIndex: 'full_name',
       key: 'TENSV',
       width: 200,
-      fixed: 'left',
     },
     ...Array.from({ length: dataDetail.numberRollCall }, (_, i) => ({
       //so tuan
@@ -247,6 +260,7 @@ export function DetailClassroomClientTable(props) {
         const divs = Array.from({ length: dataDetail.numberLessonWeek }, (_, index) => {
           const attendance = record.attendances.find((a) => a.week == i + 1 && a.lesson == index + 1);
           const checked = attendance && attendance.status === '0';
+
           return (
             <p style={{ textAlign: 'center', width: 90 / dataDetail.numberLessonWeek, border: '1px solid' }}>
               <Checkbox checked={checked} />
@@ -268,9 +282,9 @@ export function DetailClassroomClientTable(props) {
   const data = [
     {
       key: dataDetail !== undefined && dataDetail.data.id,
-      STT: '-',
+      // STT: '-',
       student_code: dataDetail !== undefined && dataDetail.data.student_code,
-      full_name: dataDetail !== undefined && dataDetail.data.first_name + ' ' + dataDetail.data.last_name,
+      full_name: dataDetail !== undefined && dataDetail.data.last_name + ' ' + dataDetail.data.first_name,
       attendances: dataDetail !== undefined && dataDetail.data.attendances,
       score: <span style={{ marginLeft: '30%', fontWeight: '700' }}>{Number(dataDetail.data.score).toFixed(2)}</span>,
     },
@@ -286,61 +300,127 @@ export function DetailClassroomClientTable(props) {
         ErrorToast('Không sao chép được', 1000);
       });
   }
+
+  // Mobile
+
+  const renderMobileTable = () => {
+    return (
+      <List
+        dataSource={data}
+        renderItem={(item) => (
+          <List.Item>
+            <div>
+              {/* <h3>STT: {item.STT}</h3> */}
+              <h5>MSSV: {item.student_code}</h5>
+              <h5>Tên sinh viên: {item.full_name}</h5>
+              {Array.from({ length: dataDetail.numberRollCall }, (_, i) => {
+                const attendanceColumns = Array.from({ length: dataDetail.numberLessonWeek }, (_, index) => {
+                  const attendance = item.attendances.find((a) => a.week == i + 1 && a.lesson == index + 1);
+
+                  const checked = attendance && attendance.status === '0';
+                  return (
+                    <p
+                      style={{
+                        // textAlign: 'center',
+                        // width: 90 / dataDetail.numberLessonWeek,
+                        // height: 90 / dataDetail.numberLessonWeek,
+                        // border: '1px solid',
+                        marginLeft1: '10px',
+                      }}
+                    >
+                      <Checkbox checked={checked} style={{ marginLeft: '10px' }} />
+                    </p>
+                  );
+                });
+                return (
+                  <div className="d-flex mb-2">
+                    <h5 style={{ width: '100px' }}>Tuần {i + 1}</h5>
+                    <div className="d-flex ml-2" style={{ margin: 'auto 0px' }}>
+                      {attendanceColumns}
+                    </div>
+                  </div>
+                );
+              })}
+              <h5>ĐIỂM: {item.score}</h5>
+            </div>
+          </List.Item>
+        )}
+      />
+    );
+  };
+
+  const renderDesktopTable = () => {
+    return (
+      <Table
+        columns={columns}
+        dataSource={data.map((item, index) => ({ ...item, key: index }))}
+        scroll={{ x: 'max-content', y: 300 }}
+        // pagination={{ pageSize: 40 }}
+        pagination={false}
+      />
+    );
+  };
+
   return (
     <>
-      <div className="row mb-5 justify-content-start ">
-        <div className="d-flex justify-content-between">
-          <div className="d-flex  ">
-            Mã lớp:
-            <span className="font-weight-bold  padding-left-12px"> {isDetailClassroom.classCode}</span>
-            <div
-              className=" cursor-pointer text-primary "
-              onClick={() => copyToClipboard(isDetailClassroom.classCode)}
-              size="sm"
-              style={{ marginLeft: '5px' }}
-            >
-              Copy
+      <div className="row mb-3 justify-content-start ">
+        <div className="row justify-content-between">
+          <div className="col-md-4 col-sm-12 mt-2 ">
+            <div className="d-flex">
+              Mã lớp:
+              <span className="font-weight-bold  padding-left-12px"> {isDetailClassroom.classCode}</span>
+              <div
+                className=" cursor-pointer text-primary "
+                onClick={() => copyToClipboard(isDetailClassroom.classCode)}
+                size="sm"
+                style={{ marginLeft: '5px' }}
+              >
+                Copy
+              </div>
             </div>
           </div>
-          <div className="d-flex justify-content-between ">
-            <Button
-              id="create-new-product"
-              variant="outline-info"
-              className="font-weight-bold ms-3 m-r-15"
-              onClick={() => handleScanQR()}
-              size="sm"
-            >
-              Điểm danh QR
-            </Button>
-            <Button
-              id="create-new-product"
-              variant="outline-success"
-              className="font-weight-bold ms-3 m-r-15"
-              onClick={() => setShowAskForPermission(true)}
-              size="sm"
-            >
-              Xin phép nghỉ học
-            </Button>
-            <Button
-              id="create-new-product"
-              variant="outline-secondary"
-              className="font-weight-bold ms-3 m-r-15"
-              onClick={() => backToPage()}
-              size="sm"
-            >
-              Quay lại
-            </Button>
+          <div className="col-md-8 col-sm-12 justify-content-between mt-2 ">
+            <div className="d-flex justify-content-end">
+              <Button
+                id="create-new-product"
+                variant="outline-info"
+                className="font-weight-bold ms-3 m-r-15"
+                onClick={() => handleScanQR()}
+                size="sm"
+              >
+                Điểm danh QR
+              </Button>
+              <Button
+                id="create-new-product"
+                variant="outline-success"
+                className="font-weight-bold ms-3 m-r-15"
+                onClick={() => setShowAskForPermission(true)}
+                size="sm"
+              >
+                Xin phép nghỉ học
+              </Button>
+              <Button
+                id="create-new-product"
+                variant="outline-secondary"
+                className="font-weight-bold ms-3 m-r-15"
+                onClick={() => backToPage()}
+                size="sm"
+              >
+                Quay lại
+              </Button>
+            </div>
           </div>
         </div>
       </div>
       {/* *** */}
       <div style={{ overflow: 'scroll' }}>
-        <Table
+        {isMobile ? renderMobileTable() : renderDesktopTable()}
+        {/* <Table
           columns={columns}
           dataSource={data.map((item, index) => ({ ...item, key: index }))}
           scroll={{ x: 'max-content', y: 300 }}
           pagination={{ pageSize: 40 }}
-        />
+        /> */}
       </div>
 
       <div className="row mt-5">

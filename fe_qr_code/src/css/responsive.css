@@ -1,0 +1,14 @@
+/* 739 */
+@media only screen and (max-width: 46.1875em) {
+}
+/* Tablet 740-1023 */
+@media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {
+  .modal-dialog {
+    margin-right: none !important;
+    margin-left: auto;
+  }
+}
+
+/* PC 1024 */
+@media only screen and (min-width: 64em) {
+}

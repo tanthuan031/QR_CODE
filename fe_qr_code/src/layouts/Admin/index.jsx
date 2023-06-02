@@ -15,6 +15,7 @@ import LogoutAdmin from '../../components/Admin/Auth/Logout';
 import { useState } from 'react';
 import { getUserAdminSelector } from '../../redux/selectors/auth/auth.selector';
 import { useSelector } from 'react-redux';
+import HeaderAdmin from '../../components/Layouts/Header/index-admin';
 // import { Button, Image } from 'react-bootstrap';
 // import { useSelector } from 'react-redux';
 
@@ -34,41 +35,9 @@ export function AdminLayout(props) {
   const user = useSelector(getUserAdminSelector);
   return (
     <>
-      <Header />
-      <Drawer
-        slot={
-          <>
-            {/* <img src={Logo} alt="Logo" width="80" height="80" /> */}
-            <div
-              style={{
-                color: '#ffffff',
-                textAlign: 'center',
-                fontWeight: 'bold',
-                fontSize: '1.3rem',
-              }}
-            >
-              {Object.keys(user).length !== 0 && user.data.last_name + ' ' + user.data.first_name}
-            </div>
-            <div
-              style={{
-                color: '#ffffff',
-                textAlign: 'center',
-                fontWeight: 'bold',
-                fontSize: '.8rem',
-              }}
-            >
-              {Object.keys(user).length !== 0 && user.data.teacher_code}
-            </div>
-            <div className="py-3">{<ListGroup data={menu_admin_item_data} />}</div>
-            <div className="d-flex justify-content-center ">
-              <Button className="btn-primary" onClick={() => setStateModalLogout(true)} size="sm">
-                Logout
-              </Button>
-            </div>
-          </>
-        }
-      />
-      <main id="main" className="main p-5">
+      <HeaderAdmin />
+
+      <main id="main-admin" className="main p-3">
         {slot}
       </main>
       <LogoutAdmin show={showLogout} setStateModal={() => setStateModalLogout(false)} />

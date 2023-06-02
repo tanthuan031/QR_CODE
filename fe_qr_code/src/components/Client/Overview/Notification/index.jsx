@@ -73,25 +73,29 @@ export function NotificationClient(props) {
                 dataNotifications.map((item, index) => (
                   <Alert key={index} variant={getRandomVariant()} style={{ padding: '5px 16px' }}>
                     <div className="row">
-                      <div className="col-md-1">
-                        {index === 0 || index === 1 ? (
-                          <Badge
-                            count={
-                              <span className="pulse-animation text-danger">
-                                <img src={ImageNew} />
-                              </span>
-                            }
-                          >
-                            {/* <FaRegStar className=" star-new" /> */}
-                          </Badge>
-                        ) : (
-                          ''
-                        )}
+                      <div className="d-flex justify-content-between mb-2">
+                        <span>
+                          {index === 0 || index === 1 ? (
+                            <Badge
+                              count={
+                                <span className=" text-danger">
+                                  <img src={ImageNew} />
+                                </span>
+                              }
+                            >
+                              {/* <FaRegStar className=" star-new" /> */}
+                            </Badge>
+                          ) : (
+                            ''
+                          )}
+                        </span>
+                        <span className="text-bold text-dark">
+                          {formatDate(item.created_at, 'DD-MM-YYYY HH:mm:ss')}
+                        </span>
                       </div>
-                      <div className="col-md-11">
-                        <p className="text-bold ">
-                          {item.title} - {formatDate(item.created_at, 'DD-MM-YYYY HH:mm:ss')}
-                        </p>
+
+                      <div className="col-md-12 col-sm-12">
+                        <p className="font-weight-bold ">{item.title}</p>
                         <p> - {item.content}</p>
                       </div>
                     </div>

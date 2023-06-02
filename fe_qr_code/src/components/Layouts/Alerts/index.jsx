@@ -22,6 +22,9 @@ export const SuccessToast = (title, timer) => {
     },
     background: '#ebfaef',
     color: '#37b489',
+    style: {
+      'z-index': '999999',
+    },
   });
 };
 
@@ -39,5 +42,6 @@ export const ErrorToast = (title, timer) => {
     },
     background: '#fde8e8',
     color: '#e3314c',
+    zIndex: 999999,
   });
 };

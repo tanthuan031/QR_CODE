@@ -32,8 +32,12 @@ export function ClassroomPage() {
   const [search, setSearch] = React.useState('');
   const handleGetAllClassroom = async () => {
     const result = await getAllClassroom({
-      key: 'id',
-      value: 'asc',
+      sort: [
+        {
+          key: 'class_name',
+          value: 'asc',
+        },
+      ],
     });
 
     if (result === 401) {
@@ -102,50 +106,53 @@ export function ClassroomPage() {
     <>
       <section>
         <div className="container-fluid mt-5">
-          <h5 className="font-weight-bold mb-3">Chi tiết lớp học</h5>
-
           {!isDetailClassroom.checkDetail && !isQRClassroom && (
-            <div className="row">
-              <div className="row mb-5 justify-content-end ">
-                <div className="d-flex justify-content-between">
-                  <div className="d-flex  "></div>
-                  <div className="d-flex justify-content-between ">
-                    <Form onSubmit={(e) => handleSearch(e)}>
-                      <InputGroup>
-                        <Form.Control
-                          id="search-order"
-                          placeholder="Nhập mã lớp để tìm kiếm"
-                          onChange={(e) => setSearch(e.target.value)}
-                          size="sm"
-                        />
+            <>
+              <h5 className="font-weight-bold mb-3">Chi tiết lớp học</h5>
+              <div className="row">
+                <div className="row mb-4 justify-content-end ">
+                  <div className="row">
+                    <div className="col-md-8 col-sm-12 mb-2 order-sm-1 order-2">
+                      <Button
+                        id="create-new-product"
+                        variant="outline-success"
+                        className="font-weight-bold m-r-15"
+                        onClick={() => setShowCreate(true)}
+                        size="sm"
+                      >
+                        Tạo lớp học
+                      </Button>
+                    </div>
+                    <div className="col-md-4 col-sm-12 mb-2 order-sm-2 order-1">
+                      <Form onSubmit={(e) => handleSearch(e)}>
+                        <InputGroup>
+                          <Form.Control
+                            id="search-order"
+                            placeholder="Nhập mã lớp để tìm kiếm"
+                            onChange={(e) => setSearch(e.target.value)}
+                            size="sm"
+                          />
 
-                        <Button id="search-user" variant="info" type="submit" size="sm">
-                          <FaSearch />
-                        </Button>
-                      </InputGroup>
-                    </Form>
-                    <Button
-                      id="create-new-product"
-                      variant="outline-success"
-                      className="font-weight-bold ms-3 m-r-15"
-                      onClick={() => setShowCreate(true)}
-                      size="sm"
-                    >
-                      Tạo lớp học
-                    </Button>
+                          <Button id="search-user" variant="info" type="submit" size="sm">
+                            <FaSearch />
+                          </Button>
+                        </InputGroup>
+                      </Form>
+                    </div>
                   </div>
                 </div>
+
+                <ClassRoom data={data} handleGetAllClassroom={handleGetAllClassroom} />
+                {totalRecord > 20 && (
+                  <PaginationUI
+                    handlePageChange={handlePageChange}
+                    perPage={20}
+                    totalRecord={totalRecord}
+                    currentPage={page}
+                  />
+                )}
               </div>
-              <ClassRoom data={data} handleGetAllClassroom={handleGetAllClassroom} />
-              {totalRecord > 20 && (
-                <PaginationUI
-                  handlePageChange={handlePageChange}
-                  perPage={20}
-                  totalRecord={totalRecord}
-                  currentPage={page}
-                />
-              )}
-            </div>
+            </>
           )}
         </div>
         {/* <Modal setStateModal={() => setShowCreate(false)} show={show} elementModalBody={bodyModalCreateClass()} /> */}

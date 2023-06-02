@@ -1,9 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button as ButtonAntd, Checkbox, Table } from 'antd';
+import { Button as ButtonAntd, Checkbox, Table, Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, Form, InputGroup } from 'react-bootstrap';
+import { Alert, Button, Form, InputGroup, OverlayTrigger } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { FaEdit, FaFileExport, FaSearch } from 'react-icons/fa';
+import { FaArrowLeft, FaBell, FaEdit, FaFileExport, FaQrcode, FaSearch, FaUser } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { addSchemaNotification, addSchemaStudent } from '../../../../adapter/classroom';
 import {
@@ -706,28 +706,28 @@ export default function DetailClassroomTable(props) {
       dataIndex: 'Action',
       key: 'STT',
       width: 100,
-      fixed: 'left',
+      // fixed: 'left',
     },
     {
       title: 'MSSV',
       dataIndex: 'student_code',
       key: 'MSSV',
-      width: 100,
-      fixed: 'left',
+      // width: 100,
+      // fixed: 'left',
     },
     {
       title: 'TÊN SINH VIÊN',
       dataIndex: 'full_name',
       key: 'TENSV',
-      width: 200,
-      fixed: 'left',
+      // width: 200,
+      // fixed: 'left',
     },
     ...Array.from({ length: dataDetail.numberRollCall }, (_, i) => ({
       //so tuan
       title: `Tuần ${i + 1}`,
       dataIndex: `week${i + 1}`,
       key: `week${i + 1}`,
-      width: 100,
+      // width: 100,
       render: (_, record) => {
         // console.log('a', record.attendances[0][0]['week']);
         const divs = Array.from({ length: dataDetail.numberLessonWeek }, (_, index) => {
@@ -749,7 +749,7 @@ export default function DetailClassroomTable(props) {
       dataIndex: 'score',
       key: 'score',
       fixed: 'right',
-      width: 90,
+      width: 80,
     },
   ];
 
@@ -775,74 +775,108 @@ export default function DetailClassroomTable(props) {
       attendances: detail.attendances,
       score: <span style={{ marginLeft: '30%', fontWeight: '700' }}>{Number(detail.score).toFixed(2)}</span>,
     }));
-
+  function copyToClipboard(text) {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        SuccessToast('Sao chép thành công', 1000);
+      })
+      .catch((error) => {
+        ErrorToast('Không sao chép được', 1000);
+      });
+  }
+  const tooltip = (
+    <Tooltip id="tooltip">
+      <strong>Holy guacamole!</strong> Check this info.
+    </Tooltip>
+  );
   return (
     <>
       <div className="row">
-        <div className="col col-md-12">
-          <div className="d-flex">
-            Mã lớp:<span className="font-weight-bold  padding-left-12px"> {isDetailClassroom.classCode}</span>
+        <div className="row">
+          <div className=" col-md-4 col-sm-12">
+            <div className="d-flex">
+              Mã lớp:<span className="font-weight-bold  padding-left-12px"> {isDetailClassroom.classCode}</span>
+              <div
+                className=" cursor-pointer text-primary "
+                onClick={() => copyToClipboard(isDetailClassroom.classCode)}
+                size="sm"
+                style={{ marginLeft: '5px' }}
+              >
+                Copy
+              </div>
+            </div>
           </div>
-        </div>
+          <div className=" col-md-8 col-sm-12 ">
+            <div className="d-flex justify-content-end">
+              <Form>
+                <InputGroup>
+                  <Form.Control
+                    id="search-order"
+                    placeholder="Nhập mã lớp..."
+                    size="sm"
+                    // onChange={(e) => setSearch(e.target.value)}
+                  />
 
-        <div className="col col-md-9">
-          <div className="row mb-3 mt-4 justify-content-start ">
-            <div className="d-flex justify-content-start ">
-              <Button
-                id="create-new-product"
-                variant="outline-primary"
-                className="font-weight-bold ms-3 m-r-15"
-                onClick={() => setCreateNotification(true)}
-                size="sm"
-              >
-                Tạo thông báo
-              </Button>
-              <Button
-                id="create-new-product"
-                variant="outline-success"
-                className="font-weight-bold ms-3 m-r-15"
-                onClick={() => setShowAddStudent(true)}
-                size="sm"
-              >
-                Thêm sinh viên
-              </Button>
-              <Button
-                id="create-new-product"
-                variant="outline-info"
-                className="font-weight-bold ms-3 m-r-15"
-                onClick={() => setShow(true)}
-                size="sm"
-              >
-                Điểm danh QR
-              </Button>
-              <Button
-                size="sm"
-                id="create-new-product"
-                variant="outline-secondary"
-                className="font-weight-bold ms-3 m-r-15"
-                onClick={() => backToPage()}
-              >
-                Quay lại
-              </Button>
+                  <Button id="search-user" variant="info" type="submit">
+                    <FaSearch />
+                  </Button>
+                </InputGroup>
+              </Form>
             </div>
           </div>
         </div>
-        <div className="col mb-3 mt-4 col-md-3">
-          <div className="row justify-content-end ">
-            <Form>
-              <InputGroup>
-                <Form.Control
-                  id="search-order"
-                  placeholder="Nhập mã lớp..."
-                  size="sm"
-                  // onChange={(e) => setSearch(e.target.value)}
-                />
 
-                <Button id="search-user" variant="info" type="submit">
-                  <FaSearch />
+        <div className="row justify-content-between">
+          <div className="col-md-12 col-sm-12 mt-2 ms-3 mb-2">
+            <div className="d-flex">
+              <Tooltip title="Tạo thông báo" placement="topLeft">
+                <Button
+                  id="create-new-product"
+                  variant="outline-primary"
+                  className="font-weight-bold  m-r-15"
+                  onClick={() => setCreateNotification(true)}
+                  size="sm"
+                >
+                  <FaBell />
                 </Button>
-              </InputGroup>
-            </Form>
+              </Tooltip>
+              <Tooltip title="Thêm sinh viên" placement="topLeft">
+                <Button
+                  id="create-new-product"
+                  variant="outline-success"
+                  className="font-weight-bold ms-3 m-r-15"
+                  onClick={() => setShowAddStudent(true)}
+                  size="sm"
+                >
+                  <FaUser />
+                </Button>
+              </Tooltip>
+              <Tooltip title="Điểm danh" placement="topLeft">
+                {' '}
+                <Button
+                  id="create-new-product"
+                  variant="outline-info"
+                  className="font-weight-bold ms-3 m-r-15"
+                  onClick={() => setShow(true)}
+                  size="sm"
+                >
+                  <FaQrcode />
+                </Button>
+              </Tooltip>
+              <Tooltip title="Quay lại" placement="topLeft">
+                {' '}
+                <Button
+                  size="sm"
+                  id="create-new-product"
+                  variant="outline-secondary"
+                  className="font-weight-bold ms-3 m-r-15"
+                  onClick={() => backToPage()}
+                >
+                  <FaArrowLeft />
+                </Button>
+              </Tooltip>
+            </div>
           </div>
         </div>
       </div>

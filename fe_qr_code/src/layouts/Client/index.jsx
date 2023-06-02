@@ -39,42 +39,11 @@ export function ClientLayout(props) {
   return (
     <>
       <Header />
-      <Drawer
-        slot={
-          <>
-            {/* <img src={Logo} alt="Logo" width="80" height="80" /> */}
-            <div
-              style={{
-                color: '#ffffff',
-                textAlign: 'center',
-                fontWeight: 'bold',
-                fontSize: '1.3rem',
-              }}
-            >
-              {Object.keys(user).length !== 0 && user.data.last_name + ' ' + user.data.first_name}
-            </div>
-            <div
-              style={{
-                color: '#ffffff',
-                textAlign: 'center',
-                fontWeight: 'bold',
-                fontSize: '.8rem',
-              }}
-            >
-              {Object.keys(user).length !== 0 && user.data.student_code}
-            </div>
-            <div className="py-3">{<ListGroup data={menu_admin_item_data} />}</div>
-            <div className="d-flex justify-content-center ">
-              <Button className="btn-primary" onClick={() => setStateModalLogout(true)} size="sm">
-                Logout
-              </Button>
-            </div>
-          </>
-        }
-      />
-      <main id="main" className="main p-5">
+
+      <main id="main" className="main p-3">
         {slot}
       </main>
+
       <LogoutClient show={showLogout} setStateModal={() => setStateModalLogout(false)} />
     </>
   );

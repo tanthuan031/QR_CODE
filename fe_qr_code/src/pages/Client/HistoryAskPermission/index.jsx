@@ -110,24 +110,21 @@ export function ClientHistoryPermissionPage() {
 
           <div className="row">
             <div className="row mb-5 justify-content-end ">
-              <div className="d-flex justify-content-between">
-                <div className="d-flex  "></div>
-                <div className="d-flex justify-content-between ">
-                  <Form onSubmit={(e) => handleSearch(e)}>
-                    <InputGroup>
-                      <Form.Control
-                        id="search-order"
-                        placeholder="Nhập mã lớp để tìm kiếm"
-                        onChange={(e) => setSearch(e.target.value)}
-                        size="sm"
-                      />
+              <div className="d-flex justify-content-end">
+                <Form onSubmit={(e) => handleSearch(e)}>
+                  <InputGroup>
+                    <Form.Control
+                      id="search-order"
+                      placeholder="Nhập mã lớp để tìm kiếm"
+                      onChange={(e) => setSearch(e.target.value)}
+                      size="sm"
+                    />
 
-                      <Button id="search-user" variant="info" type="submit" size="sm">
-                        <FaSearch />
-                      </Button>
-                    </InputGroup>
-                  </Form>
-                </div>
+                    <Button id="search-user" variant="info" type="submit" size="sm">
+                      <FaSearch />
+                    </Button>
+                  </InputGroup>
+                </Form>
               </div>
             </div>
             <ClientHistoryPermission data={data} onSubmitUpdateAskPermission={handleGetAllHistoryPermissionClient} />

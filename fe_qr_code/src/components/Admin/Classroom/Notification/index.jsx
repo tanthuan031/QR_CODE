@@ -38,7 +38,6 @@ export function NotificationAdmin(props) {
   const [showUpdateNotification, setUpdateNotification] = React.useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  console.log('hde', dataNotifications);
 
   const {
     register: registerUpdateNotification,

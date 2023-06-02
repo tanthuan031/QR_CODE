@@ -137,3 +137,6 @@ a {
 .width-70 {
   width: 70%;
 }
+body.swal2-toast-shown .swal2-container {
+  z-index: 999999 !important;
+}

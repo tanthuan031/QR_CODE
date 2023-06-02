@@ -21,6 +21,7 @@ class ClassroomRepository
         $user = Auth::user();
         $data = Classroom::query()
             ->search($request)
+            ->sort($request)
             ->where('teacher_code', $user['id'])
             ->with('teachers')
             ->paginate($this->paginate);

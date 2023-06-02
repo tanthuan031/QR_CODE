@@ -1,10 +1,31 @@
 #main {
   margin-left: 290px;
-  /* margin-top: 60px; */
   transition: all 0.3s;
   min-height: 100vh;
   background-color: #f3f3f5 !important;
 }
 *::-webkit-scrollbar-thumb {
   background-color: #2e2f30 !important;
+}
+/* 739 */
+@media only screen and (max-width: 46.1875em) {
+  #main {
+    margin-left: 0;
+  }
+  /* .drawer {
+    display: none;
+  } */
+}
+/* Tablet 740-1023 */
+@media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {
+  #main {
+    margin-left: 0;
+  }
+  .drawer {
+    width: 290px;
+  }
+}
+
+/* PC 1024 */
+@media only screen and (min-width: 64em) {
 }
