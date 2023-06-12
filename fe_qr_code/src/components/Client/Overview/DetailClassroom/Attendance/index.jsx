@@ -246,13 +246,13 @@ const Attendance = () => {
   return (
     <>
       <div className="row mt-5 justify-content-center">
-        <div className="col col-md-3"></div>
-        <div className="col col-md-6 attendance_body">
+        {/* <div className="col col-md-3"></div> */}
+        <div className=" col-xl-12 col-md-12 col-xs-12 attendance_body">
           <Form encType="multipart/form-data">
             <div className="row p-5">
               <div className="col md-6">
                 <div className="row">
-                  <div className="col col-md-6">
+                  <div className="col-xl-6 col-xs-12  col-md-6">
                     <Form.Group className=" mb-3">
                       <div className="cp-input">
                         <p className="font-weight-bold">Mã lớp</p>
@@ -270,7 +270,7 @@ const Attendance = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col col-md-6">
+                  <div className="col-xl-6 col-xs-12  col-md-6">
                     <Form.Group className=" mb-3">
                       <div className="cp-input">
                         <p className="font-weight-bold">Tên giáo viên</p>
@@ -286,7 +286,7 @@ const Attendance = () => {
                       </div>
                     </Form.Group>
                   </div>
-                  <div className="col col-md-6">
+                  <div className=" col-xl-6 col-xs-12  col-md-6">
                     <Form.Group className=" mb-3">
                       <div className="cp-input">
                         <p className="font-weight-bold">Tên lớp</p>
@@ -343,6 +343,7 @@ const Attendance = () => {
                   placeholder="Nhập mã lớp"
                   value={dataAttendance && dataAttendance.dataAttendance.attendance_range}
                   {...register('attendance_range')}
+                  hidden
                 />
                 {/* Time */}
                 <Form.Control
@@ -351,6 +352,7 @@ const Attendance = () => {
                   placeholder="Nhập mã lớp"
                   value={dataAttendance && dataAttendance.dataAttendance.attendance_time}
                   {...register('attendance_time')}
+                  hidden
                 />
                 {/* ID classroom */}
                 <Form.Control
@@ -359,6 +361,7 @@ const Attendance = () => {
                   placeholder="Nhập mã lớp"
                   value={dataAttendance && dataAttendance.dataAttendance.id_classroom}
                   {...register('classroom_id')}
+                  hidden
                 />
                 {/*hour create */}
                 <Form.Control
@@ -367,6 +370,7 @@ const Attendance = () => {
                   placeholder="Nhập mã lớp"
                   value={dataAttendance && dataAttendance.dataAttendance.create_at}
                   {...register('create_at')}
+                  hidden
                 />
                 {/*Token */}
                 <Form.Control
@@ -375,6 +379,7 @@ const Attendance = () => {
                   placeholder="Nhập mã lớp"
                   value={dataAttendance && dataAttendance.dataAttendance.tokensAdmin}
                   {...register('tokensAdmin')}
+                  hidden
                 />
 
                 {/*Location Latitude */}
@@ -384,6 +389,7 @@ const Attendance = () => {
                   maxLength={10}
                   placeholder="Nhập mã lớp"
                   value={dataAttendance && dataAttendance.dataAttendance.location.latitude}
+                  hidden
                 />
 
                 {/*Location Longitude */}
@@ -393,6 +399,7 @@ const Attendance = () => {
                   maxLength={10}
                   placeholder="Nhập mã lớp"
                   value={dataAttendance && dataAttendance.dataAttendance.location.longitude}
+                  hidden
                 />
               </div>
             </div>
@@ -420,7 +427,7 @@ const Attendance = () => {
             />
           </Form>
         </div>
-        <div className="col col-md-3"></div>
+        {/* <div className="col col-md-3"></div> */}
       </div>
     </>
   );

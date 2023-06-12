@@ -537,7 +537,7 @@ export default function DetailClassroomTable(props) {
         return false;
       } else {
         dispatch(setDataNotificationAdmin(result1.data));
-        SuccessToast('Thêm sinh viên thành công', 3500);
+        SuccessToast('Thông báo đã được gửi đi', 3500);
         Notiflix.Block.remove('.sl-box');
         setCreateNotification(false);
         resetNotification();
