@@ -47,7 +47,7 @@ export function ClientProfile(props) {
         email: user.data.email,
       });
     }
-  }, [user]);
+  }, [user, dispatch]);
   const onSubmit = async (data) => {
     BlockUICLIENT('#root', 'fixed');
     const resultData = {
@@ -99,10 +99,12 @@ export function ClientProfile(props) {
             <img className="img-fluid rounded-bottom rounded-3" src={ImgBgr} />
             <div className="profile-info">
               <img
-                className="profile-pic w-100 border-radius-lg shadow-sm"
-                style={{ width: '100%', objectFit: 'fill' }}
+                className="profile-pic  border-radius-lg shadow-sm"
+                style={{ objectFit: 'fill' }}
                 id="wizardPicturePreview"
                 src={Object.keys(user).length > 0 ? user.data.image : ImgUserDefault}
+                width={100}
+                height={100}
               />
 
               <h5 className="hvr-underline-from-center mt-4">

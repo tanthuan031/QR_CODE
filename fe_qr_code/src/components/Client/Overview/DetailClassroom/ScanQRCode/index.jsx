@@ -423,6 +423,7 @@ const ScanQRCode = ({ onDetected }) => {
         </h6>
         <div className="contain_qr">
           <video ref={ref} className="video_qr" />
+          <div className="scan_line"></div>
         </div>
         <div className="mb-3 text-center ">
           <span className="text-danger font-weight-bold ">Lưu ý: </span>Mọi hành vi gian lận trong điểm danh sẽ bị khóa

@@ -248,6 +248,7 @@ const Attendance = () => {
       <div className="row mt-5 justify-content-center">
         {/* <div className="col col-md-3"></div> */}
         <div className=" col-xl-12 col-md-12 col-xs-12 attendance_body">
+          <h4 className="text-center">Thông tin điểm danh</h4>
           <Form encType="multipart/form-data">
             <div className="row p-5">
               <div className="col md-6">
