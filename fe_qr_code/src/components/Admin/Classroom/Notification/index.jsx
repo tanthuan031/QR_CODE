@@ -257,13 +257,13 @@ export function NotificationAdmin(props) {
                 dataNotifications.map((item, index) => (
                   <Alert key={index} variant={getRandomVariant()} style={{ padding: '5px 16px' }}>
                     <div className="row">
-                      <div className="col-md-11">
+                      <div className="col-md-10">
                         <p className="text-bold ">
                           {item.title} - {formatDate(item.created_at, 'DD-MM-YYYY HH:mm:ss')}
                         </p>
                         <p> - {item.content}</p>
                       </div>
-                      <div className="col-md-1">
+                      <div className="col-md-2 text-center">
                         <div style={{ margin: '20%' }}>
                           <FaEdit
                             className="text-info font-23px cursor-pointer "

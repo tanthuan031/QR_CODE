@@ -63,4 +63,17 @@ class AuthClientServices
             return $this->apiResponse([], 'success', $result['message'], $result['status']);
         }
     }
+
+    public  function  updateUser($request)
+    {
+
+        $result = $this->authRepository->updateUser($request);
+
+        if ($result['status'] == 200) {
+            return $this->apiResponse($result['data'], $result['status'], $result['message']);
+        } else {
+
+            return $this->apiResponse([], $result['status'], $result['message']);
+        }
+    }
 }

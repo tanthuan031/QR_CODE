@@ -101,7 +101,7 @@ export function ClientHistoryPermissionPage() {
       Notiflix.Block.remove('#root');
     }
   };
-  console.log('sk', isDetailClassroomClient);
+
   return (
     <>
       <section>

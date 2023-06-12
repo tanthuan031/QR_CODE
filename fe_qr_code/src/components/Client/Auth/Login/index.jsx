@@ -58,14 +58,14 @@ export default function FormLogin() {
   return (
     <>
       <div className="row section-root-login">
-        <div className="col-md-6 d-flex sl-box-image ">
+        <div className="col-xl-5 col-md-6 d-flex sl-box-image ">
           <div className="sl-box-image-content">
             <img src={ImageLogin} alt="" className="sl-box-image-item" />
 
             <h3 className="text-center">SGU</h3>
           </div>
         </div>
-        <div className="col-md-6 d-flex ">
+        <div className="col-xl-7 col-md-6 d-flex ">
           <div className="sl-box-content">
             <Form onSubmit={handleSubmit(onSubmit)}>
               <Form.Group className="mb-3 form-user">
@@ -91,13 +91,13 @@ export default function FormLogin() {
               <Form.Group className="mb-3 text-end ">
                 <span className="text-primary  text-end cursor-pointer ">Quên mật khẩu ?</span>
               </Form.Group>
-              <div className="d-flex justify-content-end">
-                <Button
+              <div className="d-flex justify-content-center">
+                {/* <Button
                   onClick={() => (historyLocation(-1) ? historyLocation(-1) : (window.location.href = '/'))}
                   className=" btn font-weight-bold btn-login-client margin-right-10px btn-secondary "
                 >
                   Quay lại
-                </Button>
+                </Button> */}
                 <Button className="font-weight-bold btn-login-client" type="submit" disabled={!isValid}>
                   Đăng nhập
                 </Button>

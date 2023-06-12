@@ -52,13 +52,16 @@ const QRCodeGenerator = () => {
   };
 
   const data = encoder.encode(JSON.stringify(text));
+  const isMobile = window.innerWidth <= 767; // Điều kiện cho kích thước mobile (767px)
+
+  const qrCodeSize = isMobile ? 300 : 450;
   return (
     <div>
       <div className="row mt-5">
-        <div className="col col-md-3"></div>
-        <div className="col col-md-6">
+        <div className="col-xl-3 col-sm-12 col-12"></div>
+        <div className="col-xl-6 col-sm-12 col-12">
           <div className="d-flex justify-content-center">
-            <QRCode value={btoa(String.fromCharCode.apply(null, data))} size={450} className="text-center" />
+            <QRCode value={btoa(String.fromCharCode.apply(null, data))} size={qrCodeSize} className="text-center" />
           </div>
           <div className="d-flex justify-content-center pt-3">
             <Button className="btn-secondary" onClick={() => cancelQR()}>
@@ -66,7 +69,7 @@ const QRCodeGenerator = () => {
             </Button>
           </div>
         </div>
-        <div className="col col-md-3">
+        <div className="col-xl-3 col-sm-12 col-12">
           <div className="time_qr">
             <p>
               <FaRegClock />

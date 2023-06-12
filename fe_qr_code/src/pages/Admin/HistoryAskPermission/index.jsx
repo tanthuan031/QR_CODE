@@ -101,7 +101,6 @@ export function AdminHistoryPermissionPage() {
       Notiflix.Block.remove('#root');
     }
   };
-  console.log('fh', isDetailHistoryAskPermission);
 
   return (
     <>

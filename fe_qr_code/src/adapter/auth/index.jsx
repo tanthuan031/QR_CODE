@@ -54,6 +54,34 @@ export const handleGetMeClient = async () => {
   }
 };
 
+export const updateProfileClientSchema = yup.object({
+  first_name: yup
+    .string()
+    .required('Vui lòng nhập tên')
+    .matches(
+      /^[0-9a-zA-Z\sáàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵ.\-\_]+$/,
+      'Không đúng định dạng'
+    )
+    .min(1)
+    .max(50)
+    .trim(),
+  last_name: yup
+    .string()
+    .required('Vui lòng nhập họ')
+    .matches(
+      /^[0-9a-zA-Z\sáàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵ.\-\_]+$/,
+      'Không đúng định dạng'
+    )
+    .min(1)
+    .max(50)
+    .trim(),
+  email: yup
+    .string()
+    .required('Vui lòng nhập email')
+    .matches(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Không đúng định dạng')
+    .trim(),
+});
+
 // Admin
 
 export const loginAdminSchema = yup.object({
@@ -112,6 +140,8 @@ export const handleGetMeAdmin = async () => {
   const response = await handleGetInformationAdmin();
   if (response === 401) {
     return 401;
+  } else if (response === 500) {
+    return 500;
   } else {
     return response;
   }

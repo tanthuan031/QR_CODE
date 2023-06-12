@@ -23,7 +23,9 @@ class ClassroomService
 
         $result = $this->classroomRepository->getAll($request);
 
+
         if ($result) {
+
             return $this->apiResponse($result, 'success', 'Get all classroom successfully');
         } else {
             return $this->apiResponse([], 'fail', 'Get classroom unsuccessfully');
@@ -76,6 +78,15 @@ class ClassroomService
             return $this->apiResponse($result['data'], 'success', $result['message']);
         } else {
             return $this->apiResponse([], 'fail', $result['message']);
+        }
+    }
+    public function destroyStudent($idDetailStudent)
+    {
+        $result = $this->classroomRepository->destroyStudent($idDetailStudent);
+        if ($result) {
+            return $this->apiResponse($result, 'success', 'Deleted student  successfully');
+        } else {
+            return $this->apiResponse([], 'fail', 'Deleted student unsuccessfully');
         }
     }
 

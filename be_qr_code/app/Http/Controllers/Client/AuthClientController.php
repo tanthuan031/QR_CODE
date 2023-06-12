@@ -61,4 +61,9 @@ class AuthClientController extends Controller
     {
         return $this->authService->logoutClient($request);
     }
+
+    public function updateUser(Request $request)
+    {
+        return $this->authService->updateUser($request);
+    }
 }

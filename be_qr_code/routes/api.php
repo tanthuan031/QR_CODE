@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthAdminController;
 use App\Http\Controllers\Admin\ClassroomController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HistoryAskPermission;
 use App\Http\Controllers\Admin\HistoryAskPermissionController;
 use App\Http\Controllers\Admin\NotificationController;
@@ -68,6 +69,7 @@ Route::group([
     Route::resource('classroom', ClassroomController::class);
     Route::resource('history-permission', HistoryAskPermissionController::class);
     Route::resource('notification', NotificationController::class);
+    Route::resource('dashboard', DashboardController::class);
 });
 
 // Client routes
@@ -80,6 +82,8 @@ Route::group([
 ], function () {
     Route::get('getme', [AuthClientController::class, 'getMeClient']);
     Route::post('logout', [AuthClientController::class, 'logoutClient']);
+    Route::put('profile', [AuthClientController::class, 'updateUser']);
+
     Route::resource('classroom', ClassroomClientController::class);
     Route::resource('attendance', AttendanceController::class);
     Route::post('face_verify', [AttendanceController::class, 'verifyFace']);

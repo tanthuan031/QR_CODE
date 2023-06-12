@@ -98,6 +98,11 @@ a {
 .padding-right-10x {
   padding-right: 10rem;
 }
+
+.padding-right-30px {
+  padding-right: 30px;
+  font-size: 1.3rem;
+}
 .padding-right-1x {
   padding-right: 6px;
 }

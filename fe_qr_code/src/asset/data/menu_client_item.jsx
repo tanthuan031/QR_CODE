@@ -12,6 +12,7 @@ import {
   FaImages,
   FaFileExport,
   FaFileImport,
+  FaUser,
 } from 'react-icons/fa';
 
 export const menu_client_item = [
@@ -29,6 +30,14 @@ export const menu_client_item = [
     active: false,
     link: '/history',
     icon: <FaThLarge />,
+    role: 2,
+  },
+  {
+    id: 3,
+    name: 'Quản lý tài khoản',
+    active: false,
+    link: '/profile',
+    icon: <FaUser />,
     role: 2,
   },
 ];

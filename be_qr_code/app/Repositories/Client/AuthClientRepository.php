@@ -6,6 +6,8 @@ use App\Helpers\Helper;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Mockery\Undefined;
 
 class AuthClientRepository
 {
@@ -72,7 +74,13 @@ class AuthClientRepository
     public function getMeClient()
     {
         $user = Auth::user();
+
         if ($user) {
+            $imageUrl = $user['image'];
+            if ($imageUrl) {
+                $url = asset('storage/User/' . $imageUrl);
+                $user->setAttribute('image', $url);
+            }
             $data = [
                 'data' => $user,
                 'message' => "Get user successfully",
@@ -94,5 +102,34 @@ class AuthClientRepository
             'status' => 200,
             'message' => 'Logout Successfully'
         ];
+    }
+
+    public function updateUser($request)
+    {
+        $user = Auth::user();
+        $checkStudentCode = User::query()->where('student_code', $user['student_code'])->first();
+        if ($checkStudentCode) {
+            // $image = Helper::saveImgBase64v1($request['image'], 'User');
+            // dd($request);
+            if ($request->has('image')) {
+                $imageOld = $checkStudentCode['image'];
+                Storage::disk('public')->delete('User/' . $imageOld);
+                $image = Helper::saveImgBase64v1($request['image'], 'User');
+                $request->merge(['image' => $image]);
+            }
+            $result = $checkStudentCode->update($request->all());
+            $data = [
+                'data' => $result,
+                'message' => "Update profile successfully",
+                'status' => 200,
+            ];
+        } else {
+            $data = [
+                'message' => "Student not found",
+                'status' => 403,
+            ];
+        }
+
+        return $data;
     }
 }

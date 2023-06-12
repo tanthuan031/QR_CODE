@@ -164,7 +164,9 @@ export function DetailClassroomClientTable(props) {
                       <option value={0}>Chọn tuần...</option>
                       {(() => {
                         const divs = Array.from({ length: dataDetail.numberRollCall }, (_, index) => (
-                          <option value={index + 1}>Tuần {index + 1}</option>
+                          <option value={index + 1} key={index}>
+                            Tuần {index + 1}
+                          </option>
                         ));
                         return divs;
                       })()}
@@ -187,7 +189,9 @@ export function DetailClassroomClientTable(props) {
                       <option value={0}>Chọn buổi nghỉ...</option>
                       {(() => {
                         const divs = Array.from({ length: dataDetail.numberLessonWeek }, (_, index) => (
-                          <option value={index + 1}>Tiết thứ {index + 1} trong tuần</option>
+                          <option value={index + 1} key={index}>
+                            Tiết thứ {index + 1} trong tuần
+                          </option>
                         ));
                         return divs;
                       })()}
@@ -308,7 +312,7 @@ export function DetailClassroomClientTable(props) {
       <List
         dataSource={data}
         renderItem={(item) => (
-          <List.Item>
+          <List.Item key={`list_item_${item.student_code}`}>
             <div>
               {/* <h3>STT: {item.STT}</h3> */}
               <h5>MSSV: {item.student_code}</h5>
@@ -320,6 +324,7 @@ export function DetailClassroomClientTable(props) {
                   const checked = attendance && attendance.status === '0';
                   return (
                     <p
+                      key={`attendance_${i}_${index}`}
                       style={{
                         // textAlign: 'center',
                         // width: 90 / dataDetail.numberLessonWeek,
@@ -333,7 +338,7 @@ export function DetailClassroomClientTable(props) {
                   );
                 });
                 return (
-                  <div className="d-flex mb-2">
+                  <div className="d-flex mb-2" key={`week_${i}`}>
                     <h5 style={{ width: '100px' }}>Tuần {i + 1}</h5>
                     <div className="d-flex ml-2" style={{ margin: 'auto 0px' }}>
                       {attendanceColumns}

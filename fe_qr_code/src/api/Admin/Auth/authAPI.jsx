@@ -75,7 +75,6 @@ export const handleGetInformationAdmin = async () => {
 export const logoutAdmin = async () => {
   const response = await axiosClient.post('api/admin/logout', {}, configHeadersAuthenticate());
   const { status } = response;
-  // console.log('dhgj', status);
   switch (status) {
     case 'success':
       SuccessToast('Đăng xuất thành công', 1000);

@@ -186,7 +186,7 @@ const Attendance = () => {
         ModalConfirm.confirm({
           title: 'Cảnh báo',
           icon: '',
-          content: `Thất bại ! Ngoài phạm vi điểm danh`,
+          content: `Thất bại ! Ngoài phạm vi điểm danh .`,
           // okText: 'Thử lại',
           // cancelText: 'Đóng',
           // onOk: () => {

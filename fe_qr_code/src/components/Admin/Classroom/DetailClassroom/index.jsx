@@ -3,11 +3,12 @@ import { Button as ButtonAntd, Checkbox, Table, Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, Form, InputGroup, OverlayTrigger } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { FaArrowLeft, FaBell, FaEdit, FaFileExport, FaQrcode, FaSearch, FaUser } from 'react-icons/fa';
+import { FaArrowLeft, FaBell, FaEdit, FaFileExport, FaQrcode, FaSearch, FaTrash, FaUser } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { addSchemaNotification, addSchemaStudent } from '../../../../adapter/classroom';
 import {
   addDetailClassroom,
+  deleteDetailStudent,
   editAttendanceStudent,
   getClassroomById,
 } from '../../../../api/Admin/Classroom/classroomAPI';
@@ -35,7 +36,7 @@ import {
 } from '../../../../api/Admin/NotificationAdmin/notificationAdminAPI';
 import { NotificationAdmin } from '../Notification';
 import { setDataNotificationAdmin } from '../../../../redux/reducer/notification/notification.reducer';
-
+import { Modal as ModalConfirm } from 'antd';
 export default function DetailClassroomTable(props) {
   const [backdrop, setBackdrop] = React.useState('static');
   const [editTable, setEditTable] = React.useState(true);
@@ -52,6 +53,7 @@ export default function DetailClassroomTable(props) {
     week: 0,
     lesson: 0,
     status: 0,
+    image: null,
   });
   const [showCreateNotification, setCreateNotification] = React.useState(false);
   //data submit form create QR code
@@ -199,7 +201,9 @@ export default function DetailClassroomTable(props) {
                   <option value={0}>Open this select menu</option>
                   {(() => {
                     const divs = Array.from({ length: dataDetail.numberRollCall }, (_, index) => (
-                      <option value={index + 1}>Tuần {index + 1}</option>
+                      <option value={index + 1} key={index}>
+                        Tuần {index + 1}
+                      </option>
                     ));
                     return divs;
                   })()}
@@ -217,7 +221,9 @@ export default function DetailClassroomTable(props) {
                   <option value={0}>Open this select menu</option>
                   {(() => {
                     const divs = Array.from({ length: dataDetail.numberLessonWeek }, (_, index) => (
-                      <option value={index + 1}>Tiết thứ {index + 1} trong tuần</option>
+                      <option value={index + 1} key={index}>
+                        Tiết thứ {index + 1} trong tuần
+                      </option>
                     ));
                     return divs;
                   })()}
@@ -334,8 +340,16 @@ export default function DetailClassroomTable(props) {
       getAllStudentDetails();
       SuccessToast('Điểm danh thành công', 3500);
       Notiflix.Block.remove('.sl-box');
-
       setShowEditStudent(false);
+      setIdEditStudent({
+        ...idEditStudent,
+        student_code: 0,
+        classroom_id: 0,
+        week: 0,
+        lesson: 0,
+        status: 0,
+        image: null,
+      });
     } else if (result === 401) {
       ErrorToast('Bạn chưa đăng nhập', 3500);
       Notiflix.Block.remove('.sl-box');
@@ -345,133 +359,152 @@ export default function DetailClassroomTable(props) {
     }
     Notiflix.Block.remove('#root');
   };
+
   const renderBodyEditStudent = () => {
     return (
-      <Form encType="multipart/form-data">
-        <div className="row p-5">
-          <div className="col md-6">
-            <Form.Group className=" mb-3">
-              <div className="cp-input">
-                <p className="font-weight-bold">MSSV</p>
-                <Form.Control
-                  type="text"
-                  maxLength={128}
-                  value={idEditStudent.student_code}
-                  name="student_code"
-                  disabled
-                />
-                <small className="text-danger font-weight-bold">{errors?.student_code?.message}</small>
+      <>
+        <Form encType="multipart/form-data">
+          <div className="row p-5">
+            <div className="col md-6">
+              <div className="row">
+                <h6 className="text-center">Ảnh xác minh sinh viên</h6>
+                <div className="text-center">
+                  <img
+                    src={idEditStudent.image}
+                    style={{
+                      width: '150px',
+                      height: '110px',
+                      textAlign: 'center',
+                      boxShadow: '0 0.3125rem 0.625rem 0 rgba(0, 0, 0, 0.5) !important',
+                      border: '1px solid #333',
+                      borderRadius: '10px',
+                    }}
+                  />
+                </div>
               </div>
-            </Form.Group>
-            <Form.Group className=" mb-3">
-              <div className="cp-input">
-                <p className="font-weight-bold">Chọn tuần điểm danh</p>
-                <Form.Select
-                  aria-label="Default select example"
-                  name="number_roll_call"
-                  onChange={(option) =>
-                    setIdEditStudent({
-                      ...idEditStudent,
-                      week: option.target.value,
-                    })
-                  }
-                >
-                  <option value={0}>Open this select menu</option>
-                  {(() => {
-                    const divs = Array.from({ length: dataDetail.numberRollCall }, (_, index) => (
-                      <option value={index + 1}>Tuần {index + 1}</option>
-                    ));
-                    return divs;
-                  })()}
-                </Form.Select>
-                <small className="text-danger font-weight-bold"></small>
-              </div>
-            </Form.Group>
-            <Form.Group className=" mb-3">
-              <div className="cp-input">
-                <p className="font-weight-bold">Chọn tiết trong tuần</p>
-                <Form.Select
-                  aria-label="Default select example"
-                  name="number_lesson"
-                  onChange={(option) =>
-                    setIdEditStudent({
-                      ...idEditStudent,
-                      lesson: option.target.value,
-                    })
-                  }
-                >
-                  <option value={0}>Open this select menu</option>
-                  {(() => {
-                    const divs = Array.from({ length: dataDetail.numberLessonWeek }, (_, index) => (
-                      <option value={index + 1}>Tiết thứ {index + 1} trong tuần</option>
-                    ));
-                    return divs;
-                  })()}
-                </Form.Select>
-                <small className="text-danger font-weight-bold"></small>
-              </div>
-            </Form.Group>
+              <Form.Group className=" mb-3">
+                <div className="cp-input">
+                  <p className="font-weight-bold">MSSV</p>
+                  <Form.Control
+                    type="text"
+                    maxLength={128}
+                    value={idEditStudent.student_code}
+                    name="student_code"
+                    disabled
+                  />
+                  <small className="text-danger font-weight-bold">{errors?.student_code?.message}</small>
+                </div>
+              </Form.Group>
+              <Form.Group className=" mb-3">
+                <div className="cp-input">
+                  <p className="font-weight-bold">Chọn tuần điểm danh</p>
+                  <Form.Select
+                    aria-label="Default select example"
+                    name="number_roll_call"
+                    onChange={(option) =>
+                      setIdEditStudent({
+                        ...idEditStudent,
+                        week: option.target.value,
+                      })
+                    }
+                  >
+                    <option value={0}>Open this select menu</option>
+                    {(() => {
+                      const divs = Array.from({ length: dataDetail.numberRollCall }, (_, index) => (
+                        <option value={index + 1}>Tuần {index + 1}</option>
+                      ));
+                      return divs;
+                    })()}
+                  </Form.Select>
+                  <small className="text-danger font-weight-bold"></small>
+                </div>
+              </Form.Group>
+              <Form.Group className=" mb-3">
+                <div className="cp-input">
+                  <p className="font-weight-bold">Chọn tiết trong tuần</p>
+                  <Form.Select
+                    aria-label="Default select example"
+                    name="number_lesson"
+                    onChange={(option) =>
+                      setIdEditStudent({
+                        ...idEditStudent,
+                        lesson: option.target.value,
+                      })
+                    }
+                  >
+                    <option value={0}>Open this select menu</option>
+                    {(() => {
+                      const divs = Array.from({ length: dataDetail.numberLessonWeek }, (_, index) => (
+                        <option value={index + 1}>Tiết thứ {index + 1} trong tuần</option>
+                      ));
+                      return divs;
+                    })()}
+                  </Form.Select>
+                  <small className="text-danger font-weight-bold"></small>
+                </div>
+              </Form.Group>
 
-            <Form.Group className=" mb-3">
-              <div className="cp-input">
-                <p className="font-weight-bold">Trạng thái</p>
-                <Form.Check
-                  inline
-                  label="Có"
-                  name="status"
-                  type="radio"
-                  id={`inline-radio-2`}
-                  value={0}
-                  checked={idEditStudent.status == 0}
-                  onChange={(option) =>
-                    setIdEditStudent({
-                      ...idEditStudent,
-                      status: option.target.value,
-                    })
-                  }
-                />
-                <Form.Check
-                  inline
-                  label="Vắng"
-                  name="status"
-                  type="radio"
-                  id={`inline-radio-1`}
-                  value={1}
-                  checked={idEditStudent.status == 1}
-                  onChange={(option) =>
-                    setIdEditStudent({
-                      ...idEditStudent,
-                      status: option.target.value,
-                    })
-                  }
-                />
-                <small className="text-danger font-weight-bold"></small>
-              </div>
+              <Form.Group className=" mb-3">
+                <div className="cp-input">
+                  <p className="font-weight-bold">Trạng thái</p>
+                  <Form.Check
+                    inline
+                    label="Có"
+                    name="status"
+                    type="radio"
+                    id={`inline-radio-2`}
+                    value={0}
+                    checked={idEditStudent.status == 0}
+                    onChange={(option) =>
+                      setIdEditStudent({
+                        ...idEditStudent,
+                        status: option.target.value,
+                      })
+                    }
+                  />
+                  <Form.Check
+                    inline
+                    label="Vắng"
+                    name="status"
+                    type="radio"
+                    id={`inline-radio-1`}
+                    value={1}
+                    checked={idEditStudent.status == 1}
+                    onChange={(option) =>
+                      setIdEditStudent({
+                        ...idEditStudent,
+                        status: option.target.value,
+                      })
+                    }
+                  />
+                  <small className="text-danger font-weight-bold"></small>
+                </div>
+              </Form.Group>
+            </div>
+          </div>
+          <div className="row pb-3">
+            <Form.Group className="d-flex justify-content-center">
+              <Button
+                type="button"
+                variant="info"
+                className="me-3 font-weight-bold"
+                onClick={() => handleUpdateAttendanceStudent()}
+                disabled={idEditStudent.week == 0 || idEditStudent.lesson == 0}
+              >
+                Cập nhật
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                className="font-weight-bold"
+                onClick={() => setStateModalEditStudent()}
+              >
+                Quay lại
+              </Button>
             </Form.Group>
           </div>
-        </div>
-        <div className="row pb-3">
-          <Form.Group className="d-flex justify-content-center">
-            <Button
-              type="button"
-              variant="info"
-              className="me-3 font-weight-bold"
-              onClick={() => handleUpdateAttendanceStudent()}
-              disabled={idEditStudent.week == 0 || idEditStudent.lesson == 0}
-            >
-              Cập nhật
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              className="font-weight-bold"
-              onClick={() => setStateModalEditStudent()}
-            >
-              Quay lại
-            </Button>
-          </Form.Group>
-        </div>
-      </Form>
+        </Form>
+      </>
     );
   };
 
@@ -688,6 +721,39 @@ export default function DetailClassroomTable(props) {
     const excelFileName = `${isDetailClassroom.nameClassroom}.xlsx`;
     XLSX.writeFile(workbook, excelFileName);
   };
+  const handleDeleteStudent = async (e, id) => {
+    e.stopPropagation();
+
+    ModalConfirm.confirm({
+      title: 'Cảnh báo',
+      icon: '',
+      content: `Bạn muốn xóa sinh viên này`,
+      okText: 'Xóa',
+      // cancelText: 'Đóng',
+      onOk: async () => {
+        BlockUICLIENT('#root', 'fixed');
+        const result = await deleteDetailStudent(id);
+        if (result === 200) {
+          SuccessToast('Xóa sinh viên thành công', 3500);
+          Notiflix.Block.remove('.sl-box');
+          getAllStudentDetails();
+        } else if (result === 403) {
+          ErrorToast('Xóa sinh viên thất bại', 3500);
+          Notiflix.Block.remove('.sl-box');
+        } else {
+          ErrorToast('Có lỗi . Vui lòng thử lại', 3500);
+          Notiflix.Block.remove('.sl-box');
+        }
+        Notiflix.Block.remove('#root');
+      },
+      okButtonProps: {
+        style: {
+          backgroundColor: '#ff4d4f',
+        },
+      },
+      centered: true,
+    });
+  };
   const columns01 = [
     {
       title: (
@@ -712,7 +778,7 @@ export default function DetailClassroomTable(props) {
       title: 'MSSV',
       dataIndex: 'student_code',
       key: 'MSSV',
-      // width: 100,
+      // width: 200,
       // fixed: 'left',
     },
     {
@@ -729,7 +795,6 @@ export default function DetailClassroomTable(props) {
       key: `week${i + 1}`,
       // width: 100,
       render: (_, record) => {
-        // console.log('a', record.attendances[0][0]['week']);
         const divs = Array.from({ length: dataDetail.numberLessonWeek }, (_, index) => {
           const attendance = record.attendances.find(
             (a) => a.week == i + 1 && a.lesson == index + 1 && a.student_code == record.student_code
@@ -758,23 +823,36 @@ export default function DetailClassroomTable(props) {
     dataDetail.data.map((detail) => ({
       key: detail.id,
       Action: (
-        <FaEdit
-          style={{ fontSize: '1.4rem', marginLeft: '30%', color: '#1677ff', cursor: 'pointer' }}
-          onClick={() => {
-            setShowEditStudent(true);
-            setIdEditStudent({
-              ...idEditStudent,
-              student_code: detail.student_code,
-              classroom_id: detail.classroom_id,
-            });
-          }}
-        />
+        <>
+          <Tooltip title="Điểm danh hộ" placement="topLeft">
+            <FaQrcode
+              style={{ fontSize: '1rem', color: '#1677ff', cursor: 'pointer' }}
+              onClick={() => {
+                setShowEditStudent(true);
+                setIdEditStudent({
+                  ...idEditStudent,
+                  student_code: detail.student_code,
+                  classroom_id: detail.classroom_id,
+                  image: detail.users.image,
+                });
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Xóa sinh viên ra khỏi lớp học" placement="topLeft">
+            <FaTrash
+              className="text-danger"
+              style={{ fontSize: '1rem', marginLeft: '10%', color: '#1677ff', cursor: 'pointer' }}
+              onClick={(e) => handleDeleteStudent(e, detail.id)}
+            />
+          </Tooltip>
+        </>
       ),
       student_code: detail.student_code,
-      full_name: `${detail.first_name} ${detail.last_name}`,
+      full_name: `${detail.last_name} ${detail.first_name}`,
       attendances: detail.attendances,
       score: <span style={{ marginLeft: '30%', fontWeight: '700' }}>{Number(detail.score).toFixed(2)}</span>,
     }));
+
   function copyToClipboard(text) {
     navigator.clipboard
       .writeText(text)

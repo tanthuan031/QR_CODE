@@ -36,7 +36,18 @@ class ClassroomRepository
             ->with(['attendances' => function ($query) use ($id) {
                 $query->where('classroom_id', $id);
             }])
+            ->with(['users' => function ($query) {
+                $query->select('id', 'student_code', 'image');
+            }])
             ->get();
+        // Thêm đường dẫn đầy đủ vào trường image
+        $result->map(function ($detailClassroom) {
+            if ($detailClassroom->users && $detailClassroom->users->image) {
+                $detailClassroom->users->image = asset('storage/User/' . $detailClassroom->users->image);
+            }
+            return $detailClassroom;
+        });
+
         return $result;
     }
     public function createClassroom($request, $dataDetailRequest)
@@ -109,6 +120,36 @@ class ClassroomRepository
             return $e;
         }
     }
+    // Delete student
+    public function destroyStudent($id)
+    {
+        try {
+            $teacher = Auth::user();
+            $detailClassroom = DetailClassroom::query()->find($id);
+            if ($detailClassroom !== null) {
+                $checkTeacher = Classroom::query()->where('teacher_code', $teacher['id'])->find($detailClassroom['classroom_id']);
+                if ($checkTeacher !== null) {
+                    $classroom = Classroom::query()->where('id', $detailClassroom['classroom_id'])->first();
+                    Attendance::where('student_code', $detailClassroom['student_code'])
+                        ->where('classroom_id', $detailClassroom['classroom_id'])
+                        ->delete();
+                    JoinClassroom::where('classroom_code', $classroom['class_code'])
+                        ->where('student_code', $detailClassroom['student_code'])
+                        ->delete();
+                    $detailClassroom->delete();
+                    return
+                        $detailClassroom;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    // Delete classroom
 
     public function destroy($id)
     {

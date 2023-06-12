@@ -118,3 +118,15 @@ export const deleteClassroom = async (id) => {
     return 401;
   }
 };
+
+export const deleteDetailStudent = async (id) => {
+  const url = `/api/admin/classroom/${id}?delete-details`;
+  const response = await axiosClient.delete(url, configHeadersAuthenticate());
+  if (response.status === 'success') {
+    return 200;
+  } else if (response.status === 'fail') {
+    return 404;
+  } else {
+    return 401;
+  }
+};

@@ -124,7 +124,10 @@ export function ClientHistoryPermission(props) {
     },
   ];
   // console.log('dât', props.data);
-  const data = props.data;
+  const data = props.data.map((item, index) => ({
+    ...item,
+    key: index.toString(), // or use a unique identifier from the data if available
+  }));
   const setStateModalAskPermission = () => {
     setShowAskPermission(false);
   };

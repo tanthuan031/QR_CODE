@@ -41,3 +41,6 @@
 .listdetail_classroom table td:nth-child(2) {
   width: 200px;
 } */
+.lightbox {
+  z-index: 999999 !important;
+}

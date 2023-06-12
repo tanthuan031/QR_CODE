@@ -19,7 +19,7 @@ export function NotificationClient(props) {
   const isDetailClassroom = useSelector(isDetailClassroomClientSelector);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  console.log('hde', dataNotifications);
+
   const getRandomVariant = () => {
     const variants = [
       'primary',

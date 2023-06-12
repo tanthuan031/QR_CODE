@@ -65,16 +65,16 @@ export const handleGetInformationClient = async () => {
   const response = await axiosClient.get('api/client/getme', configHeadersAuthenticate());
   if (response.status === 401) {
     return 401;
-  }
-  if (response.status === 200) {
+  } else if (response.status === 200) {
     return response.data;
+  } else {
+    return 500;
   }
 };
 
 export const logoutClient = async () => {
   const response = await axiosClient.post('api/client/logout', {}, configHeadersAuthenticate());
   const { status } = response;
-  // console.log('dhgj', status);
   switch (status) {
     case 'success':
       SuccessToast('Đăng xuất thành công', 1000);
@@ -89,36 +89,22 @@ export const logoutClient = async () => {
   }
 };
 
-// export const senMailOTPClient = async (body) => {
-//   const response = await axiosClient.post('api/client/otp-sendmail', body);
-//   if (response.status === 200) {
-//     return 200;
-//   } else if (response.status === 404) {
-//     return 404;
-//   } else if (response.status === 400) {
-//     return 400;
-//   }
-// };
-
-// export const forgotPasswordClient = async (body) => {
-//   const response = await axiosClient.put('api/client/forgot-password', body);
-//   if (response.status === 'success') {
-//     return 200;
-//   } else {
-//     return 403;
-//   }
-// };
-
-// export const editProfile = async (id, body) => {
-//   const url = `/api/client/updateprofile/${id}`;
-//   const response = await axiosClient.put(url, body, configHeadersAuthenticate());
-//   if (response.status === 401) {
-//     return 401;
-//   } else if (response.status === 'success') {
-//     return 200;
-//   } else if (response.status === 500) {
-//     return 500;
-//   } else {
-//     return 404;
-//   }
-// };
+export const updateProfileClient = async (body) => {
+  const url = `/api/client/profile`;
+  const response = await axiosClient.put(url, body, configHeadersAuthenticate());
+  if (response !== undefined) {
+    if (response.status === 401) {
+      return 401;
+    } else if (response.status === 200) {
+      return 200;
+    } else if (response.status === 500) {
+      return 500;
+    } else if (response.status === 400) {
+      return 400;
+    } else {
+      return 404;
+    }
+  } else {
+    return 500;
+  }
+};

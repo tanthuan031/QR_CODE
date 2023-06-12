@@ -422,7 +422,7 @@ const ScanQRCode = ({ onDetected }) => {
           Vui lòng quét mã QR được cung cấp bởi giảng viên
         </h6>
         <div className="contain_qr">
-          <video ref={ref} width={340} height={300} />
+          <video ref={ref} className="video_qr" />
         </div>
         <div className="mb-3 text-center ">
           <span className="text-danger font-weight-bold ">Lưu ý: </span>Mọi hành vi gian lận trong điểm danh sẽ bị khóa

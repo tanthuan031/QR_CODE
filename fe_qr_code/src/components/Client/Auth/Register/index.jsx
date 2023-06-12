@@ -76,7 +76,14 @@ export default function FormRegister() {
       <>
         <div>
           <div className="d-flex justify-content-center">
-            <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" width={340} height={300} />
+            <Webcam
+              audio={false}
+              ref={webcamRef}
+              screenshotFormat="image/jpeg"
+              // width={340}
+              // height={300}
+              className="video_qr"
+            />
           </div>
           <div className="d-flex justify-content-center mb-3">
             <Button onClick={captureImage}>Chụp ảnh</Button>
@@ -88,32 +95,21 @@ export default function FormRegister() {
   return (
     <>
       <div className="row section-root-register">
-        <div className="col-md-5 d-flex sl-box-image ">
+        <div className="col-xl-5 col-md-6 d-flex sl-box-image ">
           <div className="sl-box-image-content">
             <img src={ImageLogin} alt="" className="sl-box-image-item" />
 
             <h3 className="text-center">SGU</h3>
           </div>
         </div>
-        <div className="col-md-7 d-flex ">
+        <div className="col-xl-7 col-md-6 d-flex ">
           <div className="sl-box-content">
             <Form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
               <div className="row">
                 <h4 className="text-center mb-2 mt-2">Account Information</h4>
               </div>
               <div className="row">
-                <div className="col-md-6">
-                  <Form.Group className="mb-2 form-user">
-                    <Form.Label className="font-weight-bold">
-                      Tên của bạn&nbsp;<span className="text-danger">*</span>
-                    </Form.Label>
-                    <Form.Control {...register('first_name')} type="text" />
-                  </Form.Group>
-                  <div className="d-flex justify-content-between">
-                    <small className="text-red font-12px">{errors?.first_name?.message}</small>
-                  </div>
-                </div>
-                <div className="col-md-6">
+                <div className="col-xl-6 col-md-12">
                   <Form.Group className="mb-2 form-user">
                     <Form.Label className="font-weight-bold">
                       Họ và tên lót&nbsp;<span className="text-danger">*</span>
@@ -122,6 +118,17 @@ export default function FormRegister() {
                   </Form.Group>
                   <div className="d-flex justify-content-between">
                     <small className="text-red font-12px">{errors?.last_name?.message}</small>
+                  </div>
+                </div>
+                <div className="col-xl-6 col-md-12">
+                  <Form.Group className="mb-2 form-user">
+                    <Form.Label className="font-weight-bold">
+                      Tên của bạn&nbsp;<span className="text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control {...register('first_name')} type="text" />
+                  </Form.Group>
+                  <div className="d-flex justify-content-between">
+                    <small className="text-red font-12px">{errors?.first_name?.message}</small>
                   </div>
                 </div>
               </div>
@@ -202,14 +209,14 @@ export default function FormRegister() {
                   </Form.Group>
                 </div>
               </div>
-              <div className="d-flex justify-content-end gap-2 mt-2">
-                <Button
+              <div className="d-flex justify-content-center gap-2 mt-2">
+                {/* <Button
                   variant="secondary"
                   className="font-weight-bold btn-login-client "
                   onClick={() => (backToPage(-1) ? backToPage(-1) : (window.location.href = '/'))}
                 >
                   Cancel
-                </Button>
+                </Button> */}
                 <Button
                   variant="primary"
                   className="font-weight-bold btn-login-client "

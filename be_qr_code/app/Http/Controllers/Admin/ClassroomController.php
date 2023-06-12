@@ -102,10 +102,14 @@ class ClassroomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         //
-        return $this->classroomService->destroy($id);
+        if ($request->has('delete-details')) {
+            return $this->classroomService->destroyStudent($id);
+        } else {
+            return $this->classroomService->destroy($id);
+        }
     }
 
     public function exportClassroom(Request $request, $id)
