@@ -3,12 +3,13 @@
   justify-content: center;
   border: 2px solid rgba(212, 10, 10, 0.3);
   border-radius: 5px;
-  width: 400px !important;
+  width: 340px !important;
+  height: 280px !important;
   position: relative;
 }
 .video_qr {
-  width: 340px !important;
-  height: 300px !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .scan_line {
@@ -23,17 +24,21 @@
 
 @keyframes scanAnimation {
   0% {
-    transform: translateY(-100%);
+    transform: translateY(-100%); /* Sử dụng translateX thay vì translateY */
   }
   100% {
-    transform: translateY(15000%);
+    transform: translateY(12000%); /* Chạy dòng quét lên */
   }
 }
 @media only screen and (max-width: 46.1875em) {
-  .video_qr {
+  .contain_qr {
+    width: 280px !important;
+    /* height: 300px !important; */
+  }
+  /* .video_qr {
     width: 280px !important;
     height: 300px !important;
-  }
+  } */
 }
 /* Tablet 740-1023 */
 @media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {
