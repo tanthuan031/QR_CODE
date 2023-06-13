@@ -886,7 +886,7 @@ export default function DetailClassroomTable(props) {
                     ...idEditStudent,
                     student_code: detail.student_code,
                     classroom_id: detail.classroom_id,
-                    image: detail.users.image,
+                    image: detail.users !== null ? detail.users.image : null,
                   });
                 }}
               >
@@ -1021,7 +1021,7 @@ export default function DetailClassroomTable(props) {
           columns={columns01}
           dataSource={data01}
           scroll={{ x: 'max-content', y: 450 }}
-          pagination={{ pageSize: 20 }}
+          pagination={{ pageSize: 15 }}
         />
       </div>
       <div className="row mt-5">

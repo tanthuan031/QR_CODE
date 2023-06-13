@@ -115,7 +115,7 @@ export function ClassroomPage() {
         <div className="container-fluid mt-5">
           {!isDetailClassroom.checkDetail && !isQRClassroom && (
             <>
-              <h5 className="font-weight-bold mb-3">Chi tiết lớp học</h5>
+              <h5 className="font-weight-bold mb-3">Danh sách lớp học</h5>
               <div className="row">
                 <div className="row mb-4 justify-content-end ">
                   <div className="row">
@@ -172,6 +172,7 @@ export function ClassroomPage() {
 
         {isDetailClassroom.checkDetail && !isQRClassroom && (
           <React.Suspense>
+            <h5 className="font-weight-bold mb-3">Chi tiết lớp học</h5>
             <DetailClassroomTable
             // isDetailClassroom.checkDetail={}
             />

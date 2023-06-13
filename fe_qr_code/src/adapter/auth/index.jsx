@@ -98,7 +98,7 @@ export const registerAdminSchema = yup.object({
     .string()
     .required('Vui lòng nhập tên')
     .matches(
-      /^[0-9a-zA-Z\sáàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵ.\-\_]+$/,
+      /^[0-9a-zA-Z\sáàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹđỵ.\-\_]+$/,
       'Không đúng định dạng'
     )
     .min(1)
@@ -108,7 +108,7 @@ export const registerAdminSchema = yup.object({
     .string()
     .required('Vui lòng nhập họ')
     .matches(
-      /^[0-9a-zA-Z\sáàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵ.\-\_]+$/,
+      /^[0-9a-zA-Z\sáàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹđỵ.\-\_]+$/,
       'Không đúng định dạng'
     )
     .min(1)
