@@ -105,6 +105,9 @@ export function ClientProfile(props) {
                 src={Object.keys(user).length > 0 ? user.data.image : ImgUserDefault}
                 width={100}
                 height={100}
+                onError={(e) => {
+                  e.target.src = ImgUserDefault;
+                }}
               />
 
               <h5 className="hvr-underline-from-center mt-4">

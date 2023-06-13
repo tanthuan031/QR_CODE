@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Navigate, NavLink } from 'react-router-dom';
-import NotFound from '../../../../asset/images/not_found.jpg';
+import NotFound from '../../../asset/img/not_found.png';
 export default function NotFoundData(props) {
   return (
     <div className="mt-5 d-flex flex-column align-items-center justify-content-center">
@@ -11,7 +11,9 @@ export default function NotFoundData(props) {
         height="100%"
         className="mb-3"
       />
-      <h4 className="font-weight-bold text-danger text-center">Oops ... The system could not find any matching data</h4>
+      <h4 className="font-weight-bold text-primary text-center">
+        Oops ... The system could not find any matching data
+      </h4>
       {props.btnLink && (
         <div>
           <NavLink to="/product" className="font-24px">

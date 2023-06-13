@@ -3,7 +3,17 @@ import { Button as ButtonAntd, Checkbox, Table, Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, Form, InputGroup, OverlayTrigger } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { FaArrowLeft, FaBell, FaEdit, FaFileExport, FaQrcode, FaSearch, FaTrash, FaUser } from 'react-icons/fa';
+import {
+  FaArrowLeft,
+  FaBell,
+  FaEdit,
+  FaFileExport,
+  FaMixcloud,
+  FaQrcode,
+  FaSearch,
+  FaTrash,
+  FaUser,
+} from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { addSchemaNotification, addSchemaStudent } from '../../../../adapter/classroom';
 import {
@@ -360,6 +370,15 @@ export default function DetailClassroomTable(props) {
     Notiflix.Block.remove('#root');
   };
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleClick = () => {
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
   const renderBodyEditStudent = () => {
     return (
       <>
@@ -371,6 +390,7 @@ export default function DetailClassroomTable(props) {
                 <div className="text-center">
                   <img
                     src={idEditStudent.image}
+                    onClick={handleClick}
                     style={{
                       width: '150px',
                       height: '110px',
@@ -380,6 +400,31 @@ export default function DetailClassroomTable(props) {
                       borderRadius: '10px',
                     }}
                   />
+                  {isOpen && (
+                    <div
+                      className="overlay"
+                      onClick={handleClose}
+                      style={{
+                        position: 'fixed',
+                        top: '0',
+                        left: '0',
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 1000,
+                      }}
+                    >
+                      <img
+                        src={idEditStudent.image}
+                        className="img-large"
+                        alt="Hình ảnh mở to"
+                        style={{ maxWidth: '40%', maxHeight: '40%', borderRadius: '10px' }}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
               <Form.Group className=" mb-3">
@@ -411,7 +456,9 @@ export default function DetailClassroomTable(props) {
                     <option value={0}>Open this select menu</option>
                     {(() => {
                       const divs = Array.from({ length: dataDetail.numberRollCall }, (_, index) => (
-                        <option value={index + 1}>Tuần {index + 1}</option>
+                        <option value={index + 1} key={index}>
+                          Tuần {index + 1}
+                        </option>
                       ));
                       return divs;
                     })()}
@@ -435,7 +482,9 @@ export default function DetailClassroomTable(props) {
                     <option value={0}>Open this select menu</option>
                     {(() => {
                       const divs = Array.from({ length: dataDetail.numberLessonWeek }, (_, index) => (
-                        <option value={index + 1}>Tiết thứ {index + 1} trong tuần</option>
+                        <option value={index + 1} key={index}>
+                          Tiết thứ {index + 1} trong tuần
+                        </option>
                       ));
                       return divs;
                     })()}
@@ -777,14 +826,14 @@ export default function DetailClassroomTable(props) {
     {
       title: 'MSSV',
       dataIndex: 'student_code',
-      key: 'MSSV',
+      key: 'student_code',
       // width: 200,
       // fixed: 'left',
     },
     {
       title: 'TÊN SINH VIÊN',
       dataIndex: 'full_name',
-      key: 'TENSV',
+      key: 'full_name',
       // width: 200,
       // fixed: 'left',
     },
@@ -801,7 +850,10 @@ export default function DetailClassroomTable(props) {
           );
           const checked = attendance && attendance.status === '0';
           return (
-            <p style={{ textAlign: 'center', width: 90 / dataDetail.numberLessonWeek, border: '1px solid' }}>
+            <p
+              key={index}
+              style={{ textAlign: 'center', width: 90 / dataDetail.numberLessonWeek, border: '1px solid' }}
+            >
               <Checkbox checked={checked} />
             </p>
           );
@@ -824,27 +876,32 @@ export default function DetailClassroomTable(props) {
       key: detail.id,
       Action: (
         <>
-          <Tooltip title="Điểm danh hộ" placement="topLeft">
-            <FaQrcode
-              style={{ fontSize: '1rem', color: '#1677ff', cursor: 'pointer' }}
-              onClick={() => {
-                setShowEditStudent(true);
-                setIdEditStudent({
-                  ...idEditStudent,
-                  student_code: detail.student_code,
-                  classroom_id: detail.classroom_id,
-                  image: detail.users.image,
-                });
-              }}
-            />
-          </Tooltip>
-          <Tooltip title="Xóa sinh viên ra khỏi lớp học" placement="topLeft">
-            <FaTrash
-              className="text-danger"
-              style={{ fontSize: '1rem', marginLeft: '10%', color: '#1677ff', cursor: 'pointer' }}
-              onClick={(e) => handleDeleteStudent(e, detail.id)}
-            />
-          </Tooltip>
+          <div className="d-flex">
+            <Tooltip title="Điểm danh hộ" placement="topLeft">
+              <div
+                style={{ fontSize: '1rem', color: '#1677ff', cursor: 'pointer' }}
+                onClick={() => {
+                  setShowEditStudent(true);
+                  setIdEditStudent({
+                    ...idEditStudent,
+                    student_code: detail.student_code,
+                    classroom_id: detail.classroom_id,
+                    image: detail.users.image,
+                  });
+                }}
+              >
+                <FaQrcode />
+              </div>
+            </Tooltip>
+            <Tooltip title="Xóa sinh viên ra khỏi lớp học" placement="topLeft">
+              <div
+                onClick={(e) => handleDeleteStudent(e, detail.id)}
+                style={{ fontSize: '1rem', marginLeft: '10%', color: '#1677ff', cursor: 'pointer' }}
+              >
+                <FaTrash className="text-danger" />
+              </div>
+            </Tooltip>
+          </div>
         </>
       ),
       student_code: detail.student_code,
@@ -887,7 +944,7 @@ export default function DetailClassroomTable(props) {
           </div>
           <div className=" col-md-8 col-sm-12 ">
             <div className="d-flex justify-content-end">
-              <Form>
+              {/* <Form>
                 <InputGroup>
                   <Form.Control
                     id="search-order"
@@ -900,7 +957,7 @@ export default function DetailClassroomTable(props) {
                     <FaSearch />
                   </Button>
                 </InputGroup>
-              </Form>
+              </Form> */}
             </div>
           </div>
         </div>

@@ -39,6 +39,7 @@ class ClassroomRepository
             ->with(['users' => function ($query) {
                 $query->select('id', 'student_code', 'image');
             }])
+            ->search($request)
             ->get();
         // Thêm đường dẫn đầy đủ vào trường image
         $result->map(function ($detailClassroom) {

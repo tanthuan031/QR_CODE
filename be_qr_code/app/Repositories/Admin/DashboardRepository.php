@@ -10,6 +10,7 @@ use App\Models\JoinClassroom;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Mockery\Undefined;
 
 class DashboardRepository
 {
@@ -124,8 +125,9 @@ class DashboardRepository
                 // ...
             }
 
+
             $data = [
-                'data' => $dt,
+                'data' => empty($dt) ? 'null' : $dt,
                 'message' => 'Get dashboard successfully',
                 'status' => 200
             ];

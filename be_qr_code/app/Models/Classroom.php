@@ -45,7 +45,8 @@ class Classroom extends Model
             ->when($request->has('search'), function ($query) use ($request) {
                 $search = $request->query('search');
                 $query
-                    ->where("class_code", "LIKE", "%{$search}%");
+                    ->where("class_code", "LIKE", "%{$search}%")
+                    ->orWhere("class_name", "LIKE", "%{$search}%");
             });
     }
     public function scopeSort($query, $request)

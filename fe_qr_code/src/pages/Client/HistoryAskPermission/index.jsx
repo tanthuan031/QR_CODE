@@ -127,6 +127,7 @@ export function ClientHistoryPermissionPage() {
                 </Form>
               </div>
             </div>
+
             <ClientHistoryPermission data={data} onSubmitUpdateAskPermission={handleGetAllHistoryPermissionClient} />
             {/* {totalRecord > 10 && (
                 <PaginationUI handlePageChange={handlePageChange} perPage={10} totalRecord={200} currentPage={1} />

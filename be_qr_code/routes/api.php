@@ -52,6 +52,20 @@ Route::group(['as' => 'api.', 'middleware' => ['cors']], function () {
     });
 });
 
+Route::group(['as' => 'api.', 'middleware' => ['cors']], function () {
+    Route::get('/calculate-distance-v1', function () {
+        $lat1 = request('lat1');
+        $lon1 = request('lon1');
+        $lat2 = request('lat2');
+        $lon2 = request('lon2');
+        $apiKey = env('API_KEY_GOOGLE_MAP_V1_T3');
+        $url = "https://www.mapquestapi.com/directions/v2/route?key=$apiKey&from=$lat1,$lon1&to=$lat2,$lon2";
+        $response = Http::withOptions(['verify' => false])->get($url);
+        // dd($response->json()); // In ra kết quả JSON để kiểm tra
+
+        return $response->json();
+    });
+});
 
 
 

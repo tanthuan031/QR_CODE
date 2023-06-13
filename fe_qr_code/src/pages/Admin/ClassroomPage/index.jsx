@@ -19,6 +19,8 @@ import { getAllClassroom } from '../../../api/Admin/Classroom/classroomAPI';
 import { configureStore } from '@reduxjs/toolkit';
 import { ErrorToast } from '../../../components/Layouts/Alerts';
 import Notiflix from 'notiflix';
+import Skeleton from '../../../components/Layouts/Skeleton';
+import NotFoundData from '../../../components/Layouts/NotFoundData';
 const DetailClassroomTable = React.lazy(() => import('../../../components/Admin/Classroom/DetailClassroom'));
 export function ClassroomPage() {
   const dispatch = useDispatch();
@@ -30,7 +32,9 @@ export function ClassroomPage() {
   const isDetailClassroom = useSelector(isDetailClassroomSelector);
   const isQRClassroom = useSelector(isQRClassroomSelector);
   const [search, setSearch] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
   const handleGetAllClassroom = async () => {
+    setLoading(true);
     const result = await getAllClassroom({
       sort: [
         {
@@ -47,6 +51,7 @@ export function ClassroomPage() {
     } else {
       setClassroom(result);
     }
+    setLoading(false);
   };
   React.useEffect(() => {
     handleGetAllClassroom();
@@ -73,6 +78,7 @@ export function ClassroomPage() {
   };
   const handleSearch = async (e) => {
     e.preventDefault();
+    setLoading(true);
     if (search !== '') {
       const result = await getAllClassroom({
         page: page,
@@ -101,6 +107,7 @@ export function ClassroomPage() {
 
       Notiflix.Block.remove('#root');
     }
+    setLoading(false);
   };
   return (
     <>
@@ -128,7 +135,7 @@ export function ClassroomPage() {
                         <InputGroup>
                           <Form.Control
                             id="search-order"
-                            placeholder="Nhập mã lớp để tìm kiếm"
+                            placeholder="Nhập mã/tên lớp để tìm kiếm..."
                             onChange={(e) => setSearch(e.target.value)}
                             size="sm"
                           />
@@ -141,8 +148,14 @@ export function ClassroomPage() {
                     </div>
                   </div>
                 </div>
+                {loading ? (
+                  <Skeleton column={4} />
+                ) : data.length > 0 ? (
+                  <ClassRoom data={data} handleGetAllClassroom={handleGetAllClassroom} />
+                ) : (
+                  <NotFoundData />
+                )}
 
-                <ClassRoom data={data} handleGetAllClassroom={handleGetAllClassroom} />
                 {totalRecord > 20 && (
                   <PaginationUI
                     handlePageChange={handlePageChange}

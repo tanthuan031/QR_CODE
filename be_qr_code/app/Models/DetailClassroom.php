@@ -39,4 +39,14 @@ class DetailClassroom extends Model
     {
         return $this->belongsTo(User::class, 'student_code', 'student_code');
     }
+
+    public function scopeSearch($query, $request)
+    {
+        return $query
+            ->when($request->has('search'), function ($query) use ($request) {
+                $search = $request->query('search');
+                $query
+                    ->where("student_code", "LIKE", "%{$search}%");
+            });
+    }
 }

@@ -19,6 +19,7 @@ import Notiflix from 'notiflix';
 import { ErrorToast } from '../../../components/Layouts/Alerts';
 import SkeletonCart from '../../../components/Layouts/Skeleton/SkeletonCart';
 import Skeleton from '../../../components/Layouts/Skeleton';
+import NotFoundData from '../../../components/Layouts/NotFoundData';
 
 export function ClientOverviewPage() {
   const dispatch = useDispatch();
@@ -133,7 +134,7 @@ export function ClientOverviewPage() {
                         <InputGroup>
                           <Form.Control
                             id="search-order"
-                            placeholder="Nhập mã lớp để tìm kiếm"
+                            placeholder="Nhập mã/tên lớp để tìm kiếm..."
                             onChange={(e) => setSearch(e.target.value)}
                             size="sm"
                           />
@@ -151,7 +152,13 @@ export function ClientOverviewPage() {
                     </div>
                   </div>
                 </div>
-                {loading === true ? <Skeleton column={4} /> : <ClientOverview data={data} />}
+                {loading === true ? (
+                  <Skeleton column={4} />
+                ) : data.length > 0 ? (
+                  <ClientOverview data={data} />
+                ) : (
+                  <NotFoundData />
+                )}
                 {totalRecord > 10 && (
                   <PaginationUI handlePageChange={handlePageChange} perPage={10} totalRecord={200} currentPage={1} />
                 )}

@@ -48,11 +48,14 @@ export function Overview(props) {
 
     let datasets = [];
     props.dataAttendanceRatio !== null &&
+      props.dataAttendanceRatio.data !== 'null' &&
       props.dataAttendanceRatio.data.map((item, index) => {
-        const dataArr = item.data.map((item1) => {
-          const { pop, push, shift, splice, unshift, _chartjs, ...dataItem } = item1;
-          return dataItem.ratio;
-        });
+        const dataArr = [];
+        for (let i = 1; i <= 15; i++) {
+          const foundData = item.data.find((item1) => item1.week === String(i));
+          const ratio = foundData ? foundData.ratio : 0;
+          dataArr.push(ratio);
+        }
         dataArr.unshift(0);
         datasets.push({
           label: item.classroom_name,
@@ -65,51 +68,6 @@ export function Overview(props) {
     setDataStatic(datasets);
   }, [dispatch, props.dataAttendanceRatio]);
 
-  const columns = [
-    {
-      title: 'STT',
-      dataIndex: 'STT',
-      key: 'STT',
-    },
-    {
-      title: 'Tên lớp',
-      dataIndex: 'class_name',
-      key: 'class_name',
-    },
-    {
-      title: 'Mã lớp',
-      dataIndex: 'class_code',
-      key: 'class_code',
-    },
-    {
-      title: 'Tỉ lệ chuyên cần',
-      key: 'ratio',
-      dataIndex: 'ratio',
-    },
-  ];
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sydney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ];
   return (
     <>
       <div className="row mt-5">

@@ -266,7 +266,10 @@ export function DetailClassroomClientTable(props) {
           const checked = attendance && attendance.status === '0';
 
           return (
-            <p style={{ textAlign: 'center', width: 90 / dataDetail.numberLessonWeek, border: '1px solid' }}>
+            <p
+              key={index}
+              style={{ textAlign: 'center', width: 90 / dataDetail.numberLessonWeek, border: '1px solid' }}
+            >
               <Checkbox checked={checked} />
             </p>
           );

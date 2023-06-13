@@ -13,7 +13,6 @@ import {
 } from 'react-icons/fa';
 
 function SummaryStatisTic(props) {
-  console.log('render SummaryStatisTic', props.data);
   return (
     <div className="row summary-container">
       <div className="col-xl-3 col-sm-6 col-12 small-box mb-2 ">
