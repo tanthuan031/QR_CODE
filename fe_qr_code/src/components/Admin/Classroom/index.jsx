@@ -1,19 +1,17 @@
 // @flow
+import { Modal as ModalConfirm } from 'antd';
 import Notiflix from 'notiflix';
 import * as React from 'react';
-import { Button, Form, InputGroup } from 'react-bootstrap';
-import { FaEye, FaFileExport, FaSearch, FaTrash } from 'react-icons/fa';
+import { FaEye, FaTrash } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
-import { setDataDetailClassroom, setIsDetailClassroom } from '../../../redux/reducer/classroom/classroom.reducer';
-import CreateClassroom from './CreateClassroom';
-import './style.css';
 import { deleteClassroom, getClassroomById } from '../../../api/Admin/Classroom/classroomAPI';
-import { BlockUI, BlockUICLIENT } from '../../Layouts/Notiflix';
-import { Modal as ModalConfirm } from 'antd';
-import { ErrorToast, SuccessToast } from '../../Layouts/Alerts';
 import { getAllNotificationsAdmin } from '../../../api/Admin/NotificationAdmin/notificationAdminAPI';
-import { setDataNotificationAdmin } from '../../../redux/reducer/notification/notification.reducer';
 import ImgBg from '../../../asset/img/circle.svg';
+import { setDataDetailClassroom, setIsDetailClassroom } from '../../../redux/reducer/classroom/classroom.reducer';
+import { setDataNotificationAdmin } from '../../../redux/reducer/notification/notification.reducer';
+import { ErrorToast, SuccessToast } from '../../Layouts/Alerts';
+import { BlockUICLIENT } from '../../Layouts/Notiflix';
+import './style.css';
 export function ClassRoom(props) {
   const dispatch = useDispatch();
 

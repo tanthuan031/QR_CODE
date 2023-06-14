@@ -1,21 +1,9 @@
 // @flow
 import * as React from 'react';
-import { Form, InputGroup } from 'react-bootstrap';
-import { FaEdit, FaEye, FaSearch } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
-import {
-  setDataDetailClassroomClient,
-  setIsAttendanceClient,
-  setIsDetailClassroom,
-  setIsDetailClassroomClient,
-} from '../../../redux/reducer/classroom/classroom.reducer';
 
-import './style.css';
-import { detailClassroomStudentClient } from '../../../api/Client/Classroom/classroomClientAPI';
-import { BlockUICLIENT } from '../../Layouts/Notiflix';
-import Notiflix from 'notiflix';
 import { Button, Table } from 'antd';
-import { formatDate } from '../../../utils/formatDate';
+import Notiflix from 'notiflix';
 import { getAllDetailHistoryAskPermission } from '../../../api/Admin/HistoryAskPermission/historyPermissionAdminAPI';
 import {
   setDataDetailHistoryAskPermission,
@@ -23,6 +11,8 @@ import {
 } from '../../../redux/reducer/history_ask_permistion/historyaskpermission.reducer';
 import { ErrorToast } from '../../Layouts/Alerts';
 import NotFoundData from '../../Layouts/NotFoundData';
+import { BlockUICLIENT } from '../../Layouts/Notiflix';
+import './style.css';
 export function AdminHistoryPermission(props) {
   const dispatch = useDispatch();
   const [dataHistoryPermission, setDataHistoryPermission] = React.useState([]);
@@ -103,7 +93,7 @@ export function AdminHistoryPermission(props) {
     ...item,
     key: index.toString(), // or use a unique identifier from the data if available
   }));
-  console.log('sjsjj', props.data);
+
   return (
     <>
       <div className="row ">

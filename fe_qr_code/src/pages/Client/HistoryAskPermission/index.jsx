@@ -1,24 +1,12 @@
 // @flow
+import Notiflix from 'notiflix';
 import * as React from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllClassroomClient } from '../../../api/Client/Classroom/classroomClientAPI';
-import { ClientOverview } from '../../../components/Client/Overview';
-import { DetailClassroomClientTable } from '../../../components/Client/Overview/DetailClassroom';
-import Attendance from '../../../components/Client/Overview/DetailClassroom/Attendance';
-import ScanQRCode from '../../../components/Client/Overview/DetailClassroom/ScanQRCode';
-import JoinClassroom from '../../../components/Client/Overview/JoinClassroom';
-import PaginationUI from '../../../components/Layouts/Pagination';
-import {
-  isAttendanceClientSelector,
-  isDetailClassroomClientSelector,
-  isScanQRClassroomSelector,
-} from '../../../redux/selectors/classroom/classroom.selector';
-import Notiflix from 'notiflix';
-import { ErrorToast } from '../../../components/Layouts/Alerts';
-import { ClientHistoryPermission } from '../../../components/Client/HistoryAskPermission';
+import { useDispatch } from 'react-redux';
 import { getAllHistoryAskPerClient } from '../../../api/Client/HistoryAskPermission/historyPermissionClientAPI';
+import { ClientHistoryPermission } from '../../../components/Client/HistoryAskPermission';
+import { ErrorToast } from '../../../components/Layouts/Alerts';
 
 export function ClientHistoryPermissionPage() {
   const dispatch = useDispatch();
@@ -26,12 +14,7 @@ export function ClientHistoryPermissionPage() {
   const [show, setShowJoin] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [data, setData] = React.useState([]);
-  // const [isDetailClassroom, setIsDetailClassroom] = React.useState(false);
-  const isDetailClassroomClient = useSelector(isDetailClassroomClientSelector);
-  const isScanQRClassroom = useSelector(isScanQRClassroomSelector);
-  const isAttendance = useSelector(isAttendanceClientSelector);
   const [search, setSearch] = React.useState('');
-  const [dataHistoryPermission, setDataHistoryPermission] = React.useState([]);
   const setHistory = (result, value) => {
     setData(result.data);
     if (value !== 'page') {

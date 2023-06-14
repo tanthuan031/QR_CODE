@@ -1,9 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Navigate } from 'react-router-dom';
-import FormRegister from '../../../components/Client/Auth/Register';
-import FormRegisterAdmin from '../../../components/Admin/Auth/Register';
 import { checkLoginAdmin } from '../../../adapter/auth';
+import FormRegisterAdmin from '../../../components/Admin/Auth/Register';
 
 export function RegisterAdminPage() {
   const isLogin = checkLoginAdmin();

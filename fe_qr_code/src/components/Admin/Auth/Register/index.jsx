@@ -1,14 +1,14 @@
+import { yupResolver } from '@hookform/resolvers/yup';
+import Notiflix from 'notiflix';
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
-import { loginAdminSchema, registerAdminSchema } from '../../../../adapter/auth';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { BlockUI } from '../../../Layouts/Notiflix';
-import { handleLoginAdminAPI, handleRegisterAdminAPI, setCookiesAdmin } from '../../../../api/Admin/Auth/authAPI';
+import { registerAdminSchema } from '../../../../adapter/auth';
+import { handleRegisterAdminAPI } from '../../../../api/Admin/Auth/authAPI';
 import { ErrorToast, SuccessToast } from '../../../Layouts/Alerts';
-import Notiflix from 'notiflix';
+import { BlockUI } from '../../../Layouts/Notiflix';
 
 export default function FormRegisterAdmin() {
   const [typePassword, setShowPassword] = useState('password');

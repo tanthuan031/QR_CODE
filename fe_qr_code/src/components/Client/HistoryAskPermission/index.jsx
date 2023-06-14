@@ -1,25 +1,17 @@
 // @flow
 import * as React from 'react';
-import { Button as ButtonReact, Form, InputGroup } from 'react-bootstrap';
-import { FaEdit, FaEye, FaSearch } from 'react-icons/fa';
+import { Button as ButtonReact, Form } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import {
-  setDataDetailClassroomClient,
-  setIsAttendanceClient,
-  setIsDetailClassroom,
-  setIsDetailClassroomClient,
-} from '../../../redux/reducer/classroom/classroom.reducer';
 
-import './style.css';
-import { detailClassroomStudentClient } from '../../../api/Client/Classroom/classroomClientAPI';
-import { BlockUICLIENT } from '../../Layouts/Notiflix';
-import Notiflix from 'notiflix';
 import { Button, Table } from 'antd';
-import { formatDate } from '../../../utils/formatDate';
-import Modal from '../../Layouts/Modal';
+import Notiflix from 'notiflix';
 import { useForm } from 'react-hook-form';
 import { updateAskPermissionClient } from '../../../api/Client/HistoryAskPermission/historyPermissionClientAPI';
+import { formatDate } from '../../../utils/formatDate';
 import { ErrorToast, SuccessToast } from '../../Layouts/Alerts';
+import Modal from '../../Layouts/Modal';
+import { BlockUICLIENT } from '../../Layouts/Notiflix';
+import './style.css';
 export function ClientHistoryPermission(props) {
   const {
     register,

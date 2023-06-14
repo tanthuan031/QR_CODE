@@ -1,4 +1,5 @@
 // @flow
+import Notiflix from 'notiflix';
 import * as React from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { FaSearch } from 'react-icons/fa';
@@ -9,17 +10,15 @@ import { DetailClassroomClientTable } from '../../../components/Client/Overview/
 import Attendance from '../../../components/Client/Overview/DetailClassroom/Attendance';
 import ScanQRCode from '../../../components/Client/Overview/DetailClassroom/ScanQRCode';
 import JoinClassroom from '../../../components/Client/Overview/JoinClassroom';
+import { ErrorToast } from '../../../components/Layouts/Alerts';
+import NotFoundData from '../../../components/Layouts/NotFoundData';
 import PaginationUI from '../../../components/Layouts/Pagination';
+import Skeleton from '../../../components/Layouts/Skeleton';
 import {
   isAttendanceClientSelector,
   isDetailClassroomClientSelector,
   isScanQRClassroomSelector,
 } from '../../../redux/selectors/classroom/classroom.selector';
-import Notiflix from 'notiflix';
-import { ErrorToast } from '../../../components/Layouts/Alerts';
-import SkeletonCart from '../../../components/Layouts/Skeleton/SkeletonCart';
-import Skeleton from '../../../components/Layouts/Skeleton';
-import NotFoundData from '../../../components/Layouts/NotFoundData';
 
 export function ClientOverviewPage() {
   const dispatch = useDispatch();

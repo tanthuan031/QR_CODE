@@ -1,26 +1,12 @@
 // @flow
 import * as React from 'react';
 import { Button as ButtonReact, Form, InputGroup } from 'react-bootstrap';
-import { FaEdit, FaEye, FaSearch } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  setDataDetailClassroomClient,
-  setIsAttendanceClient,
-  setIsDetailClassroom,
-  setIsDetailClassroomClient,
-} from '../../../../redux/reducer/classroom/classroom.reducer';
 
-import './style.css';
-import { detailClassroomStudentClient } from '../../../../api/Client/Classroom/classroomClientAPI';
-import { BlockUICLIENT } from '../../../Layouts/Notiflix';
-import Notiflix from 'notiflix';
 import { Button, Table } from 'antd';
-import { formatDate } from '../../../../utils/formatDate';
-import {
-  dataDetailHistoryAskPermissionSelector,
-  isDetailHistoryAskPermissionSelector,
-} from '../../../../redux/selectors/history_ask_permission/historyaskpermission.selector';
-import { ErrorToast, SuccessToast } from '../../../Layouts/Alerts';
+import Notiflix from 'notiflix';
+import { useForm } from 'react-hook-form';
 import {
   getAllDetailHistoryAskPermission,
   updateAskPermissionAdmin,
@@ -29,8 +15,15 @@ import {
   setDataDetailHistoryAskPermission,
   setIsDetailHistoryAskPermission,
 } from '../../../../redux/reducer/history_ask_permistion/historyaskpermission.reducer';
+import {
+  dataDetailHistoryAskPermissionSelector,
+  isDetailHistoryAskPermissionSelector,
+} from '../../../../redux/selectors/history_ask_permission/historyaskpermission.selector';
+import { formatDate } from '../../../../utils/formatDate';
+import { ErrorToast, SuccessToast } from '../../../Layouts/Alerts';
 import Modal from '../../../Layouts/Modal';
-import { useForm } from 'react-hook-form';
+import { BlockUICLIENT } from '../../../Layouts/Notiflix';
+import './style.css';
 export function AdminHistoryPermissionDetail(props) {
   const {
     register,

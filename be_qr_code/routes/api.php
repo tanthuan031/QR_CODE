@@ -26,10 +26,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
-
 Route::group(['as' => 'api.', 'middleware' => ['cors']], function () {
     Route::get('/calculate-distance', function () {
         $lat1 = request('lat1');
@@ -37,12 +33,6 @@ Route::group(['as' => 'api.', 'middleware' => ['cors']], function () {
         $lat2 = request('lat2');
         $lon2 = request('lon2');
         $apiKey = env('API_KEY_GOOGLE_MAP');
-
-        // $response = Http::get("https://maps.googleapis.com/maps/api/directions/json", [
-        //     'origin' => "$lat1,$lon1",
-        //     'destination' => "$lat2,$lon2",
-        //     'key' => $apiKey,
-        // ]);
         $response = Http::withOptions(['verify' => false])->get("https://maps.googleapis.com/maps/api/directions/json", [
             'origin' => "$lat1,$lon1",
             'destination' => "$lat2,$lon2",
@@ -66,10 +56,6 @@ Route::group(['as' => 'api.', 'middleware' => ['cors']], function () {
         return $response->json();
     });
 });
-
-
-
-
 
 // Admin routes
 Route::post('admin/login', [AuthAdminController::class, 'login']);

@@ -1,18 +1,17 @@
 import { Badge, Button, Collapse } from 'antd';
+import Notiflix from 'notiflix';
 import React, { useState } from 'react';
-import './style.css';
 import { Alert } from 'react-bootstrap';
+import { FaUndoAlt } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
+import { getAllNotificationsClient } from '../../../../api/Client/NotificationClient/notificationClientAPI';
+import ImageNew from '../../../../asset/img/New.gif';
+import { setDataNotificationClient } from '../../../../redux/reducer/notification/notification.reducer';
+import { isDetailClassroomClientSelector } from '../../../../redux/selectors/classroom/classroom.selector';
 import { dataNotificationClientSelector } from '../../../../redux/selectors/notification/notification.selector';
 import { formatDate } from '../../../../utils/formatDate';
-import { FaRegStar, FaUndoAlt } from 'react-icons/fa';
-import { getAllNotificationsClient } from '../../../../api/Client/NotificationClient/notificationClientAPI';
-import { isDetailClassroomClientSelector } from '../../../../redux/selectors/classroom/classroom.selector';
-import { setDataNotificationClient } from '../../../../redux/reducer/notification/notification.reducer';
-import Notiflix from 'notiflix';
-import { BlockUICLIENT } from '../../../Layouts/Notiflix';
 import Skeleton from '../../../Layouts/Skeleton';
-import ImageNew from '../../../../asset/img/New.gif';
+import './style.css';
 const { Panel } = Collapse;
 export function NotificationClient(props) {
   const dataNotifications = useSelector(dataNotificationClientSelector);

@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import { handleGetMeClient } from '../../adapter/auth';
 import { deleteCookieClient, getCookiesClient } from '../../api/Client/Auth';
 import { ClientLayout } from '../../layouts/Client';
+import { ClientHistoryPermissionPage } from '../../pages/Client/HistoryAskPermission';
 import { ClientOverviewPage } from '../../pages/Client/OverviewPage';
+import { ClientProfilePage } from '../../pages/Client/ProfilePage';
 import { LoginPage } from '../../pages/Common/Auth/LoginPage';
 import { RegisterPage } from '../../pages/Common/Auth/RegisterPage';
 import { setIsLoginClient, setUserClient } from '../../redux/reducer/auth/auth.reducer';
-import { getUserClientSelector } from '../../redux/selectors';
 import { ClientProtectedRoutes } from '../ProtectedRouter/client';
-import { ClientHistoryPermissionPage } from '../../pages/Client/HistoryAskPermission';
-import { ClientProfilePage } from '../../pages/Client/ProfilePage';
 
 export default function ClientRouter() {
   const dispatch = useDispatch();
@@ -30,7 +29,6 @@ export default function ClientRouter() {
       }
     });
   }, [dispatch]);
-  const userInfo = useSelector(getUserClientSelector);
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />

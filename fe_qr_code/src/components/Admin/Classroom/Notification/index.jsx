@@ -1,35 +1,26 @@
-import { Badge, Button, Collapse, Modal as ModalConfirm } from 'antd';
-import React, { useState } from 'react';
-import './style.css';
-import { Form, Alert, Button as ButtonReact } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  dataNotificationAdminSelector,
-  dataNotificationClientSelector,
-} from '../../../../redux/selectors/notification/notification.selector';
-import { formatDate } from '../../../../utils/formatDate';
-import { FaEdit, FaRegStar, FaTrash, FaUndoAlt } from 'react-icons/fa';
-import { getAllNotificationsClient } from '../../../../api/Client/NotificationClient/notificationClientAPI';
-import { isDetailClassroomClientSelector } from '../../../../redux/selectors/classroom/classroom.selector';
-import {
-  setDataNotificationAdmin,
-  setDataNotificationClient,
-} from '../../../../redux/reducer/notification/notification.reducer';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Collapse, Modal as ModalConfirm } from 'antd';
 import Notiflix from 'notiflix';
-import { BlockUICLIENT } from '../../../Layouts/Notiflix';
-import Skeleton from '../../../Layouts/Skeleton';
-import ImageNew from '../../../../asset/img/New.gif';
+import React, { useState } from 'react';
+import { Alert, Button as ButtonReact, Form } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
+import { FaEdit, FaTrash, FaUndoAlt } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
+import { addSchemaNotification } from '../../../../adapter/classroom';
 import {
   deleteNotification,
   getAllNotificationsAdmin,
   updateNotificationAdmin,
 } from '../../../../api/Admin/NotificationAdmin/notificationAdminAPI';
-import Modal from '../../../Layouts/Modal';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { addSchemaNotification } from '../../../../adapter/classroom';
+import { setDataNotificationAdmin } from '../../../../redux/reducer/notification/notification.reducer';
 import { isDetailClassroomSelector } from '../../../../redux/selectors/classroom/classroom.selector';
+import { dataNotificationAdminSelector } from '../../../../redux/selectors/notification/notification.selector';
+import { formatDate } from '../../../../utils/formatDate';
 import { ErrorToast, SuccessToast } from '../../../Layouts/Alerts';
+import Modal from '../../../Layouts/Modal';
+import { BlockUICLIENT } from '../../../Layouts/Notiflix';
+import Skeleton from '../../../Layouts/Skeleton';
+import './style.css';
 const { Panel } = Collapse;
 export function NotificationAdmin(props) {
   const [backdrop, setBackdrop] = React.useState('static');

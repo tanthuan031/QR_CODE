@@ -56,8 +56,8 @@
 @media only screen and (max-width: 46.1875em) {
   .section-root-login {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 40%;
+    left: 53%;
     transform: translate(-50%, -50%);
     width: 80%;
     height: 70%;
@@ -68,6 +68,10 @@
     border-radius: 10px;
     background: #ffffff;
     /* */
+  }
+  .sl-box-image {
+    background: #375dc2;
+    border-radius: 10px 10px 0 0 !important;
   }
 }
 

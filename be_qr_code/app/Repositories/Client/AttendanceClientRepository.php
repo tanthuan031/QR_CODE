@@ -92,7 +92,7 @@ class AttendanceClientRepository
         }
         return $data;
     }
-    // Admin Atendance for student
+    // Admin Attendance for student
     public function updateAttendanceStudent($request)
     {
         try {

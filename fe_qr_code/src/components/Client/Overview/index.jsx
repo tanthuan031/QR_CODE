@@ -1,23 +1,19 @@
 // @flow
 import * as React from 'react';
-import { Button, Form, InputGroup } from 'react-bootstrap';
-import { FaSearch } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import {
   setDataDetailClassroomClient,
   setIsAttendanceClient,
-  setIsDetailClassroom,
   setIsDetailClassroomClient,
 } from '../../../redux/reducer/classroom/classroom.reducer';
 
-import './style.css';
-import JoinClassroom from './JoinClassroom';
-import { detailClassroomStudentClient } from '../../../api/Client/Classroom/classroomClientAPI';
-import { BlockUICLIENT } from '../../Layouts/Notiflix';
 import Notiflix from 'notiflix';
+import { detailClassroomStudentClient } from '../../../api/Client/Classroom/classroomClientAPI';
 import { getAllNotificationsClient } from '../../../api/Client/NotificationClient/notificationClientAPI';
-import { setDataNotificationClient } from '../../../redux/reducer/notification/notification.reducer';
 import ImgBg from '../../../asset/img/circle.svg';
+import { setDataNotificationClient } from '../../../redux/reducer/notification/notification.reducer';
+import { BlockUICLIENT } from '../../Layouts/Notiflix';
+import './style.css';
 export function ClientOverview(props) {
   const dispatch = useDispatch();
 

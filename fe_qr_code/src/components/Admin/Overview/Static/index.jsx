@@ -1,8 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
 // import './index.css';
-import { Col, Row } from 'react-bootstrap';
-import { FaArchive, FaCoins, FaPeopleArrows, FaShoppingCart } from 'react-icons/fa';
 import { Chart } from 'primereact/chart';
+import { Row } from 'react-bootstrap';
 
 function Static(props) {
   const [chartData, setChartData] = useState({});

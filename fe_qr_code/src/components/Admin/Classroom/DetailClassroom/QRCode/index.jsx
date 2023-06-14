@@ -49,15 +49,6 @@ const QRCodeGenerator = () => {
       );
     }
   };
-
-  const encoder = new TextEncoder();
-  const data = encoder.encode(JSON.stringify(text)); // Chuyển đổi chuỗi thành mảng dữ liệu
-
-  // const decoder = new TextDecoder('utf-8');
-  // const decodedString = decoder.decode(data); // Chuyển đổi mảng dữ liệu thành chuỗi
-
-  // const encodedString = btoa(decodedString);
-
   /*********Mã hóa dữ liệu ***************/
 
   const dataToEncode = JSON.stringify(text);

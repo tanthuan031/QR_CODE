@@ -17,10 +17,6 @@ class AuthAdminController extends Controller
     {
         $this->authService = $authService;
     }
-    // public function getMe(): JsonResponse
-    // {
-    //     // return $this->authService->getMe();
-    // }
     /**
      * Login a listing of the resource.
      *

@@ -1,7 +1,15 @@
+import { Modal as ModalConfirm } from 'antd';
+import Notiflix from 'notiflix';
 import React, { useEffect, useState } from 'react';
-import { useZxing } from 'react-zxing';
-import './style.css';
 import { Button, Form } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { useZxing } from 'react-zxing';
+import { getDistanceFromLatLonInKm } from '../../../../../api/Admin/Auth/authAPI';
+import {
+  attendanceStudentClient,
+  detailClassroomStudentClient,
+} from '../../../../../api/Client/Classroom/classroomClientAPI';
 import {
   setAttendanceClient,
   setDataDetailClassroomClient,
@@ -9,23 +17,14 @@ import {
   setIsDetailClassroomClient,
   setIsScanQR,
 } from '../../../../../redux/reducer/classroom/classroom.reducer';
-import { useDispatch, useSelector } from 'react-redux';
-import Modal from '../../../../Layouts/Modal';
-import { Modal as ModalConfirm } from 'antd';
-import { ErrorToast, SuccessToast } from '../../../../Layouts/Alerts';
 import {
   dataDetailClassroomClientSelector,
   isDetailClassroomClientSelector,
 } from '../../../../../redux/selectors/classroom/classroom.selector';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { getDistanceFromLatLonInKm } from '../../../../../api/Admin/Auth/authAPI';
-import Notiflix from 'notiflix';
+import { ErrorToast, SuccessToast } from '../../../../Layouts/Alerts';
+import Modal from '../../../../Layouts/Modal';
 import { BlockUICLIENT } from '../../../../Layouts/Notiflix';
-import {
-  attendanceStudentClient,
-  detailClassroomStudentClient,
-} from '../../../../../api/Client/Classroom/classroomClientAPI';
+import './style.css';
 // import { getDistanceFromLatLonInKm } from '../../../../../utils/getDistanceFromLatLonInKm';
 import CryptoJS from 'crypto-js';
 const ScanQRCode = ({ onDetected }) => {

@@ -66,6 +66,20 @@
 
 /* 739 */
 @media only screen and (max-width: 46.1875em) {
+  .section-root-register {
+    position: absolute;
+    top: 50%;
+    left: 53%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    border-radius: 10px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    /* backdrop-filter: blur(14.5px);
+  -webkit-backdrop-filter: blur(14.5px); */
+    background: #ffffff;
+    overflow-y: scroll;
+  }
 }
 /* Tablet 740-1023 */
 @media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {

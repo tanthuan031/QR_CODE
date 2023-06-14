@@ -1,8 +1,7 @@
 // @flow
 import * as React from 'react';
-import FormLogin from '../../../components/Client/Auth/Login';
-import { checkLoginAdmin, checkLoginClient } from '../../../adapter/auth';
 import { Navigate } from 'react-router-dom';
+import { checkLoginAdmin } from '../../../adapter/auth';
 import FormLoginAdmin from '../../../components/Admin/Auth/Login';
 import './style.css';
 export function LoginAdminPage() {

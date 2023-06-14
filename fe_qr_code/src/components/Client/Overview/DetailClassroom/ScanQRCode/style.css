@@ -6,6 +6,7 @@
   width: 340px !important;
   height: 280px !important;
   position: relative;
+  padding: 4px !important;
 }
 .video_qr {
   width: 100% !important;

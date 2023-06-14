@@ -1,11 +1,8 @@
 // @flow
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import { ClientProfile } from '../../../components/Client/Profile';
 
 export function ClientProfilePage() {
-  const dispatch = useDispatch();
-
   return (
     <>
       <section>
