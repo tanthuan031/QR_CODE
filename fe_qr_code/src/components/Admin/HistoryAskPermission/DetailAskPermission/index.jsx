@@ -53,7 +53,6 @@ export function AdminHistoryPermissionDetail(props) {
   const [showAskPermission, setShowAskPermission] = React.useState(false);
   const [idUpdateAskPer, setIdUpdateAskPer] = React.useState();
   const [backdrop, setBackdrop] = React.useState('static');
-  console.log(dataDetailHis);
   const handleSearch = async (e) => {
     e.preventDefault();
     if (search !== '') {

@@ -47,6 +47,7 @@ import {
 import { NotificationAdmin } from '../Notification';
 import { setDataNotificationAdmin } from '../../../../redux/reducer/notification/notification.reducer';
 import { Modal as ModalConfirm } from 'antd';
+import NotFoundData from '../../../Layouts/NotFoundData';
 export default function DetailClassroomTable(props) {
   const [backdrop, setBackdrop] = React.useState('static');
   const [editTable, setEditTable] = React.useState(true);
@@ -834,7 +835,8 @@ export default function DetailClassroomTable(props) {
       title: 'TÊN SINH VIÊN',
       dataIndex: 'full_name',
       key: 'full_name',
-      // width: 200,
+
+      // width: 500,
       // fixed: 'left',
     },
     ...Array.from({ length: dataDetail.numberRollCall }, (_, i) => ({
@@ -1016,14 +1018,19 @@ export default function DetailClassroomTable(props) {
         </div>
       </div>
 
-      <div style={{ overflow: 'scroll' }}>
-        <Table
-          columns={columns01}
-          dataSource={data01}
-          scroll={{ x: 'max-content', y: 450 }}
-          pagination={{ pageSize: 15 }}
-        />
-      </div>
+      {dataDetail.data.length > 0 ? (
+        <div style={{ overflow: 'scroll' }}>
+          <Table
+            columns={columns01}
+            dataSource={data01}
+            scroll={{ x: 'max-content', y: 450 }}
+            pagination={{ pageSize: 15 }}
+          />
+        </div>
+      ) : (
+        <NotFoundData />
+      )}
+
       <div className="row mt-5">
         <h4 className="header-notification">Danh sách thông báo</h4>
         <NotificationAdmin />

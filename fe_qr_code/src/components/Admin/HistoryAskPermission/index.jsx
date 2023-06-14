@@ -22,6 +22,7 @@ import {
   setIsDetailHistoryAskPermission,
 } from '../../../redux/reducer/history_ask_permistion/historyaskpermission.reducer';
 import { ErrorToast } from '../../Layouts/Alerts';
+import NotFoundData from '../../Layouts/NotFoundData';
 export function AdminHistoryPermission(props) {
   const dispatch = useDispatch();
   const [dataHistoryPermission, setDataHistoryPermission] = React.useState([]);
@@ -102,17 +103,22 @@ export function AdminHistoryPermission(props) {
     ...item,
     key: index.toString(), // or use a unique identifier from the data if available
   }));
+  console.log('sjsjj', props.data);
   return (
     <>
       <div className="row ">
-        <Table
-          columns={columns}
-          dataSource={data}
-          bordered
-          size="small"
-          scroll={{ x: 'calc(500px + 50%)', y: 240 }}
-          pagination={false}
-        />
+        {props.data.length > 0 ? (
+          <Table
+            columns={columns}
+            dataSource={data}
+            bordered
+            size="small"
+            scroll={{ x: 'calc(500px + 50%)', y: 240 }}
+            pagination={false}
+          />
+        ) : (
+          <NotFoundData />
+        )}
       </div>
     </>
   );
