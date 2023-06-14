@@ -16,6 +16,6 @@ export const BlockUICLIENT = (element, position) => {
     fontFamily: 'Mulish',
     svgColor: '#375dc2',
     position: position ? position : 'absolute',
-    zindex: position ? 1060 : 1000,
+    zindex: position ? 9060 : 1000,
   });
 };

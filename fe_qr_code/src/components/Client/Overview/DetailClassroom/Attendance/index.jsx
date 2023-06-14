@@ -106,6 +106,7 @@ const Attendance = () => {
       const checkKm = await getDistanceFromLatLonInKm(location);
       if (checkKm.value <= Number(dataAttendance.dataAttendance.attendance_range) * 1000) {
         BlockUICLIENT('#root', 'fixed');
+        setShowAttendance(false);
         const verifyFace = await faceVerifyClient({ imageVeryfile: imageSrc });
         if (verifyFace === 200) {
           const result = await attendanceStudentClient(formatData);
@@ -116,15 +117,18 @@ const Attendance = () => {
             Notiflix.Block.remove('#root');
           } else if (result === 403) {
             setShowAttendance(false);
+            Notiflix.Block.remove('#root');
+            Notiflix.Block.remove('.sl-box');
             ModalConfirm.confirm({
               title: 'Cảnh báo',
               icon: '',
               content: `Thất bại! Hết thời gian điểm danh. Vui lòng liên hệ giảng viên để điểm danh lại`,
               // okText: 'Thử lại',
               // // cancelText: 'Đóng',
-              // onOk: () => {
-              //   Notiflix.Block.remove('.sl-box');
-              // },
+              onOk: () => {
+                handleDetailClassroom(dataAttendance.dataAttendance.id_classroom);
+                return;
+              },
               // okButtonProps: {
               //   style: {
               //     backgroundColor: '#ff4d4f',
@@ -134,6 +138,8 @@ const Attendance = () => {
             });
           } else if (result === 404) {
             setShowAttendance(false);
+            Notiflix.Block.remove('#root');
+            Notiflix.Block.remove('.sl-box');
             ModalConfirm.confirm({
               title: 'Cảnh báo',
               icon: '',
@@ -152,6 +158,7 @@ const Attendance = () => {
             });
           } else {
             ErrorToast('Có lỗi ! Vui lòng liên hệ giảng viên để giải quyết', 3500);
+            Notiflix.Block.remove('#root');
             Notiflix.Block.remove('.sl-box');
             setShowAttendance(false);
           }
@@ -159,15 +166,18 @@ const Attendance = () => {
           // ErrorToast('Khuôn mặt không khớp . Vui lòng không gian lận trong điểm danh', 3500);
           // Notiflix.Block.remove('.sl-box');
           setShowAttendance(false);
+          Notiflix.Block.remove('#root');
+          Notiflix.Block.remove('.sl-box');
           ModalConfirm.confirm({
             title: 'Cảnh báo',
             icon: '',
             content: `Khuôn mặt không khớp . Vui lòng quét đúng quy định và không điểm danh hộ`,
             // okText: 'Thử lại',
             // cancelText: 'Đóng',
-            // onOk: () => {
-            //   Notiflix.Block.remove('.sl-box');
-            // },
+            onOk: () => {
+              handleDetailClassroom(dataAttendance.dataAttendance.id_classroom);
+              return;
+            },
             // okButtonProps: {
             //   style: {
             //     backgroundColor: '#ff4d4f',
@@ -177,22 +187,26 @@ const Attendance = () => {
           });
         } else {
           ErrorToast('Đã có lỗi xảy ra vui lòng quét khuôn mặt đúng quy định', 3500);
+          Notiflix.Block.remove('#root');
           Notiflix.Block.remove('.sl-box');
         }
 
         Notiflix.Block.remove('#root');
+        Notiflix.Block.remove('.sl-box');
       } else {
         setShowAttendance(false);
+        Notiflix.Block.remove('#root');
+        Notiflix.Block.remove('.sl-box');
         ModalConfirm.confirm({
           title: 'Cảnh báo',
           icon: '',
-          content: `Thất bại ! Ngoài phạm vi điểm danh .`,
+          content: `Thất bại ! Ngoài phạm vi điểm danh.(Lưu ý : Nếu bạn cố tình gian lận thì tài khoản sẽ bị khóa)`,
           // okText: 'Thử lại',
           // cancelText: 'Đóng',
-          // onOk: () => {
-          //   Notiflix.Block.remove('.sl-box');
-          //   Notiflix.Block.remove('#root');
-          // },
+          onOk: () => {
+            handleDetailClassroom(dataAttendance.dataAttendance.id_classroom);
+            return;
+          },
           // okButtonProps: {
           //   style: {
           //     backgroundColor: '#ff4d4f',
@@ -203,9 +217,11 @@ const Attendance = () => {
       }
     } else {
       ErrorToast('Thất bại!Có lỗi xảy ra. Vui lòng thử lại', 3500);
+      Notiflix.Block.remove('#root');
       Notiflix.Block.remove('.sl-box');
     }
     Notiflix.Block.remove('#root');
+    Notiflix.Block.remove('.sl-box');
   };
 
   const renderBody = () => {

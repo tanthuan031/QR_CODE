@@ -27,7 +27,9 @@ import {
   detailClassroomStudentClient,
 } from '../../../../../api/Client/Classroom/classroomClientAPI';
 // import { getDistanceFromLatLonInKm } from '../../../../../utils/getDistanceFromLatLonInKm';
+import CryptoJS from 'crypto-js';
 const ScanQRCode = ({ onDetected }) => {
+  const secretKey = 'qr_code'; // Khóa bí mật dùng để mã hóa và giải mã
   const dispatch = useDispatch();
   const [result, setResult] = useState('');
   const [resultAtt, setResultAtt] = useState();
@@ -52,11 +54,10 @@ const ScanQRCode = ({ onDetected }) => {
   const { ref, off, start } = useZxing({
     onResult(result) {
       try {
-        const checkData = JSON.parse(atob(result.getText()));
+        const checkData = JSON.parse(CryptoJS.AES.decrypt(result.getText(), secretKey).toString(CryptoJS.enc.Utf8));
         if (checkData.name_classroom && checkData.attendance_time && checkData.attendance_week) {
-          setResult(atob(result.getText()));
+          // setResult(atob(result.getText()));
           // setShowAttendance(true);
-
           const parsedResult = checkData;
           dispatch(
             setAttendanceClient({

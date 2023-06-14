@@ -106,7 +106,7 @@ export default function DetailClassroomTable(props) {
       first_name: '',
     },
   });
-
+  console.log('test', isDetailClassroom);
   const {
     register: registerCreateNotification,
     handleSubmit: handleSubmitCreateNotification,

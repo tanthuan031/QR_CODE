@@ -14,7 +14,6 @@ import { SuccessToast } from '../../../../Layouts/Alerts';
 import CryptoJS from 'crypto-js';
 
 const QRCodeGenerator = () => {
-  const encoder = new TextEncoder();
   const dispatch = useDispatch();
   const dataCreateQRCode = useSelector(dataCreateQRCodeSelector);
   const isDetailClassroom = useSelector(isDetailClassroomSelector);
@@ -51,9 +50,22 @@ const QRCodeGenerator = () => {
     }
   };
 
-  const data = encoder.encode(JSON.stringify(text));
-  const isMobile = window.innerWidth <= 767; // Điều kiện cho kích thước mobile (767px)
+  const encoder = new TextEncoder();
+  const data = encoder.encode(JSON.stringify(text)); // Chuyển đổi chuỗi thành mảng dữ liệu
 
+  // const decoder = new TextDecoder('utf-8');
+  // const decodedString = decoder.decode(data); // Chuyển đổi mảng dữ liệu thành chuỗi
+
+  // const encodedString = btoa(decodedString);
+
+  /*********Mã hóa dữ liệu ***************/
+
+  const dataToEncode = JSON.stringify(text);
+  const secretKey = 'qr_code'; // Khóa bí mật dùng để mã hóa và giải mã
+  const encryptedData = CryptoJS.AES.encrypt(dataToEncode, secretKey).toString();
+  /*********      **       ***************/
+
+  const isMobile = window.innerWidth <= 767; // Điều kiện cho kích thước mobile (767px)
   const qrCodeSize = isMobile ? 300 : 450;
   return (
     <div>
@@ -61,7 +73,7 @@ const QRCodeGenerator = () => {
         <div className="col-xl-3 col-sm-12 col-12"></div>
         <div className="col-xl-6 col-sm-12 col-12">
           <div className="d-flex justify-content-center">
-            <QRCode value={btoa(String.fromCharCode.apply(null, data))} size={qrCodeSize} className="text-center" />
+            <QRCode value={encryptedData} size={qrCodeSize} className="text-center" />
           </div>
           <div className="d-flex justify-content-center pt-3">
             <Button className="btn-secondary" onClick={() => cancelQR()}>

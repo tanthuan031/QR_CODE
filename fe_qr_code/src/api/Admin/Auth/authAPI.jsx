@@ -1,8 +1,7 @@
 import Notiflix from 'notiflix';
 
-import axiosClient from '../../axiosClient';
 import { ErrorToast, SuccessToast } from '../../../components/Layouts/Alerts';
-import axiosAdmin from '../../axiosAdmin';
+import axiosClient from '../../axiosClient';
 
 export const setCookiesAdmin = (cname, cvalue, exdays) => {
   const d = new Date();
