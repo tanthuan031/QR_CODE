@@ -7,6 +7,7 @@ export const authReducer = createSlice({
     isLoginClient: false,
     expiredToken: false,
     userClient: {},
+    loginFirst: false,
     // Admin
     isLoginAdmin: false,
     userAdmin: {},
@@ -22,6 +23,9 @@ export const authReducer = createSlice({
     setIsLoginClient: (state, action) => {
       state.isLoginClient = action.payload;
     },
+    setLoginFirst: (state, action) => {
+      state.loginFirst = action.payload;
+    },
     // Admin
     setUserAdmin: (state, action) => {
       state.userAdmin = action.payload;
@@ -32,6 +36,6 @@ export const authReducer = createSlice({
   },
 });
 
-export const { setUserClient, setIsLoginClient, setUserAdmin, setIsLoginAdmin } = authReducer.actions;
+export const { setUserClient, setIsLoginClient, setLoginFirst, setUserAdmin, setIsLoginAdmin } = authReducer.actions;
 
 export default authReducer.reducer;

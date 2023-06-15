@@ -113,7 +113,7 @@ export function ClassRoom(props) {
                   item.id,
                   item.class_code,
                   item.class_name,
-                  item.teachers.first_name + ' ' + item.teachers.last_name,
+                  item.teachers.last_name + ' ' + item.teachers.first_name,
                   item.number_roll_call,
                   item.number_lesson_week
                 )

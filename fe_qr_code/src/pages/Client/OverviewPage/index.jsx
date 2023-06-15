@@ -19,10 +19,15 @@ import {
   isDetailClassroomClientSelector,
   isScanQRClassroomSelector,
 } from '../../../redux/selectors/classroom/classroom.selector';
+import { checkLoginFirstClientSelector } from '../../../redux/selectors/auth/auth.selector';
+import Modal from '../../../components/Layouts/Modal';
+import { setLoginFirst } from '../../../redux/reducer/auth/auth.reducer';
+import { Modal as ModalConfirm } from 'antd';
 
 export function ClientOverviewPage() {
   const dispatch = useDispatch();
   const [totalRecord, setTotalRecords] = React.useState(11);
+  const [backdrop, setBackdrop] = React.useState('static');
   const [show, setShowJoin] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [data, setData] = React.useState([]);
@@ -31,7 +36,10 @@ export function ClientOverviewPage() {
   const isDetailClassroomClient = useSelector(isDetailClassroomClientSelector);
   const isScanQRClassroom = useSelector(isScanQRClassroomSelector);
   const isAttendance = useSelector(isAttendanceClientSelector);
+  const checkLoginFirst = useSelector(checkLoginFirstClientSelector);
   const [search, setSearch] = React.useState('');
+  const [dataLoginFirst, setDataLoginFirst] = React.useState(false);
+
   const setClassroom = (result, value) => {
     setData(result.data);
     if (value !== 'page') {
@@ -60,6 +68,10 @@ export function ClientOverviewPage() {
   };
   React.useEffect(() => {
     handleGetAllClassroomClient();
+    const checkFirstLogin = localStorage.getItem('loginFirst');
+    if (checkFirstLogin) {
+      setDataLoginFirst(checkFirstLogin);
+    }
   }, [dispatch]);
 
   const handlePageChange = async (page) => {
@@ -107,10 +119,98 @@ export function ClientOverviewPage() {
     }
     setLoading(false);
   };
+
+  const handleRemoveLoginFirst = () => {
+    setDataLoginFirst(false);
+    localStorage.removeItem('loginFirst');
+  };
+  const renderBodyLoginFirst = () => {
+    return (
+      <>
+        <div style={{ padding: '20px' }}>
+          <div className="text-bold">
+            Quy định sử dụng phần mềm điểm danh QR code thông minh với tính năng nhận diện khuôn mặt và vị trí của chúng
+            tôi:
+          </div>
+          <br />
+          <div className="text-bold">1. Mục đích và phạm vi sử dụng:</div>
+          &nbsp;&nbsp;&nbsp;&nbsp;a. Phần mềm điểm danh QR code thông minh được sử dụng nhằm quản lý và giám sát quá
+          trình điểm danh của nhân viên hoặc thành viên trong tổ chức, doanh nghiệp, trường học hoặc cơ quan.
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;b. Tính năng nhận diện khuôn mặt và vị trí được tích hợp nhằm đảm bảo tính chính xác
+          và tránh gian lận trong quá trình điểm danh.
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;c. Quy định này áp dụng cho tất cả người dùng phần mềm điểm danh QR code thông minh và
+          có thể được điều chỉnh hoặc bổ sung theo từng trường hợp cụ thể.
+          <br />
+          <br />
+          <div className="text-bold">2. Đăng ký và sử dụng tài khoản:</div>
+          &nbsp;&nbsp;&nbsp;&nbsp;a. Người dùng cần đăng ký tài khoản cá nhân để sử dụng phần mềm điểm danh QR code
+          thông minh.
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;b. Thông tin đăng ký tài khoản bao gồm mã sinh viên, tên đầy đủ, địa chỉ email và
+          thông tin cá nhân khác có thể yêu cầu.
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;c. Việc sử dụng tài khoản của người khác hoặc chia sẻ tài khoản với người khác là
+          không được phép.
+          <br />
+          <br />
+          <div className="text-bold"> 3. Quá trình điểm danh:</div>
+          &nbsp;&nbsp;&nbsp;&nbsp;a. Người dùng cần quét mã QR code hoặc sử dụng tính năng nhận diện khuôn mặt để điểm
+          danh khi có yêu cầu.
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;b. Hệ thống sẽ ghi lại thời gian điểm danh, vị trí và thông tin nhận diện khuôn mặt
+          của người dùng.
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;c. Người dùng không được phép sử dụng phương pháp hay công cụ gian lận hoặc thay thế
+          để điểm danh thay mặt người khác.
+          <br />
+          <br />
+          <div className="text-bold"> 4. Quy định:</div>
+          &nbsp;&nbsp;&nbsp;&nbsp;a. Nếu phát hiện có dấu hiệu gian lận, bao gồm việc sử dụng tài khoản của người khác,
+          thay đổi thông tin nhận diện khuôn mặt hoặc vị trí, người dùng sẽ bị khóa tài khoản.
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;b. Quyết định khóa tài khoản sẽ được thực hiện bởi quản trị viên hoặc người có thẩm
+          quyền trong tổ chức sử dụng phần mềm điểm danh.
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;c. Khi tài khoản bị khóa, người dùng sẽ không thể tiếp tục sử dụng.
+          <br />
+          <br />
+          <div className="text-bold">5. Yêu cầu kết nối mạng và quyền truy cập:</div>
+          &nbsp;&nbsp;&nbsp;&nbsp;a. Để sử dụng phần mềm điểm danh, người dùng cần có{' '}
+          <span className="text-danger">kết nối mạng</span> để truy cập vào hệ thống.
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;b. Đồng thời, phần mềm cần được{' '}
+          <span className="text-danger">cấp quyền truy cập vào vị trí và camera</span> của thiết bị để sử dụng tính năng
+          nhận diện khuôn mặt và ghi lại vị trí.
+          <br />
+          <br />
+          <div className="text-bold">7. Bảo mật thông tin người dùng:</div>
+          a. Tất cả thông tin cá nhân và dữ liệu của người dùng được bảo mật và không được chia sẻ ra bên ngoài phạm vi
+          tổ chức sử dụng phần mềm điểm danh.
+          <br />
+          b. Quản trị viên và người có thẩm quyền sẽ đảm bảo sự bảo mật và tuân thủ các quy định về bảo mật dữ liệu.
+          <br />
+        </div>
+        <div className="d-flex justify-content-end">
+          <Button variant="outline-primary" style={{ margin: '10px', width: '50px' }} onClick={handleRemoveLoginFirst}>
+            Ok
+          </Button>
+        </div>
+      </>
+    );
+  };
   return (
     <>
       <section>
         <div className="container-fluid mt-5">
+          <Modal
+            show={dataLoginFirst}
+            backdrop={backdrop}
+            setStateModal={() => handleRemoveLoginFirst()}
+            elementModalTitle={<p>Thông báo</p>}
+            elementModalBody={renderBodyLoginFirst()}
+          />
           {!isDetailClassroomClient.checkDetail && !isScanQRClassroom && !isAttendance && (
             <>
               <h5 className="font-weight-bold mb-3">Danh sách lớp học</h5>

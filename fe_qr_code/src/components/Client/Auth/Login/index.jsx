@@ -11,7 +11,7 @@ import { BlockUICLIENT } from '../../../Layouts/Notiflix';
 import { handleLoginClientAPI, setCookiesClient } from '../../../../api/Client/Auth';
 import { ErrorToast, SuccessToast } from '../../../Layouts/Alerts';
 import Notiflix from 'notiflix';
-import { setIsLoginClient } from '../../../../redux/reducer/auth/auth.reducer';
+import { setIsLoginClient, setLoginFirst } from '../../../../redux/reducer/auth/auth.reducer';
 
 export default function FormLogin() {
   const historyLocation = useNavigate();
@@ -42,6 +42,8 @@ export default function FormLogin() {
       SuccessToast('Đăng nhập thành công', 2000);
       setCookiesClient('tokenClient', result.data, 1);
       dispatch(setIsLoginClient(true));
+
+      localStorage.setItem('loginFirst', true);
       Notiflix.Block.remove('.sl-box');
       Notiflix.Block.remove('.section-root-login');
       setTimeout(() => {

@@ -95,7 +95,7 @@ const ScanQRCode = ({ onDetected }) => {
               centered: true,
             });
           } else {
-            ErrorToast('QR bạn scan không tồn tại Error', 1000);
+            ErrorToast('QR bạn scan không tồn tại.', 1000);
           }
         }
       } catch (error) {
@@ -127,7 +127,7 @@ const ScanQRCode = ({ onDetected }) => {
             centered: true,
           });
         } else {
-          ErrorToast('QR bạn scan không tồn tại Error', 1000);
+          ErrorToast('QR bạn scan không tồn tại.', 1000);
         }
       }
     },

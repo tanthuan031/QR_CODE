@@ -39,11 +39,9 @@ const Attendance = () => {
   const detailClassroomClient = useSelector(isDetailClassroomClientSelector);
   const dataDetail = useSelector(dataDetailClassroomClientSelector);
   const dataAttendance = useSelector(dataAttendanceClientSelector);
-
   const cancelScanQR = () => {
     dispatch(setIsScanQR(false));
     dispatch(setIsAttendanceClient(false));
-
     dispatch(
       setIsDetailClassroomClient({
         ...detailClassroomClient,
@@ -126,8 +124,7 @@ const Attendance = () => {
               // okText: 'Thử lại',
               // // cancelText: 'Đóng',
               onOk: () => {
-                handleDetailClassroom(dataAttendance.dataAttendance.id_classroom);
-                return;
+                cancelScanQR();
               },
               // okButtonProps: {
               //   style: {
@@ -175,8 +172,7 @@ const Attendance = () => {
             // okText: 'Thử lại',
             // cancelText: 'Đóng',
             onOk: () => {
-              handleDetailClassroom(dataAttendance.dataAttendance.id_classroom);
-              return;
+              cancelScanQR();
             },
             // okButtonProps: {
             //   style: {
@@ -200,12 +196,11 @@ const Attendance = () => {
         ModalConfirm.confirm({
           title: 'Cảnh báo',
           icon: '',
-          content: `Thất bại ! Ngoài phạm vi điểm danh.(Lưu ý : Nếu bạn cố tình gian lận thì tài khoản sẽ bị khóa)`,
+          content: `Thất bại ! Ngoài phạm vi điểm danh.(Lưu ý: Nếu bạn cố tình gian lận trong quá trình điểm danh thì tài khoản sẽ bị khóa!)`,
           // okText: 'Thử lại',
           // cancelText: 'Đóng',
           onOk: () => {
-            handleDetailClassroom(dataAttendance.dataAttendance.id_classroom);
-            return;
+            cancelScanQR();
           },
           // okButtonProps: {
           //   style: {
@@ -267,159 +262,159 @@ const Attendance = () => {
           <h4 className="text-center">Thông tin điểm danh</h4>
           <Form encType="multipart/form-data">
             <div className="row p-5">
-              <div className="col md-6">
-                <div className="row">
-                  <div className="col-xl-6 col-xs-12  col-md-6">
-                    <Form.Group className=" mb-3">
-                      <div className="cp-input">
-                        <p className="font-weight-bold">Mã lớp</p>
-                        <Form.Control
-                          type="text"
-                          maxLength={10}
-                          placeholder="Nhập mã lớp"
-                          value={dataAttendance && dataAttendance.dataAttendance.code_classroom}
-                          {...register('code_classroom', { readOnly: true })}
-                          style={{ backgroundColor: '#e9ecef', caretColor: 'transparent' }}
-                        />
-                        {/* <small className="text-danger font-weight-bold">{errors?.classroom_code?.message}</small> */}
-                      </div>
-                    </Form.Group>
-                  </div>
+              {/* <div className="col md-6"> */}
+              <div className="row">
+                <div className="col-xl-6 col-xs-12  col-md-6">
+                  <Form.Group className=" mb-3">
+                    <div className="cp-input">
+                      <p className="font-weight-bold">Mã lớp</p>
+                      <Form.Control
+                        type="text"
+                        maxLength={10}
+                        placeholder="Nhập mã lớp"
+                        value={dataAttendance && dataAttendance.dataAttendance.code_classroom}
+                        {...register('code_classroom', { readOnly: true })}
+                        style={{ backgroundColor: '#e9ecef', caretColor: 'transparent' }}
+                      />
+                      {/* <small className="text-danger font-weight-bold">{errors?.classroom_code?.message}</small> */}
+                    </div>
+                  </Form.Group>
                 </div>
-                <div className="row">
-                  <div className="col-xl-6 col-xs-12  col-md-6">
-                    <Form.Group className=" mb-3">
-                      <div className="cp-input">
-                        <p className="font-weight-bold">Tên giáo viên</p>
-                        <Form.Control
-                          type="text"
-                          maxLength={10}
-                          placeholder="Nhập mã lớp"
-                          value={dataAttendance && dataAttendance.dataAttendance.name_teacher}
-                          {...register('name_teacher', { readOnly: true })}
-                          style={{ backgroundColor: '#e9ecef', caretColor: 'transparent' }}
-                        />
-                        {/* <small className="text-danger font-weight-bold">{errors?.classroom_code?.message}</small> */}
-                      </div>
-                    </Form.Group>
-                  </div>
-                  <div className=" col-xl-6 col-xs-12  col-md-6">
-                    <Form.Group className=" mb-3">
-                      <div className="cp-input">
-                        <p className="font-weight-bold">Tên lớp</p>
-                        <Form.Control
-                          type="text"
-                          maxLength={10}
-                          placeholder="Nhập mã lớp"
-                          value={dataAttendance && dataAttendance.dataAttendance.name_classroom}
-                          {...register('name_classroom', { readOnly: true })}
-                          style={{ backgroundColor: '#e9ecef', caretColor: 'transparent' }}
-                        />
-                        {/* <small className="text-danger font-weight-bold">{errors?.classroom_code?.message}</small> */}
-                      </div>
-                    </Form.Group>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col col-md-6">
-                    <Form.Group className=" mb-3">
-                      <div className="cp-input">
-                        <p className="font-weight-bold">Tuần</p>
-                        <Form.Control
-                          type="text"
-                          maxLength={10}
-                          placeholder="Nhập mã lớp"
-                          value={dataAttendance && dataAttendance.dataAttendance.attendance_week}
-                          {...register('attendance_week', { readOnly: true })}
-                          style={{ backgroundColor: '#e9ecef', caretColor: 'transparent' }}
-                        />
-                        {/* <small className="text-danger font-weight-bold">{errors?.classroom_code?.message}</small> */}
-                      </div>
-                    </Form.Group>
-                  </div>
-                  <div className="col col-md-6">
-                    <Form.Group className=" mb-3">
-                      <div className="cp-input">
-                        <p className="font-weight-bold">Tiết</p>
-                        <Form.Control
-                          type="text"
-                          value={dataAttendance && dataAttendance.dataAttendance.attendance_lesson}
-                          {...register('attendance_lesson', { readOnly: true })}
-                          style={{ backgroundColor: '#e9ecef', caretColor: 'transparent' }}
-                        />
-                        {/* <small className="text-danger font-weight-bold">{errors?.classroom_code?.message}</small> */}
-                      </div>
-                    </Form.Group>
-                  </div>
-                </div>
-
-                {/* Hidden */}
-                {/* Km */}
-                <Form.Control
-                  type="text"
-                  placeholder="Nhập mã lớp"
-                  value={dataAttendance && dataAttendance.dataAttendance.attendance_range}
-                  {...register('attendance_range')}
-                  hidden
-                />
-                {/* Time */}
-                <Form.Control
-                  type="text"
-                  maxLength={10}
-                  placeholder="Nhập mã lớp"
-                  value={dataAttendance && dataAttendance.dataAttendance.attendance_time}
-                  {...register('attendance_time')}
-                  hidden
-                />
-                {/* ID classroom */}
-                <Form.Control
-                  type="text"
-                  maxLength={10}
-                  placeholder="Nhập mã lớp"
-                  value={dataAttendance && dataAttendance.dataAttendance.id_classroom}
-                  {...register('classroom_id')}
-                  hidden
-                />
-                {/*hour create */}
-                <Form.Control
-                  type="text"
-                  maxLength={10}
-                  placeholder="Nhập mã lớp"
-                  value={dataAttendance && dataAttendance.dataAttendance.create_at}
-                  {...register('create_at')}
-                  hidden
-                />
-                {/*Token */}
-                <Form.Control
-                  type="text"
-                  maxLength={10}
-                  placeholder="Nhập mã lớp"
-                  value={dataAttendance && dataAttendance.dataAttendance.tokensAdmin}
-                  {...register('tokensAdmin')}
-                  hidden
-                />
-
-                {/*Location Latitude */}
-                <Form.Control
-                  {...register('latitude_admin')}
-                  type="text"
-                  maxLength={10}
-                  placeholder="Nhập mã lớp"
-                  value={dataAttendance && dataAttendance.dataAttendance.location.latitude}
-                  hidden
-                />
-
-                {/*Location Longitude */}
-                <Form.Control
-                  {...register('longitude_admin')}
-                  type="text"
-                  maxLength={10}
-                  placeholder="Nhập mã lớp"
-                  value={dataAttendance && dataAttendance.dataAttendance.location.longitude}
-                  hidden
-                />
               </div>
+              <div className="row">
+                <div className="col-xl-6 col-xs-12  col-md-6">
+                  <Form.Group className=" mb-3">
+                    <div className="cp-input">
+                      <p className="font-weight-bold">Tên giáo viên</p>
+                      <Form.Control
+                        type="text"
+                        maxLength={10}
+                        placeholder="Nhập mã lớp"
+                        value={dataAttendance && dataAttendance.dataAttendance.name_teacher}
+                        {...register('name_teacher', { readOnly: true })}
+                        style={{ backgroundColor: '#e9ecef', caretColor: 'transparent' }}
+                      />
+                      {/* <small className="text-danger font-weight-bold">{errors?.classroom_code?.message}</small> */}
+                    </div>
+                  </Form.Group>
+                </div>
+                <div className=" col-xl-6 col-xs-12  col-md-6">
+                  <Form.Group className=" mb-3">
+                    <div className="cp-input">
+                      <p className="font-weight-bold">Tên lớp</p>
+                      <Form.Control
+                        type="text"
+                        maxLength={10}
+                        placeholder="Nhập mã lớp"
+                        value={dataAttendance && dataAttendance.dataAttendance.name_classroom}
+                        {...register('name_classroom', { readOnly: true })}
+                        style={{ backgroundColor: '#e9ecef', caretColor: 'transparent' }}
+                      />
+                      {/* <small className="text-danger font-weight-bold">{errors?.classroom_code?.message}</small> */}
+                    </div>
+                  </Form.Group>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col col-md-6">
+                  <Form.Group className=" mb-3">
+                    <div className="cp-input">
+                      <p className="font-weight-bold">Tuần</p>
+                      <Form.Control
+                        type="text"
+                        maxLength={10}
+                        placeholder="Nhập mã lớp"
+                        value={dataAttendance && dataAttendance.dataAttendance.attendance_week}
+                        {...register('attendance_week', { readOnly: true })}
+                        style={{ backgroundColor: '#e9ecef', caretColor: 'transparent' }}
+                      />
+                      {/* <small className="text-danger font-weight-bold">{errors?.classroom_code?.message}</small> */}
+                    </div>
+                  </Form.Group>
+                </div>
+                <div className="col col-md-6">
+                  <Form.Group className=" mb-3">
+                    <div className="cp-input">
+                      <p className="font-weight-bold">Tiết</p>
+                      <Form.Control
+                        type="text"
+                        value={dataAttendance && dataAttendance.dataAttendance.attendance_lesson}
+                        {...register('attendance_lesson', { readOnly: true })}
+                        style={{ backgroundColor: '#e9ecef', caretColor: 'transparent' }}
+                      />
+                      {/* <small className="text-danger font-weight-bold">{errors?.classroom_code?.message}</small> */}
+                    </div>
+                  </Form.Group>
+                </div>
+              </div>
+
+              {/* Hidden */}
+              {/* Km */}
+              <Form.Control
+                type="text"
+                placeholder="Nhập mã lớp"
+                value={dataAttendance && dataAttendance.dataAttendance.attendance_range}
+                {...register('attendance_range')}
+                hidden
+              />
+              {/* Time */}
+              <Form.Control
+                type="text"
+                maxLength={10}
+                placeholder="Nhập mã lớp"
+                value={dataAttendance && dataAttendance.dataAttendance.attendance_time}
+                {...register('attendance_time')}
+                hidden
+              />
+              {/* ID classroom */}
+              <Form.Control
+                type="text"
+                maxLength={10}
+                placeholder="Nhập mã lớp"
+                value={dataAttendance && dataAttendance.dataAttendance.id_classroom}
+                {...register('classroom_id')}
+                hidden
+              />
+              {/*hour create */}
+              <Form.Control
+                type="text"
+                maxLength={10}
+                placeholder="Nhập mã lớp"
+                value={dataAttendance && dataAttendance.dataAttendance.create_at}
+                {...register('create_at')}
+                hidden
+              />
+              {/*Token */}
+              <Form.Control
+                type="text"
+                maxLength={10}
+                placeholder="Nhập mã lớp"
+                value={dataAttendance && dataAttendance.dataAttendance.tokensAdmin}
+                {...register('tokensAdmin')}
+                hidden
+              />
+
+              {/*Location Latitude */}
+              <Form.Control
+                {...register('latitude_admin')}
+                type="text"
+                maxLength={10}
+                placeholder="Nhập mã lớp"
+                value={dataAttendance && dataAttendance.dataAttendance.location.latitude}
+                hidden
+              />
+
+              {/*Location Longitude */}
+              <Form.Control
+                {...register('longitude_admin')}
+                type="text"
+                maxLength={10}
+                placeholder="Nhập mã lớp"
+                value={dataAttendance && dataAttendance.dataAttendance.location.longitude}
+                hidden
+              />
             </div>
+            {/* </div> */}
             <div className="row pb-2">
               <Form.Group className="d-flex justify-content-center">
                 <Button
