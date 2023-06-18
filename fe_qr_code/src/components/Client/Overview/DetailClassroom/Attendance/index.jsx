@@ -84,45 +84,95 @@ const Attendance = () => {
   };
 
   const handleAttendanceClassroom = async (data) => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    const location = {
-      lat1: dataAttendance.dataLocation.latitude,
-      lon1: dataAttendance.dataLocation.longitude,
-      lat2: dataAttendance.dataAttendance.location.latitude,
-      lon2: dataAttendance.dataAttendance.location.longitude,
-    };
-    const formatData = {
-      attendance_range: dataAttendance.dataAttendance.attendance_range,
-      attendance_time: dataAttendance.dataAttendance.attendance_time,
-      attendance_week: dataAttendance.dataAttendance.attendance_week,
-      attendance_lesson: dataAttendance.dataAttendance.attendance_lesson,
-      classroom_id: dataAttendance.dataAttendance.id_classroom,
-      create_at: dataAttendance.dataAttendance.create_at,
-      key_value: btoa(dataAttendance.dataAttendance.tokensAdmin),
-    };
-    if (formatData) {
-      const checkKm = await getDistanceFromLatLonInKm(location);
-      if (checkKm.value <= Number(dataAttendance.dataAttendance.attendance_range) * 1000) {
-        BlockUICLIENT('#root', 'fixed');
-        setShowAttendance(false);
-        const verifyFace = await faceVerifyClient({ imageVeryfile: imageSrc });
-        if (verifyFace === 200) {
-          const result = await attendanceStudentClient(formatData);
-          if (result === 200) {
-            SuccessToast('Điểm danh thành công', 3500);
-            Notiflix.Block.remove('.sl-box');
-            handleDetailClassroom(dataAttendance.dataAttendance.id_classroom);
-            Notiflix.Block.remove('#root');
-          } else if (result === 403) {
+    console.log('hdhd', dataDetail);
+    if (dataDetail.data.classroom_id === dataAttendance.dataAttendance.id_classroom) {
+      const imageSrc = webcamRef.current.getScreenshot();
+      const location = {
+        lat1: dataAttendance.dataLocation.latitude,
+        lon1: dataAttendance.dataLocation.longitude,
+        lat2: dataAttendance.dataAttendance.location.latitude,
+        lon2: dataAttendance.dataAttendance.location.longitude,
+      };
+      const formatData = {
+        attendance_range: dataAttendance.dataAttendance.attendance_range,
+        attendance_time: dataAttendance.dataAttendance.attendance_time,
+        attendance_week: dataAttendance.dataAttendance.attendance_week,
+        attendance_lesson: dataAttendance.dataAttendance.attendance_lesson,
+        classroom_id: dataAttendance.dataAttendance.id_classroom,
+        create_at: dataAttendance.dataAttendance.create_at,
+        key_value: btoa(dataAttendance.dataAttendance.tokensAdmin),
+      };
+      if (formatData) {
+        const checkKm = await getDistanceFromLatLonInKm(location);
+        if (checkKm.value <= Number(dataAttendance.dataAttendance.attendance_range) * 1000) {
+          BlockUICLIENT('#root', 'fixed');
+          setShowAttendance(false);
+          const verifyFace = await faceVerifyClient({ imageVeryfile: imageSrc });
+          if (verifyFace === 200) {
+            const result = await attendanceStudentClient(formatData);
+            if (result === 200) {
+              SuccessToast('Điểm danh thành công', 3500);
+              Notiflix.Block.remove('.sl-box');
+              handleDetailClassroom(dataDetail.data.classroom_id);
+              Notiflix.Block.remove('#root');
+            } else if (result === 403) {
+              setShowAttendance(false);
+              Notiflix.Block.remove('#root');
+              Notiflix.Block.remove('.sl-box');
+              ModalConfirm.confirm({
+                title: 'Cảnh báo',
+                icon: '',
+                content: `Thất bại! Hết thời gian điểm danh. Vui lòng liên hệ giảng viên để điểm danh lại`,
+                // okText: 'Thử lại',
+                // // cancelText: 'Đóng',
+                onOk: () => {
+                  cancelScanQR();
+                },
+                // okButtonProps: {
+                //   style: {
+                //     backgroundColor: '#ff4d4f',
+                //   },
+                // },
+                centered: true,
+              });
+            } else if (result === 404) {
+              setShowAttendance(false);
+              Notiflix.Block.remove('#root');
+              Notiflix.Block.remove('.sl-box');
+              ModalConfirm.confirm({
+                title: 'Cảnh báo',
+                icon: '',
+                content: `Thất bại!Bạn không có trong lớp học`,
+                // okText: 'Thử lại',
+                // cancelText: 'Đóng',
+                // onOk: () => {
+                //   Notiflix.Block.remove('.sl-box');
+                // },
+                // okButtonProps: {
+                //   style: {
+                //     backgroundColor: '#ff4d4f',
+                //   },
+                // },
+                centered: true,
+              });
+            } else {
+              ErrorToast('Có lỗi ! Vui lòng liên hệ giảng viên để giải quyết', 3500);
+              Notiflix.Block.remove('#root');
+              Notiflix.Block.remove('.sl-box');
+              setShowAttendance(false);
+            }
+          } else if (verifyFace === 403) {
+            // ErrorToast('Khuôn mặt không khớp . Vui lòng không gian lận trong điểm danh', 3500);
+            // Notiflix.Block.remove('.sl-box');
             setShowAttendance(false);
             Notiflix.Block.remove('#root');
             Notiflix.Block.remove('.sl-box');
             ModalConfirm.confirm({
               title: 'Cảnh báo',
               icon: '',
-              content: `Thất bại! Hết thời gian điểm danh. Vui lòng liên hệ giảng viên để điểm danh lại`,
+              content: `Khuôn mặt không khớp . Vui lòng quét đúng quy định và không điểm danh hộ`,
               // okText: 'Thử lại',
-              // // cancelText: 'Đóng',
+              // cancelText: 'Đóng',
               onOk: () => {
                 cancelScanQR();
               },
@@ -133,42 +183,22 @@ const Attendance = () => {
               // },
               centered: true,
             });
-          } else if (result === 404) {
-            setShowAttendance(false);
-            Notiflix.Block.remove('#root');
-            Notiflix.Block.remove('.sl-box');
-            ModalConfirm.confirm({
-              title: 'Cảnh báo',
-              icon: '',
-              content: `Thất bại!Bạn không có trong lớp học`,
-              // okText: 'Thử lại',
-              // cancelText: 'Đóng',
-              // onOk: () => {
-              //   Notiflix.Block.remove('.sl-box');
-              // },
-              // okButtonProps: {
-              //   style: {
-              //     backgroundColor: '#ff4d4f',
-              //   },
-              // },
-              centered: true,
-            });
           } else {
-            ErrorToast('Có lỗi ! Vui lòng liên hệ giảng viên để giải quyết', 3500);
+            ErrorToast('Đã có lỗi xảy ra vui lòng quét khuôn mặt đúng quy định', 3500);
             Notiflix.Block.remove('#root');
             Notiflix.Block.remove('.sl-box');
-            setShowAttendance(false);
           }
-        } else if (verifyFace === 403) {
-          // ErrorToast('Khuôn mặt không khớp . Vui lòng không gian lận trong điểm danh', 3500);
-          // Notiflix.Block.remove('.sl-box');
+
+          Notiflix.Block.remove('#root');
+          Notiflix.Block.remove('.sl-box');
+        } else {
           setShowAttendance(false);
           Notiflix.Block.remove('#root');
           Notiflix.Block.remove('.sl-box');
           ModalConfirm.confirm({
             title: 'Cảnh báo',
             icon: '',
-            content: `Khuôn mặt không khớp . Vui lòng quét đúng quy định và không điểm danh hộ`,
+            content: `Thất bại ! Ngoài phạm vi điểm danh.(Lưu ý: Nếu bạn cố tình gian lận trong quá trình điểm danh thì tài khoản sẽ bị khóa!)`,
             // okText: 'Thử lại',
             // cancelText: 'Đóng',
             onOk: () => {
@@ -181,40 +211,20 @@ const Attendance = () => {
             // },
             centered: true,
           });
-        } else {
-          ErrorToast('Đã có lỗi xảy ra vui lòng quét khuôn mặt đúng quy định', 3500);
-          Notiflix.Block.remove('#root');
-          Notiflix.Block.remove('.sl-box');
         }
-
-        Notiflix.Block.remove('#root');
-        Notiflix.Block.remove('.sl-box');
       } else {
-        setShowAttendance(false);
+        ErrorToast('Thất bại!Có lỗi xảy ra. Vui lòng thử lại', 3500);
         Notiflix.Block.remove('#root');
         Notiflix.Block.remove('.sl-box');
-        ModalConfirm.confirm({
-          title: 'Cảnh báo',
-          icon: '',
-          content: `Thất bại ! Ngoài phạm vi điểm danh.(Lưu ý: Nếu bạn cố tình gian lận trong quá trình điểm danh thì tài khoản sẽ bị khóa!)`,
-          // okText: 'Thử lại',
-          // cancelText: 'Đóng',
-          onOk: () => {
-            cancelScanQR();
-          },
-          // okButtonProps: {
-          //   style: {
-          //     backgroundColor: '#ff4d4f',
-          //   },
-          // },
-          centered: true,
-        });
       }
     } else {
-      ErrorToast('Thất bại!Có lỗi xảy ra. Vui lòng thử lại', 3500);
+      setShowAttendance(false);
+      ErrorToast('Thất bại! Bạn không có trong danh sách lớp', 3500);
+      handleDetailClassroom(dataDetail.data.classroom_id);
       Notiflix.Block.remove('#root');
       Notiflix.Block.remove('.sl-box');
     }
+
     Notiflix.Block.remove('#root');
     Notiflix.Block.remove('.sl-box');
   };
