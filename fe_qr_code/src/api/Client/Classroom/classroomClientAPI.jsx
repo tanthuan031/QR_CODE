@@ -73,6 +73,8 @@ export const attendanceStudentClient = async (body) => {
     return 200;
   } else if (response.status === 'fail') {
     return 403;
+  } else if (response.status === 400) {
+    return 400;
   } else if (response.status === 404) {
     return 404;
   } else if (response == 'Server error') {

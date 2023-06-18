@@ -134,3 +134,16 @@ export const getDistanceFromLatLonInKm = async (body) => {
     return false;
   }
 };
+
+export const getDistanceFromLatLonInKm_V1 = async (body) => {
+  const url = `/api/calculate-distance-v1`;
+
+  const response = await axiosClient.get('/api/calculate-distance-v1', {
+    params: body,
+  });
+  if (response) {
+    return response.route.distance;
+  } else {
+    return false;
+  }
+};

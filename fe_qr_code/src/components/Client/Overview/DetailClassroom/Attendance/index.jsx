@@ -19,7 +19,7 @@ import {
 } from '../../../../../redux/selectors/classroom/classroom.selector';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { getDistanceFromLatLonInKm } from '../../../../../api/Admin/Auth/authAPI';
+import { getDistanceFromLatLonInKm, getDistanceFromLatLonInKm_V1 } from '../../../../../api/Admin/Auth/authAPI';
 import Notiflix from 'notiflix';
 import { BlockUICLIENT } from '../../../../Layouts/Notiflix';
 import {
@@ -103,8 +103,11 @@ const Attendance = () => {
         key_value: btoa(dataAttendance.dataAttendance.tokensAdmin),
       };
       if (formatData) {
-        const checkKm = await getDistanceFromLatLonInKm(location);
-        if (checkKm.value <= Number(dataAttendance.dataAttendance.attendance_range) * 1000) {
+        // const checkKm = await getDistanceFromLatLonInKm(location);
+        const checkKm = await getDistanceFromLatLonInKm_V1(location);
+        // console.log('Check', checkKm);
+        // if (checkKm.value <= Number(dataAttendance.dataAttendance.attendance_range) * 1000)
+        if (checkKm <= Number(dataAttendance.dataAttendance.attendance_range)) {
           BlockUICLIENT('#root', 'fixed');
           setShowAttendance(false);
           const verifyFace = await faceVerifyClient({ imageVeryfile: imageSrc });
@@ -155,6 +158,12 @@ const Attendance = () => {
                 // },
                 centered: true,
               });
+            } else if (result === 400) {
+              setShowAttendance(false);
+              ErrorToast('Bạn đã điểm danh trước đó', 3500);
+              handleDetailClassroom(dataDetail.data.classroom_id);
+              Notiflix.Block.remove('#root');
+              Notiflix.Block.remove('.sl-box');
             } else {
               ErrorToast('Có lỗi ! Vui lòng liên hệ giảng viên để giải quyết', 3500);
               Notiflix.Block.remove('#root');
@@ -199,16 +208,9 @@ const Attendance = () => {
             title: 'Cảnh báo',
             icon: '',
             content: `Thất bại ! Ngoài phạm vi điểm danh.(Lưu ý: Nếu bạn cố tình gian lận trong quá trình điểm danh thì tài khoản sẽ bị khóa!)`,
-            // okText: 'Thử lại',
-            // cancelText: 'Đóng',
             onOk: () => {
               cancelScanQR();
             },
-            // okButtonProps: {
-            //   style: {
-            //     backgroundColor: '#ff4d4f',
-            //   },
-            // },
             centered: true,
           });
         }

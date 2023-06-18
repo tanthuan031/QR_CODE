@@ -41,23 +41,22 @@ class AttendanceClientRepository
 
                 if ($checkAttendance !== null) {
 
-                    $result = $checkAttendance->update($request);
+                    // $result = $checkAttendance->update($request);
 
-                    if ($request['status'] == '0') {
-                        $score = $checkStudentClassroom['score']  + 10 / ($resultClassroom['number_roll_call'] * $resultClassroom['number_lesson_week']);
-                        $checkStudentClassroom->update([
-                            'score' => $score
-                        ]);
-                    } else {
-                        $score = $checkStudentClassroom['score']  - 10 / ($resultClassroom['number_roll_call'] * $resultClassroom['number_lesson_week']);
-                        $checkStudentClassroom->update([
-                            'score' => $score
-                        ]);
-                    }
+                    // if ($request['status'] == '0') {
+                    //     $score = $checkStudentClassroom['score']  + 10 / ($resultClassroom['number_roll_call'] * $resultClassroom['number_lesson_week']);
+                    //     $checkStudentClassroom->update([
+                    //         'score' => $score
+                    //     ]);
+                    // } else {
+                    //     $score = $checkStudentClassroom['score']  - 10 / ($resultClassroom['number_roll_call'] * $resultClassroom['number_lesson_week']);
+                    //     $checkStudentClassroom->update([
+                    //         'score' => $score
+                    //     ]);
+                    // }
                     $data = [
-                        'status' => 'success',
-                        'message' => "Attendance student successfully (up)",
-                        'data' => $result
+                        'status' => 400,
+                        'message' => 'Student have been attendanced ',
                     ];
                 } else {
                     $result = Attendance::query()->create($request);

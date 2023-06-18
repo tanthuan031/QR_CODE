@@ -63,6 +63,8 @@ const QRCodeGenerator = () => {
       <div className="row mt-5">
         <div className="col-xl-3 col-sm-12 col-12"></div>
         <div className="col-xl-6 col-sm-12 col-12">
+          <h3 className="text-center mt-5">Mã QR CODE điểm danh</h3>
+          <h6 className="text-center mb-5">Vui lòng cung cấp mã QR CODE này cho lớp học để điểm danh</h6>
           <div className="d-flex justify-content-center">
             <QRCode value={encryptedData} size={qrCodeSize} className="text-center" />
           </div>
