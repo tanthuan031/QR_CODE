@@ -43,4 +43,26 @@ Back-End: Laravel
 
 Chi tiết được hướng dẫn trong từng Folder FE or BE riêng
 
+## --Cách khác: Cài đặt với docker--
+
+```
+docker compose up -d build
+```
+
+```
+docker exec  <ID Container> composer install
+```
+
+```
+docker exec  <ID Container> chown -R www-data:www-data /var/www be_qr_code/storage/
+```
+
+```
+docker exec  <ID Container> php artisan key:generate
+```
+
+```
+docker exec  <ID Container> php artisan migrate:fresh --seed
+```
+
 Author: TanThuan

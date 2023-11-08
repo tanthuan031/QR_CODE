@@ -1,0 +1,91 @@
+version: "3"
+services:
+  be_qr_code:
+    container_name: be_qr_code
+    build:
+      context: .
+      dockerfile: ./be_qr_code/Dockerfile
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www/be_qr_code
+    volumes:
+      - ./be_qr_code:/var/www/be_qr_code
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    environment:
+      - "DB_CONNECTION=pgsql"
+      - "DB_PORT=5432"
+      - "DB_HOST=db_qr_code"
+      - "DB_DATABASE=qr_code"
+      - "DB_USERNAME=qr_code"
+      - "DB_PASSWORD=qiqr_code@123"
+
+    networks:
+      - app-network
+    depends_on:
+      - db_qr_code
+
+  db_qr_code:
+    container_name: db_qr_code
+    image: "postgres:14.4-alpine"
+    environment:
+      - POSTGRES_USER=qr_code
+      - POSTGRES_PASSWORD=qiqr_code@123
+      - POSTGRES_DB=qr_code
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+  redis:
+    image: redis:alpine
+    volumes:
+      - ./docker/volumes/redis:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+  nginx:
+    container_name: nginx_be_qr_code
+    image: nginx:latest
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./be_qr_code:/var/www/be_qr_code
+      - ./be_qr_code/nginx.conf:/etc/nginx/conf.d/be_qr_code.conf:ro
+    networks:
+      - app-network
+
+  # fe_qr_code:
+  #   container_name: fe_qr_code
+  #   build:
+  #     context: .
+  #     dockerfile: ./fe_qr_code/Dockerfile
+  #   working_dir: /var/www/fe_qr_code
+  #   volumes:
+  #     - /var/www/fe_qr_code/node_modules
+  #   networks:
+  #     - app-network
+
+  nginx_fe_qr_code:
+    container_name: nginx_fe_qr_code
+    build:
+      context: .
+      dockerfile: ./fe_qr_code/Dockerfile
+    ports:
+      - "3002:3002"
+    # volumes:
+    #   # - /var/www/fe_qr_code:/var/www/fe_qr_code
+    #   - ./fe_qr_code/nginx.conf:/etc/nginx/conf.d/fe_qr_code.conf:ro
+    networks:
+      - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
