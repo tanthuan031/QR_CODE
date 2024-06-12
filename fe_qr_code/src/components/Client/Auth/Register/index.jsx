@@ -11,7 +11,7 @@ import ImageLogin from '../../../../utils/imagelogin.png';
 import './style.css';
 import Modal from '../../../Layouts/Modal';
 import { registerClientSchema } from '../../../../adapter/auth';
-import { handleRegisterClientAPI } from '../../../../api/Client/Auth';
+import { handleRegisterClientAPI, handleRegisterFaceAPI } from '../../../../api/Client/Auth';
 import { ErrorToast, SuccessToast } from '../../../Layouts/Alerts';
 import Notiflix from 'notiflix';
 import { BlockUICLIENT } from '../../../Layouts/Notiflix';
@@ -25,12 +25,14 @@ export default function FormRegister() {
     register,
     handleSubmit,
     control,
+    setValue,
+    watch,
     formState: { isValid, errors },
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(registerClientSchema),
   });
-
+  const values = watch();
   const onSubmit = async (data) => {
     BlockUICLIENT('.register_root', 'fixed');
     const resultData = {
@@ -39,9 +41,8 @@ export default function FormRegister() {
       password: data.password,
       email: data.email,
       student_code: data.student_code,
-      image: capturedImage !== null && capturedImage,
+      image: data?.image,
     };
-
     const result = await handleRegisterClientAPI(resultData);
     if (result === 403 || result.status === 422) {
       ErrorToast('Mã sinh viên hoặc email đã được đăng ký . Vui lòng đăng nhập', 3500);
@@ -66,10 +67,37 @@ export default function FormRegister() {
   const webcamRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
 
-  const captureImage = () => {
+  const captureImage = async () => {
     const imageSrc = webcamRef.current.getScreenshot();
-    setCapturedImage(imageSrc);
-    setShowCamera(false);
+    if (imageSrc) {
+      // Convert base64 to blob
+      const byteString = atob(imageSrc.split(',')[1]);
+      const mimeString = imageSrc.split(',')[0].split(':')[1].split(';')[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([ab], { type: mimeString });
+
+      // Create a File object from the Blob
+      const file = new File([blob], 'webcam_capture.jpg', { type: mimeString });
+      if (file) {
+        console.log('file', file);
+        const result = await handleRegisterFaceAPI({
+          label: values?.student_code,
+          descriptions: file,
+        });
+        if (result?.status === 200) {
+          SuccessToast('Đăng ký khuôn mặt thành công', 3000);
+          // setCookies('token', result.data.token, 1);
+          Notiflix.Block.remove('.sl-box');
+          setValue('image', result?.data?._id);
+          setCapturedImage(imageSrc);
+          setShowCamera(false);
+        }
+      }
+    }
   };
   const renderBody = () => {
     return (

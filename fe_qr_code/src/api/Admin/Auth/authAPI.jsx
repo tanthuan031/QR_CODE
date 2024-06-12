@@ -2,6 +2,7 @@ import Notiflix from 'notiflix';
 
 import { ErrorToast, SuccessToast } from '../../../components/Layouts/Alerts';
 import axiosClient from '../../axiosClient';
+import axios from 'axios';
 
 export const setCookiesAdmin = (cname, cvalue, exdays) => {
   const d = new Date();
@@ -145,5 +146,83 @@ export const getDistanceFromLatLonInKm_V1 = async (body) => {
     return response.route.distance;
   } else {
     return false;
+  }
+};
+export const getDistanceFromLatLonInKmAhamove = async (body) => {
+  const axiosInstance = axios.create({
+    baseURL: 'https://api.ahamove.com/v2/order/',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  try {
+    const response = await axiosInstance.post('estimated_fee', {
+      method_id: 'URA9',
+      method_type: 'cash',
+      remarks: '',
+      payment_method: 'CASH',
+      order_time: 0,
+      path: [
+        {
+          lat: body?.lat1,
+          lng: body?.lon1,
+          address: '353 Nguyễn Trãi,  Phường 7,  Quận 5',
+          short_address: '353 Nguyễn Trãi',
+          types: ['favorite_location'],
+          name: 'Tấn Thuận',
+          mobile: '0399102726',
+          remarks: '353 Nguyễn Trãi',
+          level: '1',
+          item_value: 0,
+        },
+        {
+          lat: body?.lat2,
+          lng: body?.lon2,
+          address: '199 Nguyễn Sơn, Phú Thạnh, Tân Phú, Hồ Chí Minh, Việt Nam',
+          short_address: '199 Nguyễn Sơn',
+          types: ['favorite_location'],
+          name: 'Tấn Thuận',
+          mobile: '0399102726',
+          remarks: '353 Nguyễn Trãi',
+          level: '2',
+          address_code: 'OZTHP7G29B',
+          item_value: 0,
+        },
+      ],
+      images: [],
+      package_detail: [],
+      services: [
+        {
+          _id: 'SGN-BIKE',
+          requests: [
+            {
+              _id: 'SGN-BIKE-INSURANCE',
+            },
+          ],
+        },
+      ],
+      token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXAiOiJ1c2VyIiwiY2lkIjoiODQzOTkxMDI3MjYiLCJzdGF0dXMiOiJBQ1RJVkFUSU5HIiwiZW9jIjoidGh1YW5odDAzMDFAZ21haWwuY29tIiwibm9jIjoiVGFuIFRodWFuIiwiY3R5IjoiU0dOIiwiaW1laSI6ImNiR1ZidUs0UW1IWFR2TWlQd3EyIiwidHlwZSI6IndlYiIsImV4cCI6MTcxNzY0MzQwMSwiaWF0IjoxNzE3Mzg0MjAxLCJpc3MiOiJhaGEifQ.Dv5BtBNQ0b4w0wKyAPokUasS9w6MYnUQzVXtoSKRG78',
+    });
+    console.log('response', response);
+    if (response.status === 200) {
+      return {
+        status: 200,
+        data: response?.data,
+      };
+    } else {
+      return {
+        status: 403,
+        data: null,
+      };
+    }
+  } catch (error) {
+    // Xử lý lỗi ở đây nếu cần
+    console.error('Error occurred:', error);
+    return {
+      status: 500,
+      data: null,
+    };
   }
 };

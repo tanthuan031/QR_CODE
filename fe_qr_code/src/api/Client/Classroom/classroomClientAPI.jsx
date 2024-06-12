@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { concatQueryString } from '../../../utils/concatQueryString';
 import { titleToSlug } from '../../../utils/titleToSlug';
 import axiosClient from '../../axiosClient';
@@ -77,6 +78,8 @@ export const attendanceStudentClient = async (body) => {
     return 400;
   } else if (response.status === 404) {
     return 404;
+  } else if (response.status === 402) {
+    return 402;
   } else if (response == 'Server error') {
     return 401;
   } else {
@@ -99,5 +102,41 @@ export const faceVerifyClient = async (body) => {
     return 401;
   } else {
     return 401;
+  }
+};
+
+export const faceVerifyClientAPI = async (body) => {
+  const axiosInstance = axios.create({
+    baseURL: 'http://127.0.0.1:8004/api/',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  try {
+    const response = await axiosInstance.post('face-check', body, {
+      params: {
+        key: '12345678910',
+      },
+    });
+    console.log('response', response);
+    if (response.status === 200) {
+      return {
+        status: 200,
+        data: response?.data?.data,
+      };
+    } else {
+      return {
+        status: 403,
+        data: null,
+      };
+    }
+  } catch (error) {
+    // Xử lý lỗi ở đây nếu cần
+    console.error('Error occurred:', error);
+    return {
+      status: 500,
+      data: null,
+    };
   }
 };

@@ -2,6 +2,7 @@ import Notiflix from 'notiflix';
 
 import axiosClient from '../../axiosClient';
 import { ErrorToast, SuccessToast } from '../../../components/Layouts/Alerts';
+import axios from 'axios';
 
 export const setCookiesClient = (cname, cvalue, exdays) => {
   const d = new Date();
@@ -106,5 +107,42 @@ export const updateProfileClient = async (body) => {
     }
   } else {
     return 500;
+  }
+};
+
+// Đăng ký face qua api
+export const handleRegisterFaceAPI = async (body) => {
+  const axiosInstance = axios.create({
+    baseURL: 'http://127.0.0.1:8004/api/',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  try {
+    const response = await axiosInstance.post('face-register', body, {
+      params: {
+        key: '12345678910',
+      },
+    });
+    console.log('response', response);
+    if (response.status === 200) {
+      return {
+        status: 200,
+        data: response?.data?.data,
+      };
+    } else {
+      return {
+        status: 403,
+        data: null,
+      };
+    }
+  } catch (error) {
+    // Xử lý lỗi ở đây nếu cần
+    console.error('Error occurred:', error);
+    return {
+      status: 500,
+      data: null,
+    };
   }
 };

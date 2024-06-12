@@ -56,7 +56,9 @@ class AttendanceClientService
             'student_code' => $studentCode['student_code'],
             'week' => $request->attendance_week,
             'lesson' => $request->attendance_lesson,
-            'status' => '0'
+            'status' => '0',
+            'image' => $request['image'],
+
         ];
         $result = $this->attendanceRepository->createAttendanceStudent($dataRequest);
         if (

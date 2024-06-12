@@ -46,7 +46,7 @@ class AuthClientRepository
             ->orWhere('email', $request['email'])
             ->first();
         if ($checkStudentCode === null) {
-            $image = Helper::saveImgBase64v1($request['image'], 'User');
+            // $image = Helper::saveImgBase64v1($request['image'], 'User');
 
             $result = User::query()->create([
                 'first_name' => $request['first_name'],
@@ -54,7 +54,7 @@ class AuthClientRepository
                 'student_code' => $request['student_code'],
                 'email' => $request['email'],
                 'password' => $request['password'],
-                'image' =>   $image,
+                'image' =>   $request['image'],
             ]);
             $data = [
                 'data' => $result,
@@ -76,11 +76,11 @@ class AuthClientRepository
         $user = Auth::user();
 
         if ($user) {
-            $imageUrl = $user['image'];
-            if ($imageUrl) {
-                $url = asset('storage/User/' . $imageUrl);
-                $user->setAttribute('image', $url);
-            }
+            // $imageUrl = $user['image'];
+            // if ($imageUrl) {
+            //     $url = asset('storage/User/' . $imageUrl);
+            //     $user->setAttribute('image', $url);
+            // }
             $data = [
                 'data' => $user,
                 'message' => "Get user successfully",

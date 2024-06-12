@@ -38,8 +38,10 @@ DB_SCHEMA=public
 #### Generate key for project:
 
 ```
-php artisan key:generate
+composer i
 ```
+
+php artisan key:generate
 
 ### 1.3 Setup Database
 

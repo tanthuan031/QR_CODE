@@ -5,6 +5,7 @@ namespace App\Repositories\Client;
 use App\Models\Attendance;
 use App\Models\Classroom;
 use App\Models\DetailClassroom;
+use App\Models\User;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
@@ -24,63 +25,73 @@ class AttendanceClientRepository
     public function createAttendanceStudent($request)
     {
         try {
-            // Kiem tra xem sinh vien co trong lop do khong
-            $checkStudentClassroom = DetailClassroom::query()->where('student_code', '=', $request['student_code'])
-                ->where('classroom_id', '=', $request['classroom_id'])->first();
 
-            if ($checkStudentClassroom !== null) {
-                // Tim thu buoi hom do da diem danh chua
-                $checkAttendance = Attendance::query()
-                    ->where('student_code', '=', $request['student_code'])
-                    ->where('classroom_id', '=', $request['classroom_id'])
-                    ->where('week', '=', $request['week'])
-                    ->where('lesson', '=', $request['lesson'])
-                    ->first();
-                // Goi de tinh diem 
-                $resultClassroom = Classroom::query()->where('id', '=', $request['classroom_id'])->first();
+            $checkUserFace = User::where('student_code', $request['student_code'])
+                ->where('image', $request['image'])
+                ->exists();
+            if ($checkUserFace) {
+                // Kiem tra xem sinh vien co trong lop do khong
+                $checkStudentClassroom = DetailClassroom::query()->where('student_code', '=', $request['student_code'])
+                    ->where('classroom_id', '=', $request['classroom_id'])->first();
+                if ($checkStudentClassroom !== null) {
+                    // Tim thu buoi hom do da diem danh chua
+                    $checkAttendance = Attendance::query()
+                        ->where('student_code', '=', $request['student_code'])
+                        ->where('classroom_id', '=', $request['classroom_id'])
+                        ->where('week', '=', $request['week'])
+                        ->where('lesson', '=', $request['lesson'])
+                        ->first();
+                    // Goi de tinh diem 
+                    $resultClassroom = Classroom::query()->where('id', '=', $request['classroom_id'])->first();
 
-                if ($checkAttendance !== null) {
+                    if ($checkAttendance !== null) {
 
-                    // $result = $checkAttendance->update($request);
+                        // $result = $checkAttendance->update($request);
 
-                    // if ($request['status'] == '0') {
-                    //     $score = $checkStudentClassroom['score']  + 10 / ($resultClassroom['number_roll_call'] * $resultClassroom['number_lesson_week']);
-                    //     $checkStudentClassroom->update([
-                    //         'score' => $score
-                    //     ]);
-                    // } else {
-                    //     $score = $checkStudentClassroom['score']  - 10 / ($resultClassroom['number_roll_call'] * $resultClassroom['number_lesson_week']);
-                    //     $checkStudentClassroom->update([
-                    //         'score' => $score
-                    //     ]);
-                    // }
-                    $data = [
-                        'status' => 400,
-                        'message' => 'Student have been attendanced ',
-                    ];
-                } else {
-                    $result = Attendance::query()->create($request);
-                    if ($request['status'] == '0') {
-                        $score = $checkStudentClassroom['score']  + 10 / ($resultClassroom['number_roll_call'] * $resultClassroom['number_lesson_week']);
-                        $checkStudentClassroom->update([
-                            'score' => $score
-                        ]);
+                        // if ($request['status'] == '0') {
+                        //     $score = $checkStudentClassroom['score']  + 10 / ($resultClassroom['number_roll_call'] * $resultClassroom['number_lesson_week']);
+                        //     $checkStudentClassroom->update([
+                        //         'score' => $score
+                        //     ]);
+                        // } else {
+                        //     $score = $checkStudentClassroom['score']  - 10 / ($resultClassroom['number_roll_call'] * $resultClassroom['number_lesson_week']);
+                        //     $checkStudentClassroom->update([
+                        //         'score' => $score
+                        //     ]);
+                        // }
+                        $data = [
+                            'status' => 400,
+                            'message' => 'Student have been attendanced ',
+                        ];
                     } else {
-                        $score = $checkStudentClassroom['score']  - 10 / ($resultClassroom['number_roll_call'] * $resultClassroom['number_lesson_week']);
-                        $checkStudentClassroom->update([
-                            'score' => $score
-                        ]);
+                        $result = Attendance::query()->create($request);
+                        if ($request['status'] == '0') {
+                            $score = $checkStudentClassroom['score']  + 10 / ($resultClassroom['number_roll_call'] * $resultClassroom['number_lesson_week']);
+                            $checkStudentClassroom->update([
+                                'score' => $score
+                            ]);
+                        } else {
+                            $score = $checkStudentClassroom['score']  - 10 / ($resultClassroom['number_roll_call'] * $resultClassroom['number_lesson_week']);
+                            $checkStudentClassroom->update([
+                                'score' => $score
+                            ]);
+                        }
+                        $data = [
+                            'status' => 'success',
+                            'message' => "Attendance student successfully (Cr)",
+                            'data' => $result
+                        ];
                     }
+                } else {
                     $data = [
-                        'status' => 'success',
-                        'message' => "Attendance student successfully (Cr)",
-                        'data' => $result
+                        'status' => 404,
+                        'message' => 'Student or classroom not found',
                     ];
                 }
             } else {
                 $data = [
-                    'status' => 404,
-                    'message' => 'Student or classroom not found',
+                    'status' => 402,
+                    'message' => 'Face do not match',
                 ];
             }
         } catch (Exception $e) {
